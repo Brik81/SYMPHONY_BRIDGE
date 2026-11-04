@@ -1,0 +1,61 @@
+# ===========================
+# KiCad Project .gitignore
+# ===========================
+
+# --- Temporary and autosave files ---
+*.000
+*.bak
+*.bck
+*.tmp
+*~
+~*
+*-bak
+*-bak*
+*-save.pro
+*-save.kicad_pcb
+*.kicad_pcb-bak
+*.kicad_sch-bak
+_autosave-*
+#auto_saved_files#
+~*.lck
+
+# --- KiCad project local config ---
+*.kicad_prl
+fp-info-cache
+*-cache*
+
+
+# --- Autorouter files ---
+*.dsn
+*.ses
+
+# --- Netlist ---
+*.net
+
+# --- BOM exports ---
+*.xml
+*.csv
+
+# --- Backup zip (KiCad automatic) ---
+**/*-backups/*.zip
+
+# --- Archives (manual) ---
+*.zip
+*.rar
+
+# --- Production / manufacturing outputs ---
+gerber/
+production/
+*.gbr
+*.gtl
+*.gbl
+*.gts
+*.gbs
+*.gto
+*.gbo
+*.drl
+
+# --- 3D model exports (generati) ---
+*.stl
+*.wrl
+*.obj

@@ -1,0 +1,116 @@
+
+(EDIF
+  (rename &CX2016DB24000D0FLJC6 "CX2016DB24000D0FLJC6")
+  (EDIFVersion 2 0 0)
+  (EDIFLevel 0)
+  (keywordMap (keywordLevel 0))
+  (status
+    (written
+      (timestamp 2025 10 12 17 26 24)
+      (dataOrigin "1658330/1290185/2.50/4/4/Crystal or Oscillator")
+      (program "SamacSys ECAD Model CX2016DB24000D0FLJC6"
+        (version "2.3"))))
+  (library
+  (rename &CX2016DB24000D0FLJC6 "CX2016DB24000D0FLJC6")
+    (EDIFLevel 0)
+    (technology
+      (numberDefinition (scale 1 (e 254 -6) (unit DISTANCE)))
+      (userData GRIDRESOLUTION (integer 50 50))
+      (figureGroup DEFAULT (pathWidth 10) (textHeight 100))
+      (figureGroup PROPERTY (pathWidth 10) (textHeight 90))
+      (figureGroup PINNUMBER (pathWidth 10) (textHeight 90))
+      (figureGroup PINNAME (pathWidth 10) (textHeight 90))
+      (figureGroup COMMENT (pathWidth 10) (textHeight 90))
+      (figureGroup PIN (pathWidth 10) (textHeight 90))
+      (figureGroup GRAPHIC (pathWidth 10) (textHeight 100))
+    )
+    (cell
+      (rename &CX2016DB24000D0FLJC6 "CX2016DB24000D0FLJC6")
+      (cellType GENERIC)
+      (view
+        (rename NORMAL "Normal")
+        (viewType SCHEMATIC)
+        (interface
+          (designator "Y")
+          (property (rename PACKAGENAME "PackageName") (string "CX2016DB24000D0FLJC6"))
+          (property (rename ISHETEROGENEOUS "IsHeterogeneous") (string "False"))
+          (property (rename DEVICESINVIEW "DevicesInView") (string "1"))
+          (property (rename DEVICESINPACKAGE "DevicesInPackage") (string "1"))
+          (property (rename DEVICEDESIGNATOR "DeviceDesignator") (string "A"))
+          (property (rename DEVICENUMBERING "DeviceNumbering") (string "Alpha"))
+          (property (rename PCB_32_FOOTPRINT "PCB Footprint") (string "CX2016DB32000D0WZRC1"))
+          (property (rename &Mouser_Part_Number "Mouser Part Number") (string "581-CX2016DB24000DLJ"))
+          (property (rename &Mouser_Price_Stock "Mouser Price/Stock") (string "https://www.mouser.co.uk/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D"))
+          (property (rename &Manufacturer_Name "Manufacturer_Name") (string "Kyocera AVX"))
+          (property (rename &Manufacturer_Part_Number "Manufacturer_Part_Number") (string "CX2016DB24000D0FLJC6"))
+          (property (rename &Description "Description") (string "Crystals AEC-Q200 24MHz 8pF 2x1.6mm"))
+          (property (rename &Datasheet_Link "Datasheet Link") (string "https://www.mouser.in/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D"))
+          (property (rename &Height "Height") (string "0 mm"))
+          (property (rename &_60__32_VALUE_32__62_ "Value") (string "CX2016DB24000D0FLJC6"))
+          (property (rename VALUE "Value") (string "Value"))
+          (port
+            (rename &HOT_1 "HOT_1")
+            (designator "1")
+            (property (rename ORDER "Order") (string "0") (owner "OrCAD"))
+          )
+          (port
+            (rename &GND "GND")
+            (designator "2")
+            (property (rename ORDER "Order") (string "1") (owner "OrCAD"))
+          )
+          (port
+            (rename &HOT_2 "HOT_2")
+            (designator "3")
+            (property (rename ORDER "Order") (string "2") (owner "OrCAD"))
+          )
+          (port
+            (rename &GND_NC_ "GND_NC_")
+            (designator "4")
+            (property (rename ORDER "Order") (string "3") (owner "OrCAD"))
+          )
+          (symbol
+            (portImplementation
+              (name &HOT_1 (display PINNAME))
+              (keywordDisplay DESIGNATOR (display PINNUMBER))
+              (figure PIN (path (pointList (pt -200 -200) (pt 0 -200))))
+              (connectLocation (figure GRAPHIC (dot (pt -200 -200))))
+            )
+            (portImplementation
+              (name &GND (display PINNAME))
+              (keywordDisplay DESIGNATOR (display PINNUMBER))
+              (figure PIN (path (pointList (pt 900 -200) (pt 1100 -200))))
+              (connectLocation (figure GRAPHIC (dot (pt 1100 -200))))
+            )
+            (portImplementation
+              (name &HOT_2 (display PINNAME))
+              (keywordDisplay DESIGNATOR (display PINNUMBER))
+              (figure PIN (path (pointList (pt 900 -100) (pt 1100 -100))))
+              (connectLocation (figure GRAPHIC (dot (pt 1100 -100))))
+            )
+            (portImplementation
+              (name &GND_NC_ (display PINNAME))
+              (keywordDisplay DESIGNATOR (display PINNUMBER))
+              (figure PIN (path (pointList (pt -200 -100) (pt 0 -100))))
+              (connectLocation (figure GRAPHIC (dot (pt -200 -100))))
+            )
+            (figure GRAPHIC
+              (figureGroupOverride GRAPHIC
+                (pathWidth 10))
+              (path
+                (pointList
+                  (pt 0 0)
+                  (pt 900 0)
+                  (pt 900 -300)
+                  (pt 0 -300)
+                  (pt 0 0)
+                )
+              )
+            )
+            (keywordDisplay DESIGNATOR (display PROPERTY (justify LOWERLEFT) (orientation R0) (origin (pt 950 130))))
+            (propertyDisplay &_60__32_VALUE_32__62_ (display PROPERTY (justify LOWERLEFT) (orientation R0) (origin (pt 950 30))))
+          )
+        )
+      )
+    )
+  )
+)

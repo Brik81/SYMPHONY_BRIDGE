@@ -1,0 +1,60 @@
+\clearpage
+\section[Parte J – Rev. 1.11 – Induttore L242 del PA e verifica degli induttori]{Parte J – Rev. 1.11 – Induttore L242 del PA e verifica degli induttori}
+
+L242 porta il 3V3 ai pin RF\_\allowbreak{}OUT (9–12) del PA IC2 QPA9510, cioè alimenta lo stadio finale. È il componente con la corrente più alta della catena RF.
+
+\subsection[23. L242 – induttore di alimentazione dello stadio finale del QPA9510]{23. L242 – induttore di alimentazione dello stadio finale del QPA9510 \tg{tagdone}{modificato v1.11}}
+
+\subsubsection[23.1 Corrente]{23.1 Corrente}
+
+\begin{itemize}
+\item APC1/\allowbreak{}APC2 = 3.3 V · 240 /\allowbreak{} (33 + 240) ≈ 2.9 V (R242/\allowbreak{}R243), cioè PA acceso al massimo. In ingresso circa +9 dBm (Si4464 a +20 dBm meno il pad R245–R248, vedi S-14). Con circa 34 dB di guadagno il PA va in saturazione a circa +35 dBm.
+\item Datasheet QPA9510 (Qorvo, 23/\allowbreak{}06/\allowbreak{}2025): potenza massima 35.4 dBm, efficienza 55 \%, corrente totale \textbf{1.7 A} alla potenza massima con Vcc 3.6 V. Quasi tutta la corrente dello stadio finale passa da L242. A 3.3 V la corrente è un po' più bassa, circa 1.5 A.
+\item Gli induttori Murata RF (LQW) hanno nucleo ceramico, quindi \textbf{non saturano}. Il limite è la corrente nominale (I\textsubscript{dc}, riscaldamento).
+\end{itemize}
+
+\subsubsection[23.2 Scelta]{23.2 Scelta}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.3498}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1368}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1615}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3519}{32pt}{0pt}}}
+\toprule
+\textbf{Murata RF su JLCPCB} & \textbf{L} & \textbf{I\textsubscript{dc}} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+LQW2UAS (1008) & 0.82–1 µH & 0.37–0.40 A & no, circa 4 volte troppo poco \\\midrule[0.15pt]
+LQW2UAS (1008) & 22–82 nH & 1 A & no \\\midrule[0.15pt]
+LQW2BAN (0805) & 100 nH & 1.05 A & no \\\midrule[0.15pt]
+\textbf{LQW2BAN22NJ00L (0805)} & \textbf{22 nH} & \textbf{1.9 A} & \textbf{scelto}: 563 pz, già usato in L201/\allowbreak{}L203/\allowbreak{}L204 \\\midrule[0.15pt]
+LQW2BAN18NG00L (0805) & 18 nH & 2.2 A & alternativa, solo 46 pz \\
+\end{longtable}}
+
+\begin{itemize}
+\item Fa come la scheda di valutazione Qorvo, dove lo stadio finale è alimentato da un induttore piccolo (Coilcraft 1606, 8.8 nH a 900 MHz, X ≈ 50 Ω). Qui 22 nH danno X ≈ 60 Ω a 435 MHz.
+\item Al contrario di 0.9 µH (X ≈ 2.5 kΩ, trascurabile), 22 nH in parallelo al nodo RF\_\allowbreak{}OUT entra nell'adattamento d'uscita. Si compensa portando C260 (in parallelo sullo stesso nodo) da 27 a 33 pF. A 435 MHz: 0.9 µH ∥ 27 pF → B = 0.0734 S; 22 nH ∥ 33 pF → B = 0.0736 S. Adattamento invariato.
+\item Per il layout futuro: piste larghe per 1.7 A sul ramo 3V3 → L242 → RF\_\allowbreak{}OUT. In saturazione su L242 cadono circa 0.12 V e si dissipano circa 0.2 W.
+\end{itemize}
+
+\subsubsection[23.3 Verifica di tutti gli induttori del progetto]{23.3 Verifica di tutti gli induttori del progetto}
+
+Sono tutti Murata RF avvolti in filo (LQW) e hanno il codice in \textquotedblleft{}JLCPCB Parts\textquotedblright{}.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1022}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2771}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3437}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1824}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0946}{40pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Valore /\allowbreak{} Murata} & \textbf{Funzione} & \textbf{Corrente} & \textbf{I\textsubscript{dc}} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+L242 & 22n LQW2BAN22NJ00L & alimentazione stadio finale PA & ≤ 1.7 A & 1.9 A \\\midrule[0.15pt]
+L243 & 2.7n LQW15AN2N7G80D & serie, uscita PA & circa 0.8 A RF (stima) & 1.5 A \\\midrule[0.15pt]
+L240 & 12n LQW18AN12NG00D & VCC1 PA (pre-amplificatore) & < 0.3 A (stima) & 0.6 A \\\midrule[0.15pt]
+L241 & 6.8n LQW18AN6N8C00D & VCC2 PA (driver) & < 0.4 A (stima) & 0.75 A \\\midrule[0.15pt]
+L703 & 220n LQW18ANR22J80D & alimentazione TX del Si4464 & circa 80 mA & 0.28 A \\\midrule[0.15pt]
+L202 & 120n LQW15ANR12J00D & alimentazione LNA TQP3M9036 & ≤ 60 mA & 0.11 A \\\midrule[0.15pt]
+L702 & 33n LQW2BAN33NG00L & adattamento TX verso PA & solo RF, bassa potenza & 1.5 A \\\midrule[0.15pt]
+L201, L203, L204 & 22n LQW2BAN22NJ00L & filtri RX & solo RF RX & 1.9 A \\\midrule[0.15pt]
+L205, L206 & 56n /\allowbreak{} 62n LQW18AN & rete RX del Si4464 (S-03) & solo RF RX & 0.36 /\allowbreak{} 0.28 A \\
+\end{longtable}}
+
+\textbf{Verifica.} BOM esportata: L242 = 22n, 0805, C2042193; C260 = 33p, 0603, C2360428. Netlist identica alla rev. 1.10. ERC identico (138, nessuna nuova).

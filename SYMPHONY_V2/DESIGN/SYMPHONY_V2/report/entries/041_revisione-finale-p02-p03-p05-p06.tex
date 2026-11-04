@@ -1,0 +1,99 @@
+\clearpage
+\section[Rev. 1.43 -- Revisione finale indipendente: P-02, P-03, P-05, P-06]{Rev. 1.43 \textendash{} Revisione finale indipendente del 03/11/2026: decisioni su P-02, P-03, P-05, P-06}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.43.
+
+\subsection{Titolo}
+Revisione finale indipendente del 03/11/2026: decisioni su P-02, P-03, P-05, P-06.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Documento di riferimento: \code{SYMPHONY\_V2\_review\_finale\_2026-11-03.pdf} (7 pagine, cartella DESIGN), redatto dall'agente \code{symphony-reviewer}.
+\item P-06: foglio MCU, R413 e R205 (\SI{0}{\ohm} 0402, C17168, DNP); U403 \code{STWD100}.
+\item P-05 / R-23: foglio UHF, connettore MMCX J201 (footprint Molex, JLCPCB C2999837, DreamLNK).
+\item P-02: foglio MCU, PC2 (comando deviatore); foglio UHF, deviatore RF HMC349A, PA QPA9510 (IC2), tensione APC.
+\item P-03: foglio UHF, filtro passa-basso FL201, deviatore HMC349A, connettore d'antenna.
+\item Nessun file di progetto KiCad modificato in questa revisione.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Nessuna modifica allo schema. Il giudizio complessivo della revisione è che la scheda funziona (accensione, TX, RX) e che non ci sono errori di pinout, polarità, livelli logici o funzioni alternate dell'MCU. Sono registrate quattro decisioni, una nuova nota firmware (F-14) e una nuova misura di collaudo (M-05).
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}lXX@{}}
+\toprule
+\textbf{Punto} & \textbf{Decisione} & \textbf{Azione}\\
+\midrule
+P-06 & Nessuna modifica & Controllo BOM/CPL del team prima dell'ordine\\
+P-05 / R-23 & Nessuna modifica, R-23 chiuso & Nessuna\\
+P-02 & Nessuna modifica hardware & Nota firmware F-14\\
+P-03 & Nessuna modifica ora & Misura M-05 al collaudo\\
+\bottomrule
+\end{tabularx}}
+
+\subsubsection{P-06 -- R413 e R205 senza flag \emph{Exclude from BOM}}
+R413 (\SI{0}{\ohm} 0402, C17168, DNP) abilita o disabilita il watchdog U403 tramite EN. Non ha il flag \emph{Exclude from BOM}: nell'export BOM finisce nella stessa riga di R202 e R204 (\SI{0}{\ohm} montate), con rischio teorico che JLCPCB la monti e disattivi il watchdog in volo. Lo stesso vale per R205. Nessuna modifica: il controllo di BOM e posizionamento lo fa il team prima dell'ordine.
+
+\subsubsection{P-05 / R-23 -- Connettore MMCX J201}
+Footprint Molex, codice JLCPCB C2999837 di DreamLNK. Era il punto R-23 della revisione indipendente del 27/10/2026, non ancora discusso. Nessuna modifica, R-23 chiuso.
+
+\subsubsection{P-02 -- Commutazione TX$\rightarrow$RX}
+PC2 dell'MCU comanda il deviatore HMC349A, che commuta in circa \SI{160}{\nano\second}. La tensione APC del PA QPA9510 si scarica in circa \SI{4}{\micro\second} (costante di tempo circa \SI{2.4}{\micro\second}; valori stimati dal revisore). Se PC2 commuta subito, per alcuni \si{\micro\second} la porta del deviatore, ormai terminata, riceve circa \SI{+31}{dBm}, oltre il massimo assoluto di \SI{26.5}{dBm} dell'HMC349A. Nessuna modifica hardware. Alternativa proposta dal revisore e non adottata: GPIO separato per l'APC.
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxokbg,colframe=boxok,boxrule=0.8pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Nota firmware F-14 \textendash{} per il firmwarista (sequenza TX$\rightarrow$RX)},fonttitle=\small,coltitle=white,colbacktitle=boxok]
+\textbf{Sequenza TX$\rightarrow$RX:} prima fermare la trasmissione (Si4464 fuori da TX, PA spento/APC a zero), attendere almeno \SI{10}{\micro\second}, solo dopo commutare PC2 (deviatore HMC349A) verso RX. \textbf{Mai commutare PC2 durante la trasmissione o subito dopo.}
+\end{tcolorbox}
+
+\subsubsection{P-03 -- Armoniche del deviatore HMC349A}
+Il deviatore è dopo il filtro passa-basso FL201 e lavora a circa \SI{30.7}{dBm}, vicino alla sua compressione P0.1dB: le armoniche che genera arrivano all'antenna senza filtro. Nessuna modifica ora.
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxwarnbg,colframe=boxwarn,boxrule=0.8pt,left=7pt,right=6pt,top=3pt,bottom=3pt,
+  title={\sffamily\bfseries Misura M-05 al collaudo},fonttitle=\small,coltitle=white,colbacktitle=boxwarn]
+Sulla scheda prodotta, in TX alla potenza massima, misurare H2 e H3 al connettore d'antenna con analizzatore di spettro. Se fuori specifica: ridurre la potenza di \SIrange{2}{3}{dB} via firmware oppure valutare un filtro dopo il deviatore in una revisione hardware successiva.
+\end{tcolorbox}
+
+\subsubsection{Altri punti della revisione, già coperti da decisioni precedenti}
+Solo elencati, nessuna modifica.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}lXl@{}}
+\toprule
+\textbf{Punto} & \textbf{Argomento} & \textbf{Riferimento}\\
+\midrule
+P-01 / P-13 & Stock a zero o basso: U301 STM32L562RET6P (C1236664), IC204 Si4464 (C482027), IC2 QPA9510 (C52059849), J708 Samtec (C7278162); bassi: C2042193, TCXO C19858587, C2297617 & R-21, acquisti di Brik81\\
+P-04 & J15 USB-C & R-09\\
+P-07 & Limite di potenza del PA & R-04 / F-01\\
+P-09 & Temperature & R-06 / R-07\\
+P-11 & Pin di J708 non collegati & R-12\\
+P-14 & Bypass del PA in GRM accettati (fuori dal percorso RF) & accettato\\
+\bottomrule
+\end{tabularx}}
+
+Ancora aperti, da decidere: P-08 (R29 \SI{22}{\kilo\ohm} da 5\,\% a 1\,\%, C25768); P-10 (secondo \SI{10}{\nano\farad} sull'alimentazione del PA come nella EVB Qorvo, NV); P-12 (pull-up su \code{/CS} della FRAM e su NSEL del Si4464); P-15 (escludere J1, test point, jumper e fori dalla BOM).
+
+\subsection{Motivazione}
+Decisioni di Brik81 sui punti della revisione finale indipendente:
+\begin{itemize}
+\item P-06: ``P-06 non ti preoccupare quello è un controllo che faccaiamo noi, jlc non monterà nulla se non approvato da noi.''
+\item P-05 / R-23: ``P-05/R-23 no non ti preoccupare va bene cosi.''
+\item P-02: ``P-02 Si assolutamente ricordarsi di aggiungerlo al documento per il fimrwarista.''
+\item P-03: ``P-03 dovremo farlo una volta prodotta la scheda e valutare giusto?'' (confermato: sì).
+\end{itemize}
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{P-02:} senza il rispetto di F-14 il deviatore HMC349A può superare il massimo assoluto di \SI{26.5}{dBm} per alcuni \si{\micro\second} a ogni commutazione TX$\rightarrow$RX. La protezione è affidata solo al firmware.
+\end{critbox}
+\begin{notebox}
+\textbf{P-03:} il livello delle armoniche H2 e H3 all'antenna è sconosciuto fino alla misura M-05. \textbf{P-06:} la protezione contro il montaggio di R413 e R205 è solo procedurale (controllo del team sulla BOM/CPL).
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item In fase d'ordine controllare che R413 e R205 risultino non montate nella BOM/CPL approvata.
+\item Aggiungere F-14 all'elenco delle note per il firmwarista (F-01\ldots F-13 già nel log) e verificarne l'implementazione.
+\item M-05 al collaudo: H2 e H3 al connettore d'antenna in TX alla potenza massima.
+\item Decidere i punti ancora aperti P-08, P-10, P-12, P-15.
+\end{itemize}

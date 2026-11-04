@@ -1,0 +1,8 @@
+\clearpage
+\section[Parte AC – Rev. 1.30 – Backup dell'RTC (R-06, R-24)]{Parte AC – Rev. 1.30 – Backup dell'RTC (R-06, R-24)}
+
+\subsection[42. Requisito del backup dell'RTC]{42. Requisito del backup dell'RTC}
+
+Brik81 ha fissato il requisito: il backup del DS3231M (U404) deve tenere l'ora solo per \textbf{pochi secondi} in caso di mancanza dell'alimentazione. Con 110 mF (10× CPH3225A) l'autonomia stimata è di circa 7 h, quindi il requisito è soddisfatto con un margine enorme. Il range −20…+60 °C del CPH3225A e la sua assenza dal catalogo JLC sono accettati. R-06 e R-24 sono chiusi senza modifiche.
+
+Per riferimento: con ≈ 3 µA di consumo e una finestra 3,0 → 2,3 V, per 10 s bastano circa 43 µF. Il banco attuale è quindi molto sovradimensionato rispetto al requisito, ed è stato lasciato così per scelta.

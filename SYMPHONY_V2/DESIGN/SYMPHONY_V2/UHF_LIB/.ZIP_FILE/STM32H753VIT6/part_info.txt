@@ -1,0 +1,9 @@
+Manufacturer=STMicroelectronics
+PartNumber=STM32H753VIT6
+PartCategory=Integrated Circuit
+PackageCategory=Quad Flat Packages
+PinCount=100
+Version=1.2
+Released=2018-07-02 16:28:35
+Downloaded=2025-10-11 17:01:44
+3D=Y

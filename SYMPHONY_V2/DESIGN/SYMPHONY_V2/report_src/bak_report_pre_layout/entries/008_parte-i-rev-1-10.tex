@@ -1,0 +1,29 @@
+\clearpage
+\section[Parte I – Rev. 1.10 – Campo \textquotedblleft{}JLCPCB Parts\textquotedblright{} unificato]{Parte I – Rev. 1.10 – Campo \textquotedblleft{}JLCPCB Parts\textquotedblright{} unificato}
+
+Il codice di parte JLCPCB (Cxxxxx) ora si trova sempre e solo nel campo \textbf{\textquotedblleft{}JLCPCB Parts\textquotedblright{}}. Regola per le prossime modifiche: ogni componente aggiunto o modificato riceve questo campo.
+
+\subsection[22. Unificazione del campo codice JLCPCB]{22. Unificazione del campo codice JLCPCB \tg{tagdone}{modificato v1.10}}
+
+\subsubsection[22.1 Verifica]{22.1 Verifica}
+
+\begin{itemize}
+\item \textbf{BOM} esportata con kicad-cli prima e dopo la modifica: 150 componenti avevano un codice prima e 150 lo hanno dopo, con \textbf{lo stesso valore}. Nessun campo con i vecchi nomi è rimasto. Nessun componente aveva due codici diversi.
+\item \textbf{Netlist} identica. \textbf{ERC} identico (138 violazioni, nessuna nuova).
+\item Le librerie simboli modificate si aprono correttamente con kicad-cli. \code{SYMPHONY.\allowbreak{}kicad\_\allowbreak{}pro} è JSON valido.
+\end{itemize}
+
+\subsubsection[22.2 Componenti senza codice JLCPCB (30)]{22.2 Componenti senza codice JLCPCB (30)}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.4120}{16pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.5880}{16pt}{0pt}}}
+\toprule
+\textbf{Componenti} & \textbf{Motivo /\allowbreak{} da fare} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C415…C424 CPH3225A & non presenti nel catalogo JLCPCB: Mouser 628-CPH3225A, Global Sourcing o materiale fornito (S-02, §19) \\\midrule[0.15pt]
+H301…H304, TP1, TP701…TP703, J1 TC2030 & fori, test point e impronta Tag-Connect: nessun componente da montare \\\midrule[0.15pt]
+R4, R5, R6, R7, R8, R9, R10, R12 (3.16 k, 105 k, 63.4 k, 19.6 k), R\_\allowbreak{}RTD1, R\_\allowbreak{}RTD2 PT1000 & foglio SENSORS, in lavorazione (S-06): codice da assegnare \\\midrule[0.15pt]
+L242 0.9 µH & codice da assegnare \\
+\end{longtable}}

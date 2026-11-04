@@ -1,0 +1,14 @@
+\clearpage
+\section[Parte S – Rev. 1.20 – S-09, pin non usati dell'MCU, VBAT del DS3231M]{Parte S – Rev. 1.20 – S-09, pin non usati dell'MCU, VBAT del DS3231M}
+
+Ultimi interventi sui rilievi di sch\_\allowbreak{}check\_\allowbreak{}2010. Con questa revisione tutti i rilievi S-01…S-14 sono chiusi o lasciati così per decisione di Brik81.
+
+\subsection[32. Dettaglio]{32. Dettaglio}
+
+\begin{itemize}
+\item \textbf{VBAT del DS3231M (importante).} Nel controllo dei pin non collegati è risultato che il pin 6 (VBAT) di U404 era scollegato dalla rete RTC\_\allowbreak{}VBAT almeno dalla rev. 1.8 (netlist del 23/\allowbreak{}10): il banco di supercap di S-02 non alimentava l'RTC. Brik81 l'ha ricollegato in KiCad (salvataggio delle 17:50). Ora la rete RTC\_\allowbreak{}VBAT comprende C415…C424, R412 e U404 pin 6. Resta solo l'avviso ERC \textquotedblleft{}power\_\allowbreak{}pin\_\allowbreak{}not\_\allowbreak{}driven\textquotedblright{} su VBAT, già noto (la rete è alimentata dal diodo D401 tramite R412, che KiCad non riconosce come sorgente).
+\item \textbf{S-09.} R410 DNP: l'uscita 32KHZ resta aperta, come ammesso dal datasheet. Firmware: all'avvio scrivere EN32KHZ = 0 (registro 0Fh, bit 3). R411 su INT/\allowbreak{}SQW rimane: non consuma (pin in alta impedenza con allarmi disattivati).
+\item \textbf{GPIO liberi di U301.} 22 pin con simbolo di non collegato. Liberi per usi futuri: PA0–PA4 e PB0 sono anche ingressi ADC.
+\end{itemize}
+
+\textbf{Verifica.} Netlist identica a quella salvata da Brik81 alle 17:50. ERC: da 136 a \textbf{114}, spariti i 22 \textquotedblleft{}pin non collegato\textquotedblright{}, nessuno nuovo. Restano 82 \textquotedblleft{}lib\_\allowbreak{}symbol\_\allowbreak{}mismatch\textquotedblright{} (simboli diversi dalla libreria, solo grafici), 19 \textquotedblleft{}pin\_\allowbreak{}to\_\allowbreak{}pin\textquotedblright{}, 6 \textquotedblleft{}power\_\allowbreak{}pin\_\allowbreak{}not\_\allowbreak{}driven\textquotedblright{}, 5 \textquotedblleft{}isolated\_\allowbreak{}pin\_\allowbreak{}label\textquotedblright{}, 1 \textquotedblleft{}label\_\allowbreak{}dangling\textquotedblright{}, 1 \textquotedblleft{}hier\_\allowbreak{}label\_\allowbreak{}mismatch\textquotedblright{}: da rivedere prima del layout.

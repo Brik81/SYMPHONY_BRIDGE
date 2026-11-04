@@ -1,0 +1,57 @@
+\clearpage
+\section[Parte AB – Rev. 1.29 – Potenza TX (R-04) e note per il firmware]{Parte AB – Rev. 1.29 – Potenza TX (R-04) e note per il firmware}
+
+\subsection[41. R-04 e raccolta delle note per il firmware]{41. R-04 e raccolta delle note per il firmware}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize, >=Stealth,
+  blk/.style={draw=accent,rounded corners=2pt,fill=accent!6,minimum height=1.0cm,text width=1.85cm,align=center,inner sep=2pt},
+  ctl/.style={draw=boxwarn,rounded corners=2pt,fill=boxwarnbg,minimum height=0.8cm,text width=1.7cm,align=center,inner sep=2pt}]
+ \node[blk] (si) {Si4464\\ IC204};
+ \node[blk,right=0.45cm of si] (pad) {pad\\ R245--R248};
+ \node[blk,right=0.45cm of pad] (pa) {PA IC2\\ QPA9510};
+ \node[blk,right=0.45cm of pa] (fl) {filtro\\ FL201};
+ \node[blk,right=0.45cm of fl] (sw) {commutatore\\ IC202 HMC349};
+ \node[blk,right=0.45cm of sw] (ant) {antenna};
+ \draw[->,thick,accent] (si)--(pad); \draw[->,thick,accent] (pad)--(pa);
+ \draw[->,thick,accent] (pa)--(fl); \draw[->,thick,accent] (fl)--(sw); \draw[->,thick,accent] (sw)--(ant);
+ \node[ctl,text width=2.6cm,below=1.6cm of fl,xshift=0.6cm] (pc2) {PC2\\ UHF.EN\_TX\_ANT\_SW};
+ \node[ctl,below=1.6cm of pa,xshift=-1.0cm] (q) {Q701 (R702, R703)\\ abilita APC};
+ \node[ctl,right=0.8cm of pc2] (u) {U701 (invertitore)\\ EN\_RX\_LNA};
+ \draw[->,boxwarn,thick] (pc2.north) -- ++(0,0.6) -| node[pos=0.25,above]{CTRL} (sw.south);
+ \draw[->,boxwarn,thick] (pc2.west) -- node[above]{APC} (q.east);
+ \draw[->,boxwarn,thick] (q.north) -- (q.north |- pa.south);
+ \draw[->,boxwarn,thick] (pc2.east) -- (u.west);
+\end{tikzpicture}
+
+{\small Catena TX (blu) e comando unico PC2 (arancio), come descritto nel testo. Schema a blocchi, non in scala.}
+\end{center}
+
+\textbf{R-04.} L'hardware della catena TX è corretto. Il PA è protetto in ingresso: anche con il Si4464 al massimo arrivano ≈ +9 dBm, contro un massimo assoluto di +13 dBm. Il margine che manca è a valle, sul commutatore e sul filtro. Un pad più grande non risolverebbe, perché in saturazione la potenza in uscita resta circa la Psat qualunque sia il pilotaggio. Le leve vere sono il pilotaggio, cioè PA\_\allowbreak{}PWR\_\allowbreak{}LVL (sotto la compressione il PA è lineare), e la VAPC (partitore R242/\allowbreak{}R243). Brik81 ha scelto di non modificare lo schema e di affidare il limite al firmware. Con modulazione FSK/\allowbreak{}GFSK lavorare vicino alla saturazione va bene, perché l'inviluppo è costante.
+
+\textbf{Come è fatto l'hardware.} Un solo pin, PC2 (rete UHF.EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW), comanda insieme tre cose: il CTRL dell'HMC349, l'abilitazione dell'APC del PA (Q701 P-MOS con pull-up R702 verso 3V3, gate tramite R703: PC2 basso = APC alimentata) e, tramite l'invertitore U701, EN\_\allowbreak{}RX\_\allowbreak{}LNA. Con PC2 in alta impedenza (boot, reset dell'MCU) il pull-up tiene il PA spento. Il commutatore e l'APC si muovono quindi insieme. La RF però c'è solo quando il Si4464 trasmette: per non commutare mai con la RF presente basta cambiare PC2 solo quando il Si4464 non è in TX.
+
+\begin{notebox}
+\textbf{Note per il firmware: requisiti hardware da rispettare} (raccolta di quelle sparse nelle revisioni precedenti, più le nuove di R-04)
+
+\begin{center}{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\cw{0.0663}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1631}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.6004}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1702}{32pt}{0pt}}}
+\toprule
+\textbf{ID} & \textbf{Argomento} & \textbf{Requisito} & \textbf{Origine} \\
+\midrule
+\textbf{F-01} & Potenza TX & \textbf{Limite rigido} su PA\_\allowbreak{}PWR\_\allowbreak{}LVL del Si4464, tarato sul prototipo (misura M-01) per avere \textbf{≤ 31 dBm} all'uscita d'antenna. Il valore va scritto come costante non modificabile da telecomando, o al più con una saturazione lato firmware. Il Si4464 non deve mai andare a +20 dBm & R-04 (rev 1.29), §3, S-07 \\\midrule[0.15pt]
+\textbf{F-02} & Sequenza TX/\allowbreak{}RX & Entrata in TX: Si4464 non in TX → PC2 su \textquotedblleft{}TX\textquotedblright{} (commutatore su TX, APC del PA alimentata, LNA spento) → attendere che commutatore e PA si assestino → Si4464 START\_\allowbreak{}TX. Uscita: fine pacchetto, Si4464 fuori da TX (READY/\allowbreak{}RX) → solo dopo PC2 su \textquotedblleft{}RX\textquotedblright{}. \textbf{Mai cambiare PC2 mentre il Si4464 trasmette} (hot switching dell'HMC349, limite 30 dBm) & R-04 (rev 1.29), §4, 1.1-04 \\\midrule[0.15pt]
+\textbf{F-03} & Durata TX & Preferire trasmissioni a impulsi o con duty cycle limitato. L242 (NRS2012, 1,7 A ΔT 40 °C) e l'LFCG-490+ (≈ 1,9 W a 85 °C) scaldano in trasmissione continua alla massima potenza. Se serve TX continuo, ridurre F-01 & rev 1.25, R-04 \\\midrule[0.15pt]
+\textbf{F-04} & Clock del Si4464 & POWER\_\allowbreak{}UP con l'opzione TCXO (TCXO a 32 MHz su XIN, XOUT flottante) e banco capacità XO (GLOBAL\_\allowbreak{}XO\_\allowbreak{}TUNE) = 0 & §2 \\\midrule[0.15pt]
+\textbf{F-05} & Reset del Si4464 & PC4 (RF\_\allowbreak{}MR\_\allowbreak{}N) basso = reset della radio. Dopo il rilascio di \textasciitilde{}MR o all'accensione aspettare almeno 200 ms (ritardo del supervisore IC205) più il POR del Si4464 prima di mandare comandi SPI, e controllare CTS & supervisore IC205 \\\midrule[0.15pt]
+\textbf{F-06} & Clock dell'MCU & HSE\_\allowbreak{}VALUE = 24000000 (quarzo Y1 da 24 MHz). Con un valore diverso UART, USB e timer partono alla frequenza sbagliata & S-04, rev 1.15 \\\midrule[0.15pt]
+\textbf{F-07} & Console & USART1 su PA9/\allowbreak{}PA10 (AF7), collegata al CH340 U402, non UART4. Bootloader: BOOT0 (PH3, TP1) alto al reset, poi STM32CubeProgrammer in UART & rev 1.8 \\\midrule[0.15pt]
+\textbf{F-08} & Sensori di temperatura & ADC1 canale 16 (PB1, V\_\allowbreak{}TEMP\_\allowbreak{}PA) e canale 2 (PC1, V\_\allowbreak{}TEMP\_\allowbreak{}BUCK), misura raziometrica su VDDA = 3V3. Calibrazione a un punto per canale (offset del TLV9051 ≈ ±0,9 °C) & S-06, rev 1.17–1.18, R-18 \\\midrule[0.15pt]
+\textbf{F-09} & RTC DS3231M & All'avvio EN32KHZ = 0 (registro 0Fh, bit 3): l'uscita 32 kHz non è usata e consuma il backup. Dopo un'interruzione lunga controllare il flag OSF e risincronizzare l'ora & S-09, rev 1.20 \\
+\bottomrule
+\end{tabular}}\end{center}
+
+\textbf{Misure obbligatorie sul prototipo.} \textbf{M-01:} Pout all'uscita d'antenna su carico da 50 Ω (attenuatore di potenza), alla temperatura ambiente e se possibile a caldo, con il Si4464 al valore F-01 e al massimo. Se con il valore F-01 si superano i 31 dBm, ridurre la VAPC con R242/\allowbreak{}R243. \textbf{M-02:} adattamento d'uscita del PA (S22 o potenza in banda 430–440 MHz) con L242 = NRS2012 e C260 = 27 pF (rev 1.25).
+\end{notebox}
+
+Dati non verificati sul datasheet: guadagno ≈ 42 dB e P3dB ≈ 34 dBm (riepilogo EVB Qorvo del 30/\allowbreak{}06/\allowbreak{}2025, alla tensione della EVB); la curva Pout/\allowbreak{}VAPC del QPA9510. Per questo il valore di F-01 si fissa con la misura M-01 e non con un calcolo.

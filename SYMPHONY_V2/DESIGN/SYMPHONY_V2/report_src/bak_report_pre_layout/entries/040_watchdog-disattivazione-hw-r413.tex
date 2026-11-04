@@ -1,0 +1,62 @@
+\clearpage
+\section[Rev. 1.42 -- Watchdog U403: disattivazione solo hardware]{Rev. 1.42 \textendash{} Watchdog U403: disattivazione solo hardware con R413, nessun GPIO su EN}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.42.
+
+\subsection{Titolo}
+Watchdog U403: disattivazione solo hardware con R413, nessun GPIO su EN.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio MCU: U403 \code{STWD100NYWY3F}, R413 \SI{0}{\ohm} 0402 DNP (EN verso \code{3V3}).
+\item PC6, rete \code{/MCU/WDT\_WDI}.
+\item Nessun file di progetto modificato.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Nulla sullo schema. Decisione di progetto e precisazione della nota firmware F-11.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Elemento} & \textbf{Prima (rev.\ 1.41)} & \textbf{Dopo (rev.\ 1.42)}\\
+\midrule
+Schema MCU & invariato & invariato\\
+Disattivazione watchdog & R413 \SI{0}{\ohm} DNP & solo R413 (scelta A confermata)\\
+GPIO su EN di U403 & non presente & non aggiunto (alternativa B scartata)\\
+Nota firmware F-11 & impulso su WDI & precisata la modalit\`a di generazione dell'impulso\\
+\bottomrule
+\end{tabular}}
+
+\subsection{Motivazione}
+Brik81 ha verificato in KiCad il collegamento della rev.\ 1.41 (\textquotedblleft{}credo tutto ok\textquotedblright{}). Ha chiesto se collegare EN a un GPIO per disattivare il watchdog via software. Domanda testuale: \textquotedblleft{}se devo debuggare quidni questa resistenza va saldatata giusto? se si, forse sarebbe carino collegarlo al micro cosi posso disattivarlo via SW?\textquotedblright{}
+
+Valutazione: un GPIO non sostituisce R413.
+\begin{itemize}
+\item Quando il firmware non gira (programmazione SWD di un chip vuoto, bootloader UART con BOOT0, firmware assente o rotto) il pin \`e flottante. Il pull-down interno di EN (\SIrange{32}{100}{\kilo\ohm}, datasheet ST DocID14134 Rev 10 p.\,12) tiene il watchdog attivo e l'MCU si resetta ogni circa \SI{1,6}{\second} durante la programmazione.
+\item In volo un firmware fuori controllo potrebbe disattivare il proprio watchdog. Mitigabile con il lock GPIO (LCKR), non verificato sul reference manual dell'STM32L562.
+\end{itemize}
+
+Alternativa B scartata: GPIO libero (es.\ PC7) su EN tramite \SI{0}{\ohm} 0402 DNP. Scelta A: solo R413.
+\begin{itemize}
+\item Debug: si salda R413 (EN alto = watchdog spento). Si pu\`o tenere una scheda da banco con R413 sempre montata.
+\item Volo: R413 non montata.
+\end{itemize}
+
+Approvazione di Brik81 (03/11/2026): \textquotedblleft{}No lascia comè e direi che siamo a posto giusto?\textquotedblright{}
+
+\subsection{Impatti e criticit\`a}
+\begin{notebox}
+\textbf{Nessun impatto hardware.} Durante lo sviluppo R413 va montata: altrimenti debug SWD con breakpoint, bootloader UART e firmware di prova senza impulso su PC6 provocano reset ogni circa \SI{1,6}{\second}.
+\end{notebox}
+
+\begin{notebox}
+\textbf{Nota firmware F-11 (precisazione).} L'impulso su WDI (PC6, \code{/MCU/WDT\_WDI}) va generato dal software nel ciclo principale, commutando il GPIO dopo aver verificato che il sistema funziona. NON va generato con un timer hardware in PWM o con un interrupt a tempo autonomo: il timer continua a girare anche con la CPU bloccata e il watchdog non scatterebbe mai.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item M-04 invariata: con R413 DNP e firmware bloccato, impulso su NRST di circa \SI{210}{\milli\second} ogni circa \SI{1,6}{\second}; con R413 montata nessun reset.
+\item In revisione del firmware controllare che F-11 sia rispettata (nessun PWM su PC6).
+\end{itemize}

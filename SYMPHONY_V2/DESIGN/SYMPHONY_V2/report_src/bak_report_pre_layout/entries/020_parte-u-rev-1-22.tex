@@ -1,0 +1,8 @@
+\clearpage
+\section[Parte U – Rev. 1.22 – Etichetta EN\_\allowbreak{}RX\_\allowbreak{}LNA nel foglio MCU]{Parte U – Rev. 1.22 – Etichetta EN\_\allowbreak{}RX\_\allowbreak{}LNA nel foglio MCU}
+
+\subsection[34. UHF.EN\_\allowbreak{}RX\_\allowbreak{}LNA]{34. UHF.EN\_\allowbreak{}RX\_\allowbreak{}LNA}
+
+L'ERC segnalava come scollegata l'etichetta UHF.EN\_\allowbreak{}RX\_\allowbreak{}LNA nel foglio MCU. Il segnale non è un'uscita dell'MCU: lo genera U701 (74AUP2G14) nel foglio UHF invertendo EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW (PC2), così l'LNA è acceso solo quando il commutatore d'antenna è in ricezione. L'uscita dal bus nel foglio MCU era quindi superflua ed è stata tolta (soluzione A, fatta da Brik81).
+
+\textbf{Verifica.} Collegamenti della netlist identici a prima (UHF.EN\_\allowbreak{}RX\_\allowbreak{}LNA = R202, TP703, U701 pin 6). ERC da 114 a \textbf{112}: spariti label\_\allowbreak{}dangling e hier\_\allowbreak{}label\_\allowbreak{}mismatch. Restano 82 lib\_\allowbreak{}symbol\_\allowbreak{}mismatch, 19 pin\_\allowbreak{}to\_\allowbreak{}pin, 6 power\_\allowbreak{}pin\_\allowbreak{}not\_\allowbreak{}driven e 5 isolated\_\allowbreak{}pin\_\allowbreak{}label, che Brik81 lascia così.

@@ -1,0 +1,11 @@
+\clearpage
+\section[Parte Y – Rev. 1.26 – Codici JLC (R-05) e datasheet di U701 (R-22)]{Parte Y – Rev. 1.26 – Codici JLC (R-05) e datasheet di U701 (R-22)}
+
+\subsection[38. Correzioni di BOM e documentazione]{38. Correzioni di BOM e documentazione}
+
+\begin{itemize}
+\item \textbf{R-05.} Tre codici JLC non corrispondevano al valore: R206/\allowbreak{}R207 (4k7 con il codice di un 10 k), R202 (0R con il codice di un 33 k, che in serie a SHUT\_\allowbreak{}DOWN poteva impedire lo spegnimento dell'LNA in TX) e C35 (100n con il codice di un 10 nF). Brik81 li ha corretti in KiCad. Claude Code ha riesportato la netlist e verificato i nuovi codici: C25900, C17168 e C1525.
+\item \textbf{R-22.} Il campo Datasheet di U701 (74AUP2G14, montato come Diodes 74AUP2G14DW-7, C526337) puntava al SN74LVC2G14 di TI. È stato aggiornato al datasheet Diodes 74AUP2G14 (URL verificato: risponde con un PDF), sia nelle tre unità dello schema sia nel simbolo di libreria \code{UHF\_\allowbreak{}LIB/\allowbreak{}SYMBOL/\allowbreak{}IC.\allowbreak{}kicad\_\allowbreak{}sym}, così KiCad non vede differenze fra i due. Il pinout era già lo stesso, quindi nulla cambia nel circuito.
+\end{itemize}
+
+\textbf{Verifica.} Netlist esportata prima e dopo la modifica di R-22: le reti sono identiche e U701 riporta il nuovo datasheet. R-05 e R-22 sono chiusi.

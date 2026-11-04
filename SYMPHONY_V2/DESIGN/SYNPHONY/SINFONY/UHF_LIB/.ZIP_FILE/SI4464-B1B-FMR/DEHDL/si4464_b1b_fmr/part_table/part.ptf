@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'SI4464_B1B_FMR'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Silicon Labs", "SI4464-B1B-FMR" (!) = "", "QFN50P400X400X90-21N-D", "Quad Flat No-Lead", "634-SI4464-B1X-FMR", "https://www.mouser.co.uk/ProductDetail/Silicon-Labs/SI4464-B1B-FMR?qs=v11sNlF%252BHAdMGha0TrMSMw%3D%3D", "RF Transceiver +20 dBm sub-GHz transmitter", "https://www.silabs.com/documents/public/data-sheets/Si4464-63-61-60.pdf", "0.9 mm"
+END_PART
+
+END.

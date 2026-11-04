@@ -1,0 +1,16 @@
+.TCM1-63AX-plus- :1 ;RF Balun 10MHz ~ 6GHz 50 / 50Ohm 6-SMD Module 10MHz ~ 6GHz 9.42dB 2.5dB
+TCM163AX
+*STM T
+*NGS
+*PLB 1="NOT USED_1" 2="PRIMARY" 3="PRIMARY DOT" 4="SECONDARY" 5="NOT USED_2" 6="SECONDARY DOT"
+*MXP 6
+*DFN TCM1-63AX-plus-
+~!Mouser Part Number (139-TCM1-63AX)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Mini-Circuits/TCM1-63AX%2b?qs=xZ%2FP%252Ba9zWqaLvjkaLlAVvw%3D%3D)
+~!Manufacturer_Name (Mini-Circuits)
+~!Manufacturer_Part_Number (TCM1-63AX+)
+~!Link Datasheet (https://www.minicircuits.com/pdfs/TCM1-63AX+.pdf?srsltid=AfmBOopccNdTW2iQ-1Z0eqWfv7bI4WP4UY3kaUh0VYjPlJWZI-4Uwe80)
+~!Height (4.06mm)
+~!3D_Model (TCM1-63AX+)
+TCM1-63AX-plus-
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 6.1!U 

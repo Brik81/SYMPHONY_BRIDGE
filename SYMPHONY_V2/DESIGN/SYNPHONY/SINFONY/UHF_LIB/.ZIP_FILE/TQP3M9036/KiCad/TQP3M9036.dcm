@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TQP3M9036
+D RF Amplifier 400-2000MHz NF.45dB Gain 19dB @.9GHz LNA
+K
+F https://www.qorvo.com/products/d/da005543
+$ENDCMP
+#
+#End Doc Library

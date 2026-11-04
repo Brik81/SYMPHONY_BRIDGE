@@ -1,0 +1,33 @@
+\clearpage
+\section[Parte G – Rev. 1.8 – UART di programmazione su USART1]{Parte G – Rev. 1.8 – UART di programmazione su USART1}
+
+L'obiettivo è programmare l'STM32L562 tramite USB-C (U402 CH340) con il bootloader di sistema. Il bootloader non supporta UART4, mentre supporta USART1 su PA9/\allowbreak{}PA10 (ST AN2606, famiglia STM32L552/\allowbreak{}562).
+
+\subsection[20. U402 su USART1]{20. U402 su USART1 \tg{tagdone}{modificato v1.8}}
+
+\subsubsection[20.1 Situazione e modifica]{20.1 Situazione e modifica}
+
+\begin{itemize}
+\item Prima: U402 TXD (pin 8) e RXD (pin 9) andavano a UART4 = PA1 (pin 15) e PA0 (pin 14). Su queste interfacce il bootloader di sistema non risponde: si poteva programmare solo via SWD.
+\item Brik81 ha spostato le etichette nel foglio MCU su PA9 (USART1\_\allowbreak{}TX, pin 42) e PA10 (USART1\_\allowbreak{}RX, pin 43), con etichetta gerarchica \code{UART1\{UART\}}. Il pin del foglio nello schema principale e il foglio IF erano rimasti \code{UART4\{UART\}}, quindi \textbf{il collegamento era interrotto}. L'ERC lo segnalava così: \textquotedblleft{}Sheet pin UART4\{UART\} has no matching hierarchical label\textquotedblright{}, \textquotedblleft{}Hierarchical label UART1\{UART\} has no matching sheet pin\textquotedblright{}, \textquotedblleft{}U402 pin 9 RXD not driven\textquotedblright{}.
+\item Correzione: rinominati in \code{UART1} i pin dei fogli MCU e IF nello schema principale, e l'etichetta gerarchica e le 4 etichette nel foglio IF.
+\end{itemize}
+
+\subsubsection[20.2 Verifica]{20.2 Verifica}
+
+\begin{itemize}
+\item Netlist con kicad-cli: \textbf{/\allowbreak{}IF/\allowbreak{}UART1.TX = U301 pin 42 (PA9) + U402 pin 9 (RXD)}, \textbf{/\allowbreak{}IF/\allowbreak{}UART1.RX = U301 pin 43 (PA10) + U402 pin 8 (TXD)}. TX e RX sono incrociati correttamente.
+\item ERC: nessuna violazione nuova. Spariscono 7 violazioni: i 2 hier\_\allowbreak{}label\_\allowbreak{}mismatch UART, 4 isolated\_\allowbreak{}pin\_\allowbreak{}label UART e U402 RXD non pilotato. Totale 191.
+\end{itemize}
+
+\subsubsection[20.3 Note]{20.3 Note}
+
+\begin{itemize}
+\item Per entrare nel bootloader: BOOT0 (PH3, R3 /\allowbreak{} TP1) a livello alto al reset, poi STM32CubeProgrammer in modalità UART sulla COM del CH340.
+\item Il firmware deve usare USART1 (PA9/\allowbreak{}PA10, AF7) al posto di UART4 per la console.
+\item Opzionale, non fatto: usare \textasciitilde{}RTS di U402 per comandare BOOT0 e un'altra linea per NRST, così si entra nel bootloader in automatico.
+\end{itemize}
+
+\begin{notebox}
+\textbf{Da fare in KiCad.} Riaprire lo schema (i file sono stati modificati da fuori) e \textbf{aggiornare il PCB da schema}. Le piste esistenti su PA0/\allowbreak{}PA1 verso U402 vanno rifatte su PA9/\allowbreak{}PA10. Si può fare insieme all'aggiornamento della rev. 1.7 (C415…C424).
+\end{notebox}

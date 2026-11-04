@@ -1,0 +1,16 @@
+\clearpage
+\section[Parte O – Rev. 1.16 – Condensatori su IN1 del TPS2121 (S-05)]{Parte O – Rev. 1.16 – Condensatori su IN1 del TPS2121 (S-05)}
+
+Punto S-05 della verifica \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf} (già P13 della rev. 1.4): l'ingresso IN1 del commutatore di alimentazione TPS2121, a cui arriva il 5 V della dock (J708), non aveva nessun condensatore.
+
+\subsection[28. S-05 – Ingresso IN1 del TPS2121]{28. S-05 – Ingresso IN1 del TPS2121 \tg{tagdone}{chiuso v1.16}}
+
+\begin{itemize}
+\item \textbf{Perché servono.} Il 5 V della dock arriva da un connettore e da cavi: senza condensatore vicino al pin, i picchi di corrente quando il TPS2121 commuta o quando parte il convertitore a valle fanno oscillare la tensione per l'induttanza dei cavi, e possono far scattare la protezione da sovratensione (OV1) o la commutazione verso l'USB-C. Lo stesso problema era già risolto su IN2 (VBUS) con C38 10 µF.
+\item \textbf{Scelta.} 10 µF per l'energia, 100 nF per i disturbi veloci. Entrambi \textbf{0402}, come richiesto (minimo spazio).
+\item \textbf{Tensione nominale.} Il 10 µF da 6.3 V in 0402 (il più comune) ha troppo poco margine su un 5 V che arriva da fuori: scelto il \textbf{10 V}. In 0402, con 5 V applicati, la capacità reale di un 10 µF X5R scende a circa 3–4 µF: sufficiente per questo ingresso, che ha a valle C33 22 µF dopo il commutatore.
+\item \textbf{JLCPCB.} C40 (C1525) è un componente \textquotedblleft{}basic\textquotedblright{}. C39 (C315248) è \textquotedblleft{}extended\textquotedblright{}: costo di caricamento di circa 3 \$ per ordine, stock oltre 300 000 pezzi. Alternativa basic: 10 µF 10 V in 0603 (C19702), un po' più grande.
+\item \textbf{Per il layout:} C39 e C40 vicinissimi al pin 7 di IC4, con il 100 nF più vicino e via GND direttamente sul pad.
+\end{itemize}
+
+\textbf{Verifica.} Netlist: rispetto alla rev. 1.15 cambiano solo la rete 5V (aggiunti C39.1, C40.1) e GND (C39.2, C40.2). ERC: 140, le sole 2 nuove sono \textquotedblleft{}lib\_\allowbreak{}symbol\_\allowbreak{}mismatch\textquotedblright{} su C39 e C40, lo stesso avviso grafico di tutti gli altri C\_\allowbreak{}Small del progetto (C38 da cui sono copiati compreso). Nessun errore di collegamento.

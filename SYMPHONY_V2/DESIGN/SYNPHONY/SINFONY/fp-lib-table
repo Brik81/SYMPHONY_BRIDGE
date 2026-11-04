@@ -1,0 +1,10 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "comunication_SALVO")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/comunication_SALVO.pretty")(options "")(descr ""))
+  (lib (name "connector")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/connector.pretty")(options "")(descr ""))
+  (lib (name "IC")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/IC.pretty")(options "")(descr ""))
+  (lib (name "MCU")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/MCU.pretty")(options "")(descr ""))
+  (lib (name "power")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/power.pretty")(options "")(descr ""))
+  (lib (name "RADIO_SALVO")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/RADIO_SALVO.pretty")(options "")(descr ""))
+  (lib (name "MASTER_Dock_FootLib")(type "KiCad")(uri "${KIPRJMOD}/UHF_LIB/FOOTPRINT/MASTER_Dock_FootLib.pretty")(options "")(descr ""))
+)

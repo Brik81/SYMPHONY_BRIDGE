@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "GRF5604"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2025-03-19-12:14:45)
+    (mountForm default
+        (footprintRef "QFN50P300X300X90-17N")
+        (spec "System")
+    )
+)

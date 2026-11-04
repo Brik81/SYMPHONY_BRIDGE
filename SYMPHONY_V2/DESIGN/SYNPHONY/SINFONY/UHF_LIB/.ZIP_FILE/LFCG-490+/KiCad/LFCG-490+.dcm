@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LFCG-490+
+D Signal Conditioning LTCC Low Pass Filter, DC - 490 MHz, 50O
+K
+F https://www.minicircuits.com/pdfs/LFCG-490+.pdf
+$ENDCMP
+#
+#End Doc Library

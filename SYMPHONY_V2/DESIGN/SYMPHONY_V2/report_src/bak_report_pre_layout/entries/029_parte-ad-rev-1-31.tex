@@ -1,0 +1,12 @@
+\clearpage
+\section[Parte AD – Rev. 1.31 – Pin non usati del connettore dock J708 (R-12)]{Parte AD – Rev. 1.31 – Pin non usati del connettore dock J708 (R-12)}
+
+\subsection[43. J708: +12V, +3V3\_\allowbreak{}CONN e RS485]{43. J708: +12V, +3V3\_\allowbreak{}CONN e RS485}
+
+J708 ha il pinout standard del dock. Su questa scheda Brik81 ha deciso: il 3V3 è generato a bordo (foglio POWER), quindi +3V3\_\allowbreak{}CONN non serve, mentre il 5V del dock è collegato; +12V non è usato; RS485.A1/\allowbreak{}B1 per ora non sono usati, e sulla scheda non c'è un transceiver RS485. Le etichette restano sui pin per documentare il pinout. Accanto a J708 c'è ora una nota che lo spiega, così un revisore non li scambia per errori di collegamento.
+
+I flag no-connect non sono stati messi: in KiCad un pin con un no-connect e insieme un'etichetta dà un conflitto, e la nota di testo ottiene lo stesso scopo. Sul PCB questi pad restano semplicemente non collegati.
+
+\textbf{Aggiornamento 02/\allowbreak{}11 – R-12 chiuso.} Anche GPIO\_\allowbreak{}PPS (pin 17), GPIOSX\_\allowbreak{}0 (pin 14) e GPIOSX\_\allowbreak{}2 (pin 13) restano non collegati per decisione di Brik81: \textquotedblleft{}nono lascia stare se non è connessa fregatenene, sono li per avere nomi standard essendo per noi un connettore standard\textquotedblright{}. Le etichette servono solo a mantenere i nomi standard del connettore.
+
+\textbf{Verifica.} Netlist prima e dopo: identica. Il PDF dello schema conferma che la nota è leggibile e non si sovrappone ad altro.

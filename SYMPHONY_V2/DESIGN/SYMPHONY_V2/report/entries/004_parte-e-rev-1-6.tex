@@ -1,0 +1,78 @@
+\clearpage
+\section[Parte E – Rev. 1.6 – Backup dell'RTC con supercondensatore]{Parte E – Rev. 1.6 – Backup dell'RTC con supercondensatore}
+
+Punto S-02 della verifica \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf}: la cella ricaricabile MS621FE sul VBAT dell'RTC non aveva un circuito di ricarica, ed è risultata non acquistabile dall'Italia. Sostituita da un supercondensatore caricato dal 3V3.
+
+\subsection[18. S-02 – VBAT del DS3231M (U404)]{18. S-02 – VBAT del DS3231M (U404) \tg{tagdone}{modificato v1.6}}
+
+\subsubsection[18.1 Situazione prima della modifica]{18.1 Situazione prima della modifica}
+
+\begin{itemize}
+\item BT401 MS621FE-FL11E (Mn-Li ricaricabile, 3 V, 5.5 mAh) collegata direttamente a VBAT (pin 6) di U404 DS3231MZ, senza ricarica. VCC di U404 è sul 3V3.
+\item Senza ricarica la cella resta allo stato di carica della consegna (circuito aperto 2.6–3.4 V), e una volta scesa sotto 2.0 V si degrada. Con il DS3231M che in backup assorbe 2–3 µA, una cella carica dura circa 70 giorni a scheda spenta.
+\item \textbf{Acquisto}: Mouser non la spedisce in Italia (restrizione sulle batterie al litio). TME e Farnell la danno ritirata o fuori produzione. Su JLCPCB tutte le varianti 621 (MS621FE, MS621F, MS621T, MS621R, ML621-TZ1) hanno stock 0.
+\end{itemize}
+
+\begin{notebox}
+\textbf{Correzione dell'analisi.} In una prima analisi (in chat) il VBAT era stato attribuito per errore all'STM32 (0.2–0.5 µA, caricatore interno VBE). Il pin è invece il VBAT del DS3231M: 2 µA tipici e 3 µA max, minimo 2.3 V, nessun caricatore interno. Il dimensionamento qui sotto usa i dati del DS3231M.
+\end{notebox}
+
+\subsubsection[18.2 Soluzione]{18.2 Soluzione}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=0.2756\hsize\raggedright\arraybackslash}X>{\hsize=1.3300\hsize\raggedright\arraybackslash}X>{\hsize=1.0192\hsize\raggedright\arraybackslash}X>{\hsize=1.3752\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{Ref} & \textbf{Componente} & \textbf{Codice JLCPCB (stock al 21/\allowbreak{}10)} & \textbf{Funzione} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{4}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+C415 & CDA CBL5R5334CF-ZJ, 0.33 F, 5.5 V, Ø13.5 × 9.5 mm, passo 5.0 mm, −40…+85 °C & C33990384, Extended, 200 pz, saldatura a onda & Riserva di energia per il VBAT \\\midrule[0.15pt]
+D401 & Diodes Inc. BAT54WS-7-F, Schottky, SOD-323 & C124205, Extended, 8 310 pz & Impedisce che il supercap si scarichi sul 3V3 quando è spento \\\midrule[0.15pt]
+R412 & 1 kΩ 1 \% 0402 & C11702, Basic & Limita la corrente di carica (al massimo circa 3 mA a supercap scarico, τ = R·C ≈ 5.5 min) \\
+\end{xltabular}}
+
+Circuito: \textbf{3V3 → D401 (anodo → catodo) → R412 → nodo VBAT (U404 pin 6 + C415 positivo); C415 negativo → GND.}
+
+\subsubsection[18.3 Funziona con le sole alimentazioni a 3V3?]{18.3 Funziona con le sole alimentazioni a 3V3?}
+
+\begin{itemize}
+\item Il supercap da 5.5 V viene caricato solo fino a circa 3.3 − V\textsubscript{F} ≈ \textbf{3.1–3.2 V}, perché a correnti di µA la V\textsubscript{F} del BAT54 è circa 0.1–0.2 V. Stare sotto la tensione nominale è ammesso, anzi ne allunga la vita. Il valore 5.5 V è solo il massimo ammesso, non il punto di lavoro.
+\item DS3231M: VBAT ammesso 2.3–5.5 V. Con VCC presente (3V3) il chip si alimenta da VCC, perché passa a VBAT solo quando VCC < V\textsubscript{PF} e VCC < VBAT. Siccome VBAT (≈ 3.15 V) è minore di VCC (3.3 V), in funzionamento normale il supercap fornisce solo la perdita di VBAT (nA).
+\item Allo spegnimento del 3V3, D401 è in inversa (circa 3 V) e blocca la scarica verso il rail. Resta la sua perdita inversa: decine di nA a 25 °C, alcune centinaia di nA a caldo.
+\end{itemize}
+
+\subsubsection[18.4 Autonomia]{18.4 Autonomia}
+
+t = C · (V\textsubscript{0} − V\textsubscript{min}) /\allowbreak{} I, con V\textsubscript{min} = 2.3 V (VBAT minimo del DS3231M).
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=1.9030\hsize\raggedright\arraybackslash}X>{\hsize=0.5265\hsize\raggedright\arraybackslash}X>{\hsize=0.5265\hsize\raggedright\arraybackslash}X>{\hsize=1.1450\hsize\raggedright\arraybackslash}X>{\hsize=0.8990\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{Caso} & \textbf{C} & \textbf{V\textsubscript{0}} & \textbf{I totale} & \textbf{Autonomia} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{5}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+Tipico (25 °C) & 0.33 F & 3.15 V & 2.1 µA (DS3231M 2 µA + diodo) & \textbf{circa 37 h} \\\midrule[0.15pt]
+Corrente max del DS3231M & 0.33 F & 3.15 V & 3.3 µA & circa 24 h \\\midrule[0.15pt]
+Peggiore: −20 \% C, rail 3.2 V, corrente max, diodo caldo & 0.26 F & 3.0 V & 3.5 µA & \tg{tagwarn}{circa 14 h} \\
+\end{xltabular}}
+
+Obiettivo richiesto: almeno 15 h. Rispettato in condizioni tipiche con ampio margine, e nel caso più sfavorevole si arriva al limite. Nel calcolo manca l'autoscarica del supercap, che non è indicata nella scheda di selezione CDA: va misurata sul prototipo (caricare, staccare il 3V3, misurare la tensione di VBAT dopo 15 h).
+
+\subsubsection[18.5 Note e vincoli]{18.5 Note e vincoli}
+
+\begin{itemize}
+\item \textbf{Ingombro}: si passa da Ø6.8 × 2.1 mm (MS621) a \textbf{Ø13.5 × 9.5 mm, componente passante}. Il footprint KiCad usato (CP\_\allowbreak{}Radial\_\allowbreak{}D13.0mm\_\allowbreak{}P5.00mm) ha sagoma Ø13.0 mm: il corpo reale sporge di 0.25 mm per lato, quindi va lasciato spazio nel piazzamento.
+\item \textbf{Polarità}: rispettare il + sul footprint (pad quadrato = +).
+\item \textbf{Temperatura}: −40…+85 °C (dato CDA), adatto al range del CubeSat.
+\item \textbf{Firmware}: dopo un'interruzione lunga controllare il flag OSF del DS3231M e risincronizzare l'ora.
+\item Alternative valutate e scartate: Seiko CPH3225A 11 mF (solo 1–1.5 h col DS3231M), DMS3R3224 0.22 F Ø6.8 SMD (circa 14 h nel caso peggiore e stock 0), FDK ML621-TZ1 e Panasonic ML621 (stesse restrizioni di acquisto, Panasonic obsoleta), Panasonic BR-1225A primaria (Ø12.5 mm, acquisto incerto).
+\end{itemize}
+
+\textbf{Verifica.} Netlist rigenerata con kicad-cli: 3V3 → D401 pin 2 (A); Net-(D401-K) = D401 pin 1 + R412 pin 2; Net-(U404-VBAT) = U404 pin 6 + C415 pin 1 + R412 pin 1; C415 pin 2 su GND. BT401 non è più presente. ERC: 189 violazioni come prima, nessuna sui nuovi componenti. L'avviso di annotazione già presente riguarda U701 duplicato, non questa modifica.
+
+\begin{notebox}
+\textbf{Da fare in KiCad.} Ricaricare il foglio MCU senza salvare sopra un'eventuale versione aperta. Poi \textbf{aggiornare il PCB da schema}: sparisce BT401 e compaiono C415, D401 e R412. Piazzare C415 (Ø13.5 mm) e verificare l'altezza di 9.5 mm rispetto al meccanico.
+\end{notebox}

@@ -1,0 +1,8 @@
+\clearpage
+\section[Parte AH – Rev. 1.35 – Pull-up di I2C1 (R-13)]{Parte AH – Rev. 1.35 – Pull-up di I2C1 (R-13)}
+
+\subsection[47. Pull-up di I2C1 tramite JP201]{47. Pull-up di I2C1 tramite JP201}
+
+I2C1 (SCL PB6, SDA PB7) arriva a J203 (pin 3/\allowbreak{}2) e al dock J708 (pin 11/\allowbreak{}9), con D202 come protezione ESD. I pull-up R206/\allowbreak{}R207 da 4k7 vanno al 3V3 solo attraverso JP201, un solder jumper aperto di serie e fuori BOM. Con JP201 aperto il bus non ha pull-up a bordo. Brik81 ha confermato che è lo standard di progetto: sul bus del dock i pull-up li fornisce una sola scheda, e su quella si chiude il jumper; così non si sommano in parallelo i pull-up di tutte le schede. Nessuna nota aggiunta sullo schema, su richiesta di Brik81. R-13 è chiuso.
+
+\textbf{Da ricordare al collaudo:} se la scheda si usa da sola (al banco con un sensore su J203, senza dock) JP201 va chiuso, altrimenti I2C1 non funziona.

@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP FM25V10-G
+D F-RAM,128KB,SPI,40MHz,3V,SOIC8 FM25V10-G Serial-SPI FRAM Memory, 1Mbit, 2  3.6 V 8-Pin SOIC
+K
+F http://www.cypress.com/file/41691/download
+$ENDCMP
+#
+#End Doc Library

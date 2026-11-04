@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "ECS-TXO-20CSMV4-320-AY-TR"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2023-12-04-05:11:32)
+    (mountForm default
+        (footprintRef "ECSTXO20CSMV4320AYTR")
+        (spec "System")
+    )
+)

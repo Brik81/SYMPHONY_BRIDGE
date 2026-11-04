@@ -1,0 +1,6 @@
+\clearpage
+\section[Parte T – Rev. 1.21 – Footprint CPH3225A e pulizia]{Parte T – Rev. 1.21 – Footprint CPH3225A e pulizia}
+
+\subsection[33. Origine del footprint CPH3225A]{33. Origine del footprint CPH3225A}
+
+Il footprint dei supercap C415…C424 aveva l'origine non al centro: il pick-and-place di JLCPCB usa l'origine come centro del componente, quindi i 10 supercap sarebbero stati montati spostati di circa 0.4 mm. Ora pad, corpo, serigrafia e courtyard sono centrati sull'origine (pad a ±1.1 mm). Verificato con l'esportazione SVG del footprint. Netlist ed ERC dello schema invariati (114). Il percorso del modello 3D resta da rendere relativo al progetto (lo fa Brik81).

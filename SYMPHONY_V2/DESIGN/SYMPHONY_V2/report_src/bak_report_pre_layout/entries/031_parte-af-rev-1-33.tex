@@ -1,0 +1,10 @@
+\clearpage
+\section[Parte AF – Rev. 1.33 – TPS2121: pin ST e OV2 (R-16)]{Parte AF – Rev. 1.33 – TPS2121: pin ST e OV2 (R-16)}
+
+\subsection[45. Pin ST e OV2 del TPS2121]{45. Pin ST e OV2 del TPS2121}
+
+\textbf{ST.} È un'uscita open-drain che indica il canale attivo (alta = IN1, cioè il dock; bassa = IN2, cioè la USB). Era lasciata aperta. Non era un guasto, ma TI chiede di collegarla a GND se non serve. Brik81 l'ha collegata in KiCad alla linea GND che va al pin 12. Verifica: nella netlist esportata dopo il salvataggio delle 12:47 l'unica differenza rispetto alla rev 1.31 è IC4/\allowbreak{}9, passato dalla rete unconnected-(IC4-ST-Pad9) a GND. Controllato anche che il salvataggio non abbia toccato le modifiche delle rev 1.25–1.31.
+
+\textbf{OV2.} Il pin a GND disattiva il supervisore di sovratensione sull'ingresso USB. Brik81 ha deciso di lasciarlo così, perché la USB si usa solo a terra con un alimentatore da banco di qualità. Rischio residuo accettato: se un alimentatore guasto desse più di 5,5–6 V sulla USB, la tensione arriverebbe al 5V0, dove ci sono il buck TPSM863257 (che la regge) e la VDD del commutatore HMC349.
+
+La priorità al 5 V del dock (IN1, tramite PR1 con R31/\allowbreak{}R32) è confermata da Brik81 come assoluta e resta invariata. R-16 è chiuso.

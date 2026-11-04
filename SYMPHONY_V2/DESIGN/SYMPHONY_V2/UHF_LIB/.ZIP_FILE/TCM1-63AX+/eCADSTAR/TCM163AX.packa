@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "TCM1-63AX+"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2026-03-23-17:38:14)
+    (mountForm default
+        (footprintRef "TCM163AX")
+        (spec "System")
+    )
+)

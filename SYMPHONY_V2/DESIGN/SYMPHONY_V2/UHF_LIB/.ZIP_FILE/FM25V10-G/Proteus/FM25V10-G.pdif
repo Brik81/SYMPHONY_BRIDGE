@@ -1,0 +1,144 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "FM25V10-G"
+   (description "F-RAM,128KB,SPI,40MHz,3V,SOIC8 FM25V10-G Serial-SPI FRAM Memory, 1Mbit, 2  3.6 V 8-Pin SOIC")
+   (family "ANA")
+   (package "SOIC127P602X173-8N")
+   (attribute "Datasheet Link" "http://www.cypress.com/file/41691/download")
+   (attribute "Geometry.Height" "1.727mm")
+   (attribute "Mouser Part Number" "877-FM25V10-G")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Infineon-Technologies/FM25V10-G?qs=pA5MXup5wxFqKGjf8NeQmw%3D%3D")
+   (attribute "Manufacturer_Name" "Infineon")
+   (attribute "Manufacturer_Part_Number" "FM25V10-G")
+   (gate
+    (symbol "FM25V10-G")
+    (pin "$CS$" 1 PS)
+    (pin "SO" 2 PS)
+    (pin "$WP$" 3 PS)
+    (pin "VSS" 4 PS)
+    (pin "VDD" 8 PS)
+    (pin "$HOLD$" 7 PS)
+    (pin "SCK" 6 PS)
+    (pin "SI" 5 PS)
+   )
+  )
+  (symbol "FM25V10-G"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 900 100) (pt 900 -400) (pt 200 -400) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -200) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -300) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -200) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1100 -300) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "SOIC127P602X173-8N"
+   (units MM)
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -3.75 2.739)
+      (pt 3.75 2.739)
+      (pt 3.75 -2.739)
+      (pt -3.75 -2.739)
+      (pt -3.75 2.739))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -1.949 2.444)
+      (pt 1.949 2.444)
+      (pt 1.949 -2.444)
+      (pt -1.949 -2.444)
+      (pt -1.949 2.444))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -1.949 1.174)
+      (pt -0.679 2.444))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt -1.599 2.444)
+      (pt 1.599 2.444)
+      (pt 1.599 -2.444)
+      (pt -1.599 -2.444)
+      (pt -1.599 2.444))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -3.5 2.58)
+      (pt -1.949 2.58))))
+   (leg 1 (pt -2.725 1.905) (padstack 0))
+   (leg 2 (pt -2.725 0.635) (padstack 0))
+   (leg 3 (pt -2.725 -0.635) (padstack 0))
+   (leg 4 (pt -2.725 -1.905) (padstack 0))
+   (leg 5 (pt 2.725 -1.905) (padstack 0))
+   (leg 6 (pt 2.725 -0.635) (padstack 0))
+   (leg 7 (pt 2.725 0.635) (padstack 0))
+   (leg 8 (pt 2.725 1.905) (padstack 0))
+   (padstack 0
+    (plated false)
+    (pad (layer TCOP) (rectf 0.65 1.551 0 0 0))
+   )
+   (model "FM25V10-G.stp"
+    (euler 0 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

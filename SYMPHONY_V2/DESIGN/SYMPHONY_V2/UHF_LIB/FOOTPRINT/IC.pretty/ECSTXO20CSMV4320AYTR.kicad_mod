@@ -1,0 +1,259 @@
+(footprint "ECSTXO20CSMV4320AYTR"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "ECS-TXO-20CSMV4-320-AY-TR-2")
+	(tags "Crystal or Oscillator")
+	(property "Reference" "Y**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "e4f3f8fe-d49c-4bda-87b0-e6bc6b677f53")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "ECSTXO20CSMV4320AYTR"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "89e568fa-7746-4eb0-8c08-29114d840456")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "723af9cd-a8ed-4620-8df0-69081e12f0a7")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6392ad66-94a9-4879-a6d0-803cb604faf6")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -1 1.4)
+		(end -1 1.4)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "d8531ded-933b-4042-b54f-29ccfd968c3e")
+	)
+	(fp_line
+		(start -1 1.5)
+		(end -1 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "12492b0f-a39d-46df-800f-1ef9cf159419")
+	)
+	(fp_line
+		(start -1 1.5)
+		(end -1 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "412530cf-2bae-4100-9ef9-98c0fb61c4d8")
+	)
+	(fp_line
+		(start -0.2 -0.8)
+		(end 0.2 -0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4637ab4e-d193-4184-9ba2-c284084b7591")
+	)
+	(fp_line
+		(start -0.2 0.8)
+		(end 0.2 0.8)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "084898c6-b3da-42af-921c-803ec60b128d")
+	)
+	(fp_arc
+		(start -1 1.4)
+		(mid -0.95 1.45)
+		(end -1 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "51acc3eb-8385-4a3b-9a3c-db350a2ef9ad")
+	)
+	(fp_arc
+		(start -1 1.4)
+		(mid -0.95 1.45)
+		(end -1 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "da6388b4-0881-41eb-998f-7a4aacb4a4ac")
+	)
+	(fp_arc
+		(start -1 1.5)
+		(mid -1.05 1.45)
+		(end -1 1.4)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "8ade11ac-b234-4020-8661-ecdcfcf0aeb2")
+	)
+	(fp_line
+		(start -2.225 -2.025)
+		(end 2.225 -2.025)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "a00ba856-88ac-42dd-babd-1fd5afb6a226")
+	)
+	(fp_line
+		(start -2.225 2.025)
+		(end -2.225 -2.025)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "07f2f68c-467d-45f9-9b47-9554cf28aae8")
+	)
+	(fp_line
+		(start -1 -0.8)
+		(end -1 0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "b82cc4b6-db8d-4e0e-b270-55ad95589988")
+	)
+	(fp_line
+		(start -1 0.8)
+		(end 1 0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "3bd31e1f-7881-497d-8230-97d17d6bc9da")
+	)
+	(fp_line
+		(start 1 -0.8)
+		(end -1 -0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "eb0a13f7-e5d2-4561-976e-1d5d99d2538d")
+	)
+	(fp_line
+		(start 1 0.8)
+		(end 1 -0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "680a6a57-233b-4dcd-9fa2-e61f15500d3d")
+	)
+	(fp_line
+		(start 2.225 -2.025)
+		(end 2.225 2.025)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "1b541226-cbd3-49ab-849d-ddec94ed6fd2")
+	)
+	(fp_line
+		(start 2.225 2.025)
+		(end -2.225 2.025)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+		(uuid "987fa911-c629-49ac-8010-12bc01fc31a2")
+	)
+	(pad "1" smd rect
+		(at -0.91 0.613)
+		(size 0.63 0.825)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "762c3648-3ec5-4ba8-8224-e4640a9c8ea9")
+	)
+	(pad "2" smd rect
+		(at 0.91 0.613)
+		(size 0.63 0.825)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "7867159e-5bda-4f07-905e-af4ca6d9fa82")
+	)
+	(pad "3" smd rect
+		(at 0.91 -0.613)
+		(size 0.63 0.825)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "930933bb-c27b-4efb-a847-4d3548d89e06")
+	)
+	(pad "4" smd rect
+		(at -0.91 -0.613)
+		(size 0.63 0.825)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "bf4edac3-8be6-42de-8f0b-e27a44602a7f")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/UHF_LIB/3D/ECS-TXO-20CSMV4-320-AY-TR.stp"
+		(offset
+			(xyz 0 0 -0.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -0)
+		)
+	)
+)

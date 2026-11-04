@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'ECS_TXO_20CSMV4_320_AY_TR'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "FARNELL_PART_NUMBER", "FARNELL_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "ECS", "ECS-TXO-20CSMV4-320-AY-TR" (!) = "", "ECSTXO20CSMV4320AYTR", "Other", "", "", "XTAL OSC TCXO 32.0000MHZ CLPSW", "", "0.8 mm"
+END_PART
+
+END.

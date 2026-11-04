@@ -1,0 +1,13 @@
+\clearpage
+\section[Parte W – Rev. 1.24 – Revisione indipendente del 27/\allowbreak{}10: R-01 e R-02]{Parte W – Rev. 1.24 – Revisione indipendente del 27/\allowbreak{}10: R-01 e R-02}
+
+\subsection[36. Correzione dei codici JLC di U301 e IC1/\allowbreak{}IC5]{36. Correzione dei codici JLC di U301 e IC1/\allowbreak{}IC5}
+
+La revisione indipendente del 27/\allowbreak{}10/\allowbreak{}2026 (file \code{SYMPHONY\_\allowbreak{}V2\_\allowbreak{}revisione\_\allowbreak{}indipendente\_\allowbreak{}2026-10-27.\allowbreak{}pdf} nella cartella DESIGN, fatta senza leggere questo registro) ha trovato due codici JLC che, montati, avrebbero reso inutilizzabile la scheda. Brik81 li ha corretti in KiCad. Claude Code ha riesportato la netlist con kicad-cli e controllato i nuovi codici sul catalogo LCSC.
+
+\begin{itemize}
+\item \textbf{R-01 – U301.} Il simbolo è STM32L562RETxP (SMPS esterno, VDD12 sui pin 30 e 62), ma il codice era di un STM32L562RET6, che ha un pinout diverso dal pin 25 al 30 e dal 54 al 62 (I2C1, I2C2, SWO e BOOT0 su pin sbagliati, PH3-BOOT0 flottante). Il nuovo codice C1236664 è STM32L562RET6P. \tg{tagwarn}{Attenzione}: al 27/\allowbreak{}10 LCSC lo dà a stock 0, quindi va verificata la disponibilità prima dell'ordine.
+\item \textbf{R-02 – IC1, IC5.} Il codice era di un TLV9001UIDBVR: altro modello, con il pinout \textquotedblleft{}U\textquotedblright{} in cui OUT è sul pin 4. Il nuovo C1849429 è TLV9051IDBVR, con lo stesso pinout DBV del simbolo.
+\end{itemize}
+
+\textbf{Verifica.} Netlist esportata dopo il salvataggio delle 14:14 e confrontata con quella della revisione indipendente: cambiano solo i campi JLCPCB Parts di U301, IC1 e IC5. Simboli, footprint, valori e collegamenti sono identici. R-01 e R-02 sono chiusi.

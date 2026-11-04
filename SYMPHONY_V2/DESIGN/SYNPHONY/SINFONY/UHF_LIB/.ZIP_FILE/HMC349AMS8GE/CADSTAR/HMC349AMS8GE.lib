@@ -1,0 +1,16 @@
+.HMC349AMS8GE :1 ;High Isolation, Nonreflective, GaAs, SPDT Switch,100 MHz to 4 GHz
+SOP65P490X110-9N
+*STM IC
+*NGS
+*PLB 1="VDD" 2="CTRL" 3="RFC" 4="EN" 5="RF1" 6="GND_1" 7="GND_2" 8="RF2" 9="EP"
+*MXP 9
+*DFN HMC349AMS8GE
+~!Mouser Part Number (584-HMC349AMS8GE)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Analog-Devices/HMC349AMS8GE?qs=pceeu5JH%2FH9BjxXZlXR05g%3D%3D)
+~!Manufacturer_Name (Analog Devices)
+~!Manufacturer_Part_Number (HMC349AMS8GE)
+~!Link Datasheet (https://www.analog.com/HMC349AMS8G/datasheet)
+~!Height (1.1mm)
+~!3D_Model (HMC349AMS8GE)
+HMC349AMS8GE
+1.1!U 2.1!U 3.1!U 4.1!U 9.1!U 8.1!U 7.1!U 6.1!U 5.1!U 

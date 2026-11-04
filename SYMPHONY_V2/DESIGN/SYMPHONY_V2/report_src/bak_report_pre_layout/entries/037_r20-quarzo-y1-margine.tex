@@ -1,0 +1,50 @@
+\clearpage
+\section[Rev. 1.39 -- R-20: margine di oscillazione del quarzo Y1]{Rev. 1.39 \textendash{} R-20: margine di oscillazione del quarzo Y1, chiuso senza modifiche}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.39.
+
+\subsection{Titolo}
+R-20: margine di oscillazione del quarzo Y1, chiuso senza modifiche.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio MCU (\code{MCU.kicad\_sch}).
+\item \code{Y1}: quarzo \SI{24}{\mega\hertz} (LCSC C70583, YXC X322524MMB4SI): $C_L$ \SI{10}{\pico\farad}, ESR max \SI{50}{\ohm}, $\pm$\SI{10}{ppm}, footprint \code{Crystal\_SMD\_3225-4Pin\_3.2x2.5mm}.
+\item \code{C1} e \code{C2}: \SI{10}{\pico\farad} 0402 (C76946).
+\item \code{R1}: \SI{0}{\ohm} in serie su \code{OSC\_OUT}.
+\item \code{U301} STM32L562, pin PH0 (rete \code{HSE\_IN}).
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Nulla sullo schema.
+
+\subsection{Motivazione e calcoli}
+Carico: \SI{10}{\pico\farad} in serie con \SI{10}{\pico\farad} = \SI{5}{\pico\farad}, più parassite \SIrange{3}{5}{\pico\farad} = \SIrange{8}{10}{\pico\farad}, in linea con $C_L$ = \SI{10}{\pico\farad} del quarzo (al massimo qualche ppm di errore positivo).
+
+Margine di guadagno secondo ST AN2867: $g_{m,crit} = 4\cdot \mathrm{ESR}\cdot(2\pi f)^2\cdot(C_0+C_L)^2$, con ESR \SI{50}{\ohm}, $f$ = \SI{24}{\mega\hertz}, $C_L$ = \SI{10}{\pico\farad}. Limite STM32L562: $G_{m\_crit\_max}$ = \SI{1,5}{\milli\ampere\per\volt} (datasheet DS12736, Tab.\,88, p.\,220).
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}rrr@{}}
+\toprule
+\textbf{$C_0$ del quarzo} & \textbf{$g_{m,crit}$} & \textbf{Limite $G_{m\_crit\_max}$}\\
+\midrule
+\SI{3}{\pico\farad} & $\approx$ \SI{0,77}{\milli\ampere\per\volt} & \SI{1,5}{\milli\ampere\per\volt}\\
+\SI{5}{\pico\farad} & $\approx$ \SI{1,02}{\milli\ampere\per\volt} & \SI{1,5}{\milli\ampere\per\volt}\\
+\bottomrule
+\end{tabular}}
+
+Il quarzo è sotto il limite in entrambi i casi.
+
+Approvazione di Brik81 (03/11/2026): \textquotedblleft{}R-20 chiudilo senza modifiche, next\textquotedblright{}.
+
+\subsection{Impatti e criticità}
+\begin{notebox}
+Il $C_0$ del quarzo \textbf{non} è verificato sul datasheet YXC (assunto \SIrange{3}{5}{\pico\farad}, tipico per un 3225). Il criterio \textquotedblleft{}gm\_crit < Gm\_crit\_max con margine già incluso\textquotedblright{} delle versioni recenti di AN2867 non è stato ricontrollato sul documento. Il quarzo C70583 è a stock 0 su LCSC (vedi R-21).
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item In collaudo controllare l'avvio dell'HSE a freddo e a caldo e misurare la frequenza (errore atteso entro qualche ppm).
+\item Nota firmware F-06: \code{HSE\_VALUE = 24000000}.
+\end{itemize}

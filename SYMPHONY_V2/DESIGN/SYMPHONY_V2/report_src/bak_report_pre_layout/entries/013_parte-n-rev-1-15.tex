@@ -1,0 +1,23 @@
+\clearpage
+\section[Parte N – Rev. 1.15 – Quarzo HSE Y1 (S-04)]{Parte N – Rev. 1.15 – Quarzo HSE Y1 (S-04)}
+
+Punto S-04 della verifica \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf}: il valore di Y1 non indicava frequenza e capacità di carico. Il circuito era già corretto: è stata corretta solo la documentazione sullo schema.
+
+\subsection[27. S-04 – Quarzo Y1 dell'STM32L562]{27. S-04 – Quarzo Y1 dell'STM32L562 \tg{tagdone}{chiuso v1.15}}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1659}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.7485}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0855}{24pt}{0pt}}}
+\toprule
+\textbf{Controllo} & \textbf{Calcolo /\allowbreak{} dato} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Frequenza & 24 MHz su PH0/\allowbreak{}PH1 (HSE). L'HSE dell'STM32L562 accetta 4–48 MHz & OK \\\midrule[0.15pt]
+C1, C2 & C = 2·(C\textsubscript{L} − C\textsubscript{s}) = 2·(10 − 5) = 10 pF, con C\textsubscript{s} ≈ 5 pF stimata. Montati 10 pF C0G 0402 (C76946). Nota col calcolo già presente sul foglio & OK \\\midrule[0.15pt]
+R1 & 0 Ω, resistenza serie per limitare il drive level, aumentabile sul prototipo & OK \\\midrule[0.15pt]
+Margine d'innesco & g\textsubscript{m,crit} = 4·ESR·(2πf)²·(C0 + C\textsubscript{L})² = 4·50·(2π·24 MHz)²·(3 + 10 pF)² ≈ 0.77 mA/\allowbreak{}V, con C0 ≈ 3 pF stimata (da confermare sul datasheet YXC). Limite STM32L5: 1.5 mA/\allowbreak{}V. Margine circa 2 & OK \\
+\end{longtable}}
+
+\textbf{Per il firmware:} nel progetto STM32 impostare \code{HSE\_\allowbreak{}VALUE = 24000000}. Con un valore diverso UART, USB e timer partono alla frequenza sbagliata.
+
+\textbf{Verifica.} Netlist identica alla rev. 1.14. ERC identico (138, nessuna nuova).

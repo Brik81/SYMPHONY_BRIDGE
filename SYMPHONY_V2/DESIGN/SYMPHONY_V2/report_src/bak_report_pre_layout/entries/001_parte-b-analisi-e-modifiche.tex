@@ -1,0 +1,458 @@
+\clearpage
+\section[Parte B – Analisi e modifiche del 19/\allowbreak{}10/\allowbreak{}2026 (rev. 0.1–1.3)]{Parte B – Analisi e modifiche del 19/\allowbreak{}10/\allowbreak{}2026 (rev. 0.1–1.3)}
+
+{\small Contenuto originale delle revisioni 0.1–1.3, lasciato com'era per la cronologia. Gli stati aggiornati sono nei registri (Parte A) e nella Parte C.}
+
+\subsection[0. Sommario]{0. Sommario}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.0392}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3211}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0644}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.5753}{32pt}{0pt}}}
+\toprule
+\textbf{\#} & \textbf{Argomento} & \textbf{Stato} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+1 & Alimentazione (DNP esclusi) & \tg{tagdone}{modificato v1.1} & Rail 3V3 OK. Partitori del TPS2121 corretti in v1.1 (R29 = 22k, R31 = 10k), §1.3 \\\midrule[0.15pt]
+2 & TCXO su XIN del Si4464 & \tg{tagdone}{modificato v1.0} & TCXO spostato da XOUT a XIN, XOUT con no-connect \\\midrule[0.15pt]
+3 & Match TX Si4464 (choke DC + rete) & \tg{tagdone}{modificato v1.0} & Rete class-E da AN648 Tab. 2 @434 MHz \\\midrule[0.15pt]
+4 & HMC349 alimentato a 5V0 & \tg{tagdone}{modificato v1.1} & VDD dell'HMC349 ora su 5V0; vincoli firmware in §4 \\\midrule[0.15pt]
+5 & APC del PA /\allowbreak{} gate di Q701 & \tg{tagdone}{modificato v1.0} & R703 = 0 Ω, R242 = 33 Ω, R243 = 240 Ω \\\midrule[0.15pt]
+6 & Simbolo di Q701 & \tg{tagdone}{modificato v1.1} & Simbolo P-MOS Q\_\allowbreak{}PMOS\_\allowbreak{}GSD, stesso pinout \\\midrule[0.15pt]
+M & Modifiche minori & \tg{tagdone}{modificato v1.0} & Tutte tranne SDN del Si4464 (da discutere) \\\midrule[0.15pt]
+9 & Passivi di IC2 & \tg{tagdone}{modificato v1.2} & Quasi tutti necessari (rete Qorvo). Rimossi R244 e C253; R240/\allowbreak{}R241 tenuti per il prototipo \\\midrule[0.15pt]
+10 & Verifica: codici JLCPCB, pad, tensione ≥ 5×, Murata & \tg{tagdone}{modificato v1.3} & Corretti in rev. 1.3; restano aperti L242 e J201. Situazione v1.1: codici errati su 5 posizioni (C204 è un induttore, C230 è 33 pF, C206/\allowbreak{}C207/\allowbreak{}C208 hanno pad sbagliato), 5 posizioni sotto la regola 5×, 4 non Murata, 38 posizioni senza codice. Proposte in §10 \\\midrule[0.15pt]
+13 & Verifica completa, foglio per foglio (rev. 1.4) & \tg{tagcrit}{errori trovati v1.4} & 3 errori critici (IC501 a specchio, VDD12 su 3V3, C1/\allowbreak{}C2 10 nF), LNA che non si spegne, foglio SENSORS incompleto. Proposte P8–P17 \\\midrule[0.15pt]
+14 & Conferma finale dimensionamento e collegamenti & \tg{tagwarn}{parziale} & Confermati radice, POWER, MOUNTING\_\allowbreak{}HOLES; UHF con riserva; IF, MCU e SENSORS non confermati \\
+\end{longtable}}
+
+\subsection[1. Verifica alimentazione (DNP esclusi)]{1. Verifica alimentazione (DNP esclusi)}
+
+Verifica fatta sul netlist esportato con kicad-cli, togliendo tutti i componenti DNP (IC401, IC601, R404, R405, R601, C402–C406, C408, C409, C601, TP601, TP602 e gli avanzi del foglio UHF).
+
+\subsubsection[1.1 Rail 3V3 – OK]{1.1 Rail 3V3 – OK}
+
+\begin{itemize}
+\item \textbf{Sorgente unica:} IC3 TPSM863257 (buck 3 A) alimentato da 5V0. Con IC401/\allowbreak{}IC601 DNP nessun altro regolatore pilota il 3V3, quindi il corto IN/\allowbreak{}OUT di IC401 e l'uscita a 5 V di IC601 non sono più un problema.
+\item \textbf{Tensione d'uscita:} V\textsubscript{FB} = 0.600 V (594–606 mV). Partitore R47 = 135 k /\allowbreak{} R48 = 30 k: V\textsubscript{OUT} = 0.6 · (1 + 135/\allowbreak{}30) = \textbf{3.30 V} (±1 \% più la tolleranza delle resistenze). C37 22 pF è il feed-forward.
+\item \textbf{Abilitazione:} EN pilotato da \code{/\allowbreak{}IF/\allowbreak{}EN\_\allowbreak{}DOCK} (J708.15) tramite R46 10 k. EN ha un pull-down interno da 2 MΩ, quindi \textbf{senza dock il 3V3 resta spento}. Sembra voluto (commit \textquotedblleft{}EN\_\allowbreak{}DOCK\textquotedblright{}); lo segnalo solo per conferma.
+\item \textbf{Budget di corrente sul 3V3:} PA QPA9510 circa 1.0–1.2 A a piena potenza (3.3 V), Si4464 circa 85 mA in TX a +20 dBm, LNA 45 mA, più MCU e periferiche. Totale circa 1.4 A, contro 3 A disponibili dal buck (OCL di valle 3.1 A min): OK.
+\item \textbf{Lato 5V0:} circa 1.4 A · 3.3 V /\allowbreak{} (5 V · 0.88) ≈ 1.05 A. Il limite di IC4 TPS2121 con R44 = 33 k vale I\textsubscript{LM} = 65.2 /\allowbreak{} 33\textsuperscript{0.861} ≈ \textbf{3.2 A}: OK.
+\end{itemize}
+
+\subsubsection[1.2 Attenzioni (non sono errori)]{1.2 Attenzioni (non sono errori)}
+
+\begin{itemize}
+\item \textbf{Picchi del PA sul 3V3:} il 3V3 è condiviso con MCU, Si4464 e TCXO, e in TX il PA chiede impulsi da circa 1.2 A. Ho portato i bulk del PA a 10 µF 0805 (§M). In layout: alimentazione del PA con pista dedicata e larga dal buck, separata da quella di MCU e radio.
+\item \textbf{Alimentazione da USB (VBUS):} una porta USB 2.0 senza advertisement Type-C garantisce 500 mA. In TX a piena potenza servono circa 1 A a 5 V, quindi da porta \textquotedblleft{}legacy\textquotedblright{} il TX al massimo può far cadere l'alimentazione. Da dock (IN1) non c'è problema, una volta corretto il §1.3.
+\end{itemize}
+
+\subsubsection[1.3 PROBLEMA TROVATO – partitori OV1 /\allowbreak{} PR1 del TPS2121 (IC4)]{1.3 PROBLEMA TROVATO – partitori OV1 /\allowbreak{} PR1 del TPS2121 (IC4) \tg{tagdone}{modificato v1.1}}
+
+\begin{notebox}
+\textbf{Stato attuale} (identico anche nel commit precedente):
+\begin{itemize}
+\item OV1: R29 = 10 k (da 5V a OV1), R30 = 4.7 k (verso GND). Soglia di sovratensione su IN1 = 1.06 V · (10 + 4.7)/\allowbreak{}4.7 = \textbf{3.32 V}.
+\item Con 5 V dalla dock, OV1 = 5 · 4.7/\allowbreak{}14.7 = 1.60 V > V\textsubscript{REF} 1.06 V, quindi il TPS2121 vede IN1 in sovratensione e \textbf{non usa mai la dock}: la scheda si alimenta solo da USB.
+\item PR1: R31 = 22 k, R32 = 4.7 k, quindi PR1 = 0.88 V < 1.06 V e la priorità a IN1 non è attiva.
+\end{itemize}
+ \textbf{Proposta:} scambiare i valori di R29 e R31 (\textbf{R29 = 22 k, R31 = 10 k}), che sembra essere stato l'intento originale:
+\begin{itemize}
+\item OV1: soglia = 1.06 · 26.7/\allowbreak{}4.7 = \textbf{6.02 V}, coerente con l'esempio TI (6.08 V per un ingresso a 5 V).
+\item PR1: 5 · 4.7/\allowbreak{}14.7 = 1.60 V > 1.06 V, quindi IN1 (dock) ha priorità quando supera circa 3.3 V; altrimenti passa a VBUS.
+\end{itemize}
+ In rev. 1.0 il foglio POWER non era stato modificato perché non era tra le modifiche autorizzate.
+\end{notebox}
+
+\begin{okbox}
+\textbf{Aggiornamento rev. 1.1 (approvato da Brik81, 19/\allowbreak{}10/\allowbreak{}2026 15:49; eseguito 15:52):} R29 = 22k (jlc C25547), R31 = 10k (jlc C71617). Soglia OV su IN1 = 6.02 V, priorità alla dock sopra circa 3.3 V. Netlist verificata: OV1 = R29/\allowbreak{}R30, PR1 = R31/\allowbreak{}R32 (modifiche 1.1-01, 1.1-02).
+\end{okbox}
+
+{\small Riferimenti: TI TPS2121 datasheet (SLVSEA3F) – V\textsubscript{REF} 1.06 V (§7.5), §9.3.5 OVx, §10.2.4.2 \textquotedblleft{}Selecting OVx Resistors\textquotedblright{} (eq. 6–7), tabella di priorità §9.4, eq. 2 (I\textsubscript{LM}). TI TPSM863257 datasheet – V\textsubscript{FB} 600 mV, R\textsubscript{EN} 2 MΩ, V\textsubscript{EN(ON)} 1.20 V.}
+
+\subsection[2. TCXO collegato a XIN del Si4464]{2. TCXO collegato a XIN del Si4464 \tg{tagdone}{modificato v1.0}}
+
+\textbf{Modifica:} la rete Y201 → C204 (10 nF) → R201 (33 Ω), con TP701, ora arriva al pin \textbf{17 XIN}. Il pin \textbf{16 XOUT} è lasciato flottante con un marker no-connect (spostato da XIN a XOUT).
+
+\textbf{Motivo:} il datasheet indica che una sorgente esterna o un TCXO va su XIN, accoppiata in AC se lo swing è 0.6–1.4 Vpp; XOUT va lasciato flottante. Prima il TCXO pilotava XOUT, quindi il Si4464 non avrebbe avuto clock.
+
+\textbf{Firmware:} chiamare \code{POWER\_\allowbreak{}UP} con l'opzione TCXO e impostare il banco capacità XO (\code{GLOBAL\_\allowbreak{}XO\_\allowbreak{}TUNE}) a 0.
+
+{\small Riferimenti: Si4464/\allowbreak{}63/\allowbreak{}61/\allowbreak{}60 datasheet rev 1.4, §5.4 \textquotedblleft{}Crystal Oscillator\textquotedblright{} (p. 38) e tabella pin (pin 16 XOUT, pin 17 XIN).}
+
+\subsection[3. Match TX del Si4464]{3. Match TX del Si4464 \tg{tagdone}{modificato v1.0}}
+
+\textbf{Motivo:} il pin TX è open-drain e il datasheet dice: \textit{\textquotedblleft{}the L-C match must supply VDD (+3.3 VDC nominal) to this pin\textquotedblright{}}. Nello schema non c'era alcun choke verso VDD. Inoltre la rete precedente (C702 2p, L702 3.2n, L701 3.2n verso GND) a 433 MHz caricava il TX con circa 1.5 − j166 Ω, con una trasmissione calcolata di circa −31 dB.
+
+\textbf{Modifica:} adottata la rete \textbf{class-E \textquotedblleft{}Match\textquotedblright{}} di Silicon Labs AN648, Tabella 2 (split TX/\allowbreak{}RX, V\textsubscript{DD} = 3.3 V), riga 434 MHz. È la stessa topologia della tabella \textquotedblleft{}RETE INPUT MATCHING\textquotedblright{} già presente nel foglio (C\_\allowbreak{}DC, L\_\allowbreak{}choke, L\_\allowbreak{}s, C\_\allowbreak{}s), con i valori ufficiali.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.2119}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1064}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2432}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1537}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2847}{40pt}{0pt}}}
+\toprule
+\textbf{Elemento AN648} & \textbf{Valore AN648} & \textbf{Ref. schema} & \textbf{Prima} & \textbf{Dopo} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Lchoke (VDD → pin TX) & 220 nH & L703 (riattivato, tolto DNP e spostato) & 68 n, DNP, scollegato & \textbf{220 n} 0805 wire-wound (es. Coilcraft 0805CS-221XJ, 400 mA, SRF 820 MHz) \\\midrule[0.15pt]
+C0 (serie) & 9.1 pF & C702 & 2 p & \textbf{9.1 p} C0G \\\midrule[0.15pt]
+L0 (serie) & 33 nH & L702 & 3.2 n & \textbf{33 n} wire-wound \\\midrule[0.15pt]
+CM (parallelo) & 15 pF & C704 (ex L701, cambiato in condensatore) & L 3.2 n & \textbf{15 p} C0G 0402 \\\midrule[0.15pt]
+DC block verso il pad & – & C701 & 33 p & \textbf{100 p} (−j3.7 Ω, trasparente) \\
+\end{longtable}}
+
+\begin{itemize}
+\item Il \textbf{filtro passa-basso} di AN648 (LM1/\allowbreak{}CM1/\allowbreak{}LM2/\allowbreak{}CM2/\allowbreak{}LM3) \textbf{non è stato aggiunto}: qui il Si4464 non pilota l'antenna ma il pad e il PA, e le armoniche finali vengono attenuate da FL201 (LFCG-490+) a valle del PA. Se le misure di spurie lo richiedessero, va inserito tra C704 e C701.
+\item \textbf{Livelli di potenza:} il pad R245/\allowbreak{}R246/\allowbreak{}R247‖R248 attenua 10.8 dB. Con il Si4464 al massimo (+20 dBm) al PA arrivano circa +9.2 dBm, sotto il massimo assoluto del QPA9510 (+13 dBm). Per avere circa 32 dBm in uscita (guadagno circa 42 dB) bastano circa −10 dBm all'ingresso del PA, cioè circa +1 dBm dal Si4464: in firmware conviene limitare \code{PA\_\allowbreak{}PWR\_\allowbreak{}LVL}.
+\item Come indica AN648, i valori presuppongono induttanze wire-wound (Coilcraft 0402HP /\allowbreak{} Murata LQW15A-LQW18A) e vanno verificati in laboratorio, perché il layout influisce.
+\end{itemize}
+
+{\small Riferimenti: Si4464 datasheet rev 1.4, tabella pin (pin 4 TX); Silicon Labs AN648 \textquotedblleft{}Si4063/\allowbreak{}Si4463/\allowbreak{}64/\allowbreak{}68 TX Matching\textquotedblright{} rev 0.3, §2.1, §2.3.1, Tabella 2 e Figura 1; QPA9510 datasheet (RF input abs max +13 dBm).}
+
+\subsection[4. HMC349 alimentato da 5V0 – verifica]{4. HMC349 alimentato da 5V0 – verifica \tg{tagdone}{modificato v1.1}}
+
+\textbf{Risposta: sì, l'HMC349AMS8G accetta 5 V su VDD}, e il controllo resta compatibile con la logica a 3.3 V.
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.5827}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1836}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2337}{24pt}{0pt}}}
+\toprule
+\textbf{Parametro (datasheet rev F)} & \textbf{VDD = 3 V} & \textbf{VDD = 5 V} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Campo VDD consentito & \multicolumn{2}{>{\raggedright\arraybackslash}p{\cw{0.4173}{24pt}{8pt}}}{3 – 5 V (massimo assoluto 7 V)} \\\midrule[0.15pt]
+Ingressi CTRL/\allowbreak{}EN: V\textsubscript{INH} /\allowbreak{} V\textsubscript{INL} & \multicolumn{2}{>{\raggedright\arraybackslash}p{\cw{0.4173}{24pt}{8pt}}}{V\textsubscript{INH} 2 V min (fino a VDD), V\textsubscript{INL} 0.8 V max: il GPIO a 3.3 V e l'uscita del 74AUP vanno bene anche con VDD = 5 V} \\\midrule[0.15pt]
+P0.1dB & 25 dBm & 31 dBm \\\midrule[0.15pt]
+P1dB & 28 dBm & 34 dBm tip. (30 min) \\\midrule[0.15pt]
+Massimo assoluto RF, percorso attivo, T\textsubscript{case} 85 °C & 31.5 dBm & 33.5 dBm \\\midrule[0.15pt]
+Massimo assoluto RF, percorso attivo, T\textsubscript{case} 125 °C & 26 dBm & 28 dBm \\\midrule[0.15pt]
+Hot switching (85 °C) & \multicolumn{2}{>{\raggedright\arraybackslash}p{\cw{0.4173}{24pt}{8pt}}}{30 dBm} \\
+\end{longtable}}
+
+\begin{itemize}
+\item \textbf{Il problema di oggi:} a 3.3 V il PA (circa 31–32 dBm dopo FL201) supera la P1dB dello switch (28 dBm) ed è al limite del massimo assoluto (31.5 dBm).
+\item \textbf{Con VDD = 5V0:} P1dB circa 34 dBm (30 min) e massimo assoluto 33.5 dBm, quindi il margine c'è. Restano due vincoli:
+\begin{itemize}
+\item il \textbf{valore minimo garantito} di P1dB è 30 dBm: per stare sicuri in ogni condizione, conviene limitare l'uscita del PA a circa 30 dBm con l'APC o con \code{PA\_\allowbreak{}PWR\_\allowbreak{}LVL};
+\item \textbf{non commutare lo switch con RF presente} (hot switching 30 dBm): in firmware commutare CTRL prima di accendere il PA e spegnere il PA prima di tornare in RX.
+\end{itemize}
+\item \textbf{Modifica da fare se approvi:} pin 1 (VDD) di IC202 sul simbolo 5V0 invece di 3V3, con 100 nF vicino al pin. 5V0 è l'uscita del TPS2121, sempre presente quando la scheda è alimentata. In rev. 1.0 non era stato modificato nulla.
+\item \textbf{Alternativa:} uno switch di potenza più alta (in libreria c'è già l'HMC784A, da verificare a datasheet).
+\end{itemize}
+
+\begin{okbox}
+\textbf{Aggiornamento rev. 1.1 (approvato da Brik81, 19/\allowbreak{}10/\allowbreak{}2026 15:49; eseguito 15:52):} il simbolo di alimentazione di IC202 pin 1 (\#PWR0208) ora è 5V0. C211 100n resta sul pin come disaccoppiamento; il suo codice JLC attuale è da 16 V e va sostituito con uno da 25 V (§10). Restano i vincoli firmware: PA intorno a 30 dBm e niente commutazione con RF presente (modifica 1.1-04).
+\end{okbox}
+
+{\small Riferimenti: Analog Devices HMC349AMS8G datasheet rev F – Tabella 1 (Specifications), Tabella 2 (Absolute Maximum Ratings), Tabella 4 (truth table).}
+
+\subsection[5. APC del PA e gate di Q701]{5. APC del PA e gate di Q701 \tg{tagdone}{modificato v1.0}}
+
+\textbf{Motivo:}
+
+\begin{itemize}
+\item Il partitore sul gate (R702/\allowbreak{}R703 100 k /\allowbreak{} 100 k) dava V\textsubscript{GS} = −1.65 V con EN = 0, troppo vicino alla soglia dell'FDN308P (fino a −1.5 V): accensione incerta, soprattutto a freddo.
+\item R242/\allowbreak{}R243 (100/\allowbreak{}820) davano 2.94 V a vuoto, al limite del massimo assoluto APC di 3.0 V. Con la corrente reale del pin APC (4.6 mA a 2.8 V) la tensione scendeva a circa 2.55 V, quindi meno potenza.
+\end{itemize}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.0725}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0893}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0741}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.7641}{32pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Prima} & \textbf{Dopo} & \textbf{Effetto} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+R703 & 100 k & \textbf{0 Ω} & Gate pilotato direttamente dal GPIO: V\textsubscript{GS} = −3.3 V (pienamente ON). R702 100 k tiene Q701 spento, quindi PA spento, con GPIO flottante al reset \\\midrule[0.15pt]
+R242 & 100 Ω & \textbf{33 Ω} & \multirow{2}{=}{APC a vuoto 3.3 · 240/\allowbreak{}273 = 2.90 V (2.99 V con 3V3 = 3.4 V: sempre ≤ 3.0 V). Sotto carico (4.6 mA, R\textsubscript{th} 29 Ω) circa 2.77 V, vicino ai 2.8 V nominali Qorvo. Corrente nel partitore circa 12 mA, potenza su R243 circa 35 mW (0402 OK)} \\
+R243 & 820 Ω & \textbf{240 Ω} &  \\
+\end{longtable}}
+
+La logica non cambia: EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW = 0 vuol dire switch su RF1 (TX) e PA acceso; EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW = 1 vuol dire switch su RF2 (RX), PA spento e LNA acceso.
+
+\textbf{Miglioria futura (non fatta):} pilotare l'APC da un DAC dell'STM32L562 per avere controllo di potenza e rampa, che riduce lo splatter spettrale in fase di certificazione.
+
+{\small Riferimenti: QPA9510 datasheet (23/\allowbreak{}06/\allowbreak{}2025) – Abs. Max V\textsubscript{APC} −0.5…+3.0 V, \textquotedblleft{}Power Control ON voltage\textquotedblright{} 2.8 V, \textquotedblleft{}APC input current\textquotedblright{} 4.6 mA a 2.8 V, descrizione pin 15/\allowbreak{}16; onsemi FDN308P datasheet (V\textsubscript{GS(th)}).}
+
+\subsection[6. Simbolo di Q701 – correzione]{6. Simbolo di Q701 – correzione \tg{tagdone}{modificato v1.1}}
+
+\textbf{Situazione:} Q701 ha valore \textquotedblleft{}FDN308P\textquotedblright{} (MOSFET a \textbf{canale P}), ma nello schema usa il simbolo \code{2N7002E} (canale N). Descrizione \textquotedblleft{}0.24A Id, 60V Vds, N-Channel MOSFET\textquotedblright{} e link al datasheet Diodes ds30376, entrambi del 2N7002. Il circuito però funziona solo con un P-MOS (S su 3V3, D verso il partitore APC). Il pinout SOT-23 (1 = G, 2 = S, 3 = D) coincide, quindi la netlist e il PCB sono corretti. Il rischio riguarda il \textbf{BOM e la revisione}: chi legge lo schema vede un N-MOS, e in acquisto o assemblaggio si può montare un 2N7002, con il PA che non si accende mai.
+
+\textbf{Cosa farei:}
+
+\begin{itemize}
+\item Sostituire il simbolo con \code{Device:Q\_\allowbreak{}PMOS\_\allowbreak{}GSD} della libreria KiCad (pin 1 = G, 2 = S, 3 = D, come nell'SOT-23 dell'FDN308P). In alternativa c'è \code{Transistor\_\allowbreak{}FET:FDN340P}, che ha lo stesso pinout.
+\item Mantenere footprint \code{Package\_\allowbreak{}TO\_\allowbreak{}SOT\_\allowbreak{}SMD:SOT-23}, valore FDN308P e collegamenti invariati; verificare dopo la sostituzione che i pin coincidano.
+\item Correggere Description (\textquotedblleft{}P-Channel MOSFET, −20 V, −1.5 A, SOT-23\textquotedblright{}) e Datasheet (onsemi FDN308P).
+\item Verificare che il codice JLC \code{C7472857} corrisponda davvero all'FDN308P.
+\end{itemize}
+
+\begin{okbox}
+\textbf{Aggiornamento rev. 1.1 (approvato da Brik81, 19/\allowbreak{}10/\allowbreak{}2026 15:49; eseguito 15:52):} simbolo sostituito con \code{Transistor\_\allowbreak{}FET:Q\_\allowbreak{}PMOS\_\allowbreak{}GSD} (in KiCad 10 il simbolo sta in Transistor\_\allowbreak{}FET, non in Device). Pin 1 = G, 2 = S, 3 = D, identici al precedente: netlist verificata, Q701.1 = gate, Q701.2 = 3V3, Q701.3 = R242. Description e Datasheet corretti. Valore, footprint e codice jlc invariati. Il simbolo 2N7002E, non più usato, è stato tolto dalla libreria interna dello schema (modifica 1.1-03). Il codice C7472857 è un FDN308P di TECH PUBLIC, vedi §10.2.
+\end{okbox}
+
+\subsection[M. Modifiche minori]{M. Modifiche minori \tg{tagdone}{modificato v1.0}}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1222}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1037}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1258}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.6484}{32pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Prima} & \textbf{Dopo} & \textbf{Motivo /\allowbreak{} riferimento} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C216 & 8.2 (senza unità) & \textbf{8.2p} & Valore incompleto (8.2 F). Verificare che il codice JLC C668333 sia 8.2 pF \\\midrule[0.15pt]
+L243 & 2.4 nH & \textbf{2.7 nH} & Riferimento Qorvo QPA9510 410–470 MHz: L4 = 2.7 nH \\\midrule[0.15pt]
+C260 & 27 p, 0402 & 27 p, \textbf{0603} & Riferimento Qorvo: C10 27 pF 0603 1 \% C0G (nodo a circa 5 Ω, corrente RF alta) \\\midrule[0.15pt]
+L242 & 1 µH, 1206 & \textbf{0.9 µH, 1008} & Choke del PA: Coilcraft \textbf{1008AF-901XJR}, wire-wound, Isat 1.4 A, Irms 1.3 A, SRF 415 MHz, quindi impedenza molto alta a 433 MHz. \tg{tagwarn}{Nota}: la tua nota chiedeva Isat ≥ 2 A. La corrente reale a 3.3 V è circa 1.0–1.1 A (margine circa 30 \%). Se vuoi 2 A garantiti: Coilcraft 2222SQ-221 (220 nH, air core, circa 5 A, |Z| circa 600 Ω a 433 MHz), che però richiede un footprint dedicato \\\midrule[0.15pt]
+C245, C256 & 3.3 µF, 0402 & \textbf{10 µF, 0805} & Bulk del PA: un 3.3 µF 0402 perde circa il 50 \% con la tensione applicata; Qorvo usa 3.3 µF al tantalio. 10 µF 0805 X5R/\allowbreak{}X7R ≥ 10 V \\\midrule[0.15pt]
+L202 & 22 nH & \textbf{120 nH} & Choke dell'LNA: 22 nH valgono solo circa 60 Ω a 433 MHz, il datasheet chiede alta impedanza. 120 nH valgono circa 330 Ω (wire-wound 0402, es. Murata LQW15ANR12J00) \\\midrule[0.15pt]
+Footprint IC2 & EP senza via & \textbf{3×3 via termiche} & QFN50P300X300X90-17N-D: 9 via, foro 0.25 mm, pad 0.45 mm, passo 0.5 mm. Qorvo raccomanda foro 0.203–0.330 mm su griglia 0.5–1.2 mm. Il PA dissipa circa 2.3 W (θ\textsubscript{jc} 12.5 °C/\allowbreak{}W) \\\midrule[0.15pt]
+Nota layout & – & Testo sullo schema & Match d'uscita del PA: replicare il layout dell'EVB Qorvo, perché a circa 5 Ω piste e posizioni fanno parte del match. Prevedere taratura \\\midrule[0.15pt]
+SDN Si4464 & \multicolumn{3}{>{\raggedright\arraybackslash}p{\cw{0.8778}{32pt}{16pt}}}{Non modificato, come richiesto (da discutere)} \\
+\end{longtable}}
+
+\subsection[9. Verifica 1 – IC2 (QPA9510) ha bisogno di tutti questi passivi?]{9. Verifica 1 – IC2 (QPA9510) ha bisogno di tutti questi passivi? \tg{tagcheck}{verificato v1.1}}
+
+Ho confrontato ogni passivo attorno a IC2 con il BOM della scheda di valutazione Qorvo QPA9510 per 410–470 MHz. Quasi tutto corrisponde uno a uno al riferimento, e la maggior parte dei componenti fa parte del match RF, non è solo disaccoppiamento. Il datasheet dice che VCC1 \textquotedblleft{}forma l'induttanza shunt necessaria per il match interstadio\textquotedblright{} e che \textquotedblleft{}posizione e valore dei componenti sono importanti\textquotedblright{}.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.3096}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2004}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2056}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2845}{32pt}{0pt}}}
+\toprule
+\textbf{Funzione} & \textbf{Ref schema} & \textbf{Equivalente EVB Qorvo} & \textbf{Rimovibile?} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+DC block ingresso RF & C255 56p & C1 56p & No (obbligatorio da datasheet) \\\midrule[0.15pt]
+VCC1: induttanza del match interstadio + massa RF & L240 12n, C244 330p & L1 12n, C19 330p & No, fa parte del match \\\midrule[0.15pt]
+VCC2: induttanza + massa RF & L241 6.8n, C248 330p & L6 6.8n, C20 330p & No, fa parte del match \\\midrule[0.15pt]
+Choke del collettore & L242 & L3 1 µH & No \\\midrule[0.15pt]
+Match d'uscita & C260 27p, L243 2.7n, C261 22p, C262 2p & C10, L4, C11, C25 & No \\\midrule[0.15pt]
+Massa RF lato 3V3 del choke & C258 47p, C251 100p & C14 47p, C15 100p & No: chiudono a massa la RF a 433 MHz e alle armoniche \\\midrule[0.15pt]
+Disaccoppiamento 1 nF & C241, C247, C257 & C3, C6, C13 & Sconsigliato: uno per ogni pin di alimentazione \\\midrule[0.15pt]
+Disaccoppiamento 10 nF & C240, C246 (3V3), C252, C253 (APC) & C2, C5, C16, C17 & Solo C252 o C253, vedi sotto \\\midrule[0.15pt]
+Bulk & C245, C256 10 µF & C18, C21 3.3 µF tantalio & No: il PA chiede impulsi da circa 1 A \\\midrule[0.15pt]
+Ponticelli 0 Ω sulle alimentazioni & R240 (VCC1), R241 (VCC2) & R2, R3 0 Ω & \textbf{Sì, opzionali} \\\midrule[0.15pt]
+Ponticello APC1–APC2 & R244 0 Ω & – & \textbf{Sì} \\
+\end{longtable}}
+
+\textbf{Rimovibili con certezza (2 componenti):} APC1 e APC2 sono sempre collegati tra loro tramite R244 0 Ω. Si può sostituire R244 con una pista, e a quel punto C252 e C253 (10 nF) stanno sullo stesso nodo: ne basta uno, vicino ai pin 15/\allowbreak{}16. Il nodo è già a bassa impedenza (partitore 33/\allowbreak{}240 Ω).
+
+\textbf{Rimovibili se non servono per il debug (2 componenti):} R240 e R241 da 0 Ω servono solo a misurare la corrente di ogni stadio o a montare una ferrite (nella versione 900 MHz Qorvo monta in quelle posizioni ferriti BLM15AG). Al primo prototipo conviene tenerli; in produzione si possono sostituire con pista.
+
+\textbf{Da non togliere:} il resto, perché fa parte del match o è il disaccoppiamento indicato da Qorvo per la stabilità. Togliere i 47p/\allowbreak{}100p o i 1 nF sposta la stabilità del PA, e in questi PA a guadagno alto (circa 42 dB) è il primo motivo di oscillazioni.
+
+\textbf{Sul pad d'ingresso} (R245–R248, 4 resistenze): in teoria si potrebbe togliere e far uscire dal Si4464 direttamente circa −10 dBm. Lo sconsiglio: il pad dà al Si4464 un carico a 50 Ω stabile per il match class-E, e protegge il PA (massimo assoluto all'ingresso +13 dBm) da un errore firmware che porti il Si4464 a +20 dBm.
+
+In rev. 1.1 nessuna modifica eseguita (proposta \textbf{P3}).
+
+\begin{okbox}
+\textbf{Aggiornamento rev. 1.2 (approvato da Brik81, 19/\allowbreak{}10/\allowbreak{}2026 17:04, scelta dei componenti delegata a Claude Code; eseguito 17:05):} rimossi R244 (sostituito da un filo) e C253 con il suo simbolo GND. Netlist verificata: APC1 (pin 16), APC2 (pin 15), C252, R242 e R243 sono sullo stesso nodo. Tenuto C252, già sul lato del partitore. R240 e R241 restano montati per misurare la corrente degli stadi sul prototipo. ERC: nessuna segnalazione nuova legata a questa modifica (modifiche 1.2-01, 1.2-02).
+\end{okbox}
+
+{\small Riferimenti: Qorvo QPA9510 410–470 MHz EVB Test Summary 30/\allowbreak{}06/\allowbreak{}2025, pag. 3 (BOM e schema); QPA9510 datasheet 23/\allowbreak{}06/\allowbreak{}2025, pag. 6–7 (BOM EVB e descrizione pin 1, 5/\allowbreak{}6, 15/\allowbreak{}16).}
+
+\subsection[10. Verifica 2 – codici JLCPCB, pad, tensione e Murata]{10. Verifica 2 – codici JLCPCB, pad, tensione e Murata \tg{tagwarn}{errori trovati v1.1}}
+
+\textbf{Metodo.} Ogni codice del campo \code{jlc} del foglio UHF (componenti non DNP) è stato letto dal catalogo JLCPCB/\allowbreak{}LCSC il 19/\allowbreak{}10/\allowbreak{}2026 15:55. Per ogni codice ho controllato valore, package rispetto al footprint, tensione nominale e marca. Per le posizioni senza codice ho cercato un Murata sul catalogo JLCPCB (stock alla stessa data).
+
+\textbf{Regola della tensione: tensione nominale ≥ 5 × tensione di lavoro del nodo}, contando la DC più il picco RF. Tensioni di lavoro usate:
+
+\begin{itemize}
+\item 3V3: 3.4 V massimo, quindi serve almeno 17 V, cioè un condensatore da \textbf{25 V}. 5V0: 5 V, quindi \textbf{25 V} (esattamente 5×).
+\item Uscita del PA a 50 Ω (dopo L243, FL201, switch, MMCX): 32 dBm = 12.6 V di picco, quindi servono 63 V, cioè \textbf{100 V}. Con antenna disadattata il picco sale ancora: per questo i 250 V già usati sono una buona scelta.
+\item Collettore del PA (nodo di C260, circa 5 Ω): 3.3 V DC + circa 4 V RF, circa 7.3 V di picco, quindi servono 37 V, cioè \textbf{50 V}.
+\item Pin TX del Si4464: il datasheet fissa il picco a 6.5 V continuativi (8 V istantanei), quindi servono 40 V, cioè \textbf{50 V}.
+\item Catena RX, ingresso del PA, APC: sotto 3.3 V, quindi 25 V; i C0G da 50 V vanno bene.
+\item Induttori e resistenze: gli induttori non hanno tensione nominale. Per loro ho controllato \textbf{corrente nominale} (almeno circa 1.5× la corrente reale) e SRF. Le resistenze 0402 sono da 50 V e le 0603 da 75 V, quindi la regola 5× è rispettata ovunque. Murata non produce resistenze a catalogo JLCPCB, quindi l'obbligo Murata l'ho applicato a condensatori e induttori.
+\end{itemize}
+
+\subsubsection[10.1 Errori nei codici esistenti]{10.1 Errori nei codici esistenti}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.0707}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1896}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2605}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1588}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3203}{40pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Schema (valore, pad)} & \textbf{Codice attuale = cosa è davvero} & \textbf{Problema} & \textbf{Proposta Murata (codice JLC, stock)} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+\textbf{C204} & 10n 0402, accoppiamento TCXO & C21585 = Murata LQG15HN10NJ02D, \textbf{induttore 10 nH} & \tg{tagwarn}{componente sbagliato} Il TCXO arriverebbe al Si4464 attraverso un induttore, senza blocco DC & GRM155R71E103KA01D, 10n 25V X7R, \textbf{C77013} (132k) \\\midrule[0.15pt]
+\textbf{C230} & 56p 0805, DC block uscita PA & C437548 = GRM21A5C2E330JW01D, \textbf{33 pF} & \tg{tagwarn}{valore sbagliato} Sposta il match d'uscita & GRM21A5C2E560JW01D, 56p 250V C0G 0805, \textbf{C913752} (1853) \\\midrule[0.15pt]
+\textbf{C206, C208} & 100p \textbf{0402}, lato antenna e uscita FL201 (63 V richiesti) & C1864265 = GRM21A5C2E101FW01D, 100p 250V \textbf{0805} & \tg{tagwarn}{pad sbagliato} Un 0805 non entra nel footprint 0402 & (a) footprint a 0805 e codice invariato (250 V, coerente con C212/\allowbreak{}C213); oppure (b) GRM1555C2A101GA01D, 100p 100V 0402, \textbf{C21366878} (3109). Consiglio (a) \\\midrule[0.15pt]
+\textbf{C207} & 100p \textbf{0402}, porta RX dello switch & C1864265 (0805) & \tg{tagwarn}{pad sbagliato} & GRM1555C1H101JA01D, 100p 50V C0G, \textbf{C77177} (987k), oppure come C206 per uniformità \\\midrule[0.15pt]
+C201, C203 & 100n 0402 su 3V3 & C1525 = Samsung CL05B104KO5NNNC, 16 V & \tg{tagwarn}{non Murata} 16 V < 17 V & GRM155R71E104KE14D, 100n 25V X7R, \textbf{C77014} (538k) \\\midrule[0.15pt]
+C211 & 100n 0402 su \textbf{5V0} (da v1.1) & C1525, 16 V & \tg{tagwarn}{non Murata} 16 V < 25 V & \textbf{C77014} (25 V = 5×, al limite). Se vuoi margine sopra 5×: 0402 50 V X7R \\\midrule[0.15pt]
+C202 & 1u 0402 su 3V3 & C29266 = Samsung CL05A105KO5NNNC, 16 V & \tg{tagwarn}{non Murata} 16 V < 17 V & GRM155R61E105KA12D, 1u 25V X5R, \textbf{C77009} (607k) \\\midrule[0.15pt]
+C215 & 1u 0402 su 3V3 & C76999 = Murata GRM155R61A105KE15D, \textbf{10 V} & \tg{tagwarn}{tensione} 10 V < 17 V & \textbf{C77009} (25 V) \\
+\end{longtable}}
+
+\subsubsection[10.2 Codici esistenti corretti]{10.2 Codici esistenti corretti}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.2011}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2952}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1784}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3253}{32pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Codice} & \textbf{Verifica} & \textbf{Note} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C209, C210 (6.8p 0805) & C464958 Murata GQM2195C2E6R8CB12D & valore, pad, 250 V, Murata: OK &  \\\midrule[0.15pt]
+C212, C213, C222, C223 (100p 0805) & C1864265 Murata GRM21A5C2E101FW01D & OK (C213 vede 3.3 V DC: 250 V ok) & stock 418 \\\midrule[0.15pt]
+C214, C226, C227 (100p 0402, 3V3) & C77177 Murata 50 V C0G & OK &  \\\midrule[0.15pt]
+C216 (8.2p 0805) & C668333 Murata GQM2195C2E8R2CB12D & OK (verificato: è 8.2 pF) &  \\\midrule[0.15pt]
+C217, C218 (5.6p 0805) & C2357067 Murata GQM2195C2E5R6BB12D & valore, pad, 250 V OK & \tg{tagwarn}{stock 0} Nessun 5.6p 0805 Murata disponibile oggi. Opzioni: preordine, oppure 0402 GJM1555C1H5R6BB01D (C161329), ma cambia footprint e va ritarato il filtro \\\midrule[0.15pt]
+C219, C220 (7.5p 0805) & C3831627 Murata 250 V & OK &  \\\midrule[0.15pt]
+C228 (1n 0402, 3V3) & C76947 Murata 50 V C0G & OK &  \\\midrule[0.15pt]
+L201, L203, L204, L206 (22n 0805) & C2042193 Murata LQW2BAN22NJ00L & OK, 1.9 A &  \\\midrule[0.15pt]
+L205 (18n 0805) & C2042168 Murata LQW2BAN18NG00L & OK, 2.2 A & stock 46: basso \\\midrule[0.15pt]
+R201 33, R202 33k, R203 10k, R702 100k & C25105, C25779, C71617, C60491 & valore e pad OK, 50 V &  \\\midrule[0.15pt]
+R29 22k, R31 10k (POWER, v1.1) & C25547, C71617 & OK & R29 al 5 \%: soglia OV tra 5.8 e 6.3 V, accettabile \\\midrule[0.15pt]
+IC202 HMC349 & C662138 HMC349AMS8GETR & OK (versione in bobina) &  \\\midrule[0.15pt]
+IC204 Si4464 & C482027 & OK & \tg{tagwarn}{stock 0} \\\midrule[0.15pt]
+Q201 TQP3M9036 & C920261 & OK &  \\\midrule[0.15pt]
+FL201 LFCG-490+ & C3034233 & OK & stock 50: basso \\\midrule[0.15pt]
+Y201 TCXO & C19858587 & OK & stock 54: basso \\\midrule[0.15pt]
+U701 74AUP2G14 & C526337 74AUP2G14DW-7, SOT-363 & OK &  \\\midrule[0.15pt]
+Q701 FDN308P & C7472857 & package OK & \tg{tagwarn}{verificare} È un FDN308P di TECH PUBLIC (compatibile, P-ch 20 V 2.8 A), non onsemi. Controllare pinout e V\textsubscript{GS(th)} sul suo datasheet. Su JLCPCB non c'è l'originale onsemi \\\midrule[0.15pt]
+J201 MMCX & C2999837 DreamLNK DL-MMCX-KEF-180 & \tg{tagwarn}{footprint diverso} & Il footprint è Molex 73415-0961. Usare il codice Molex C588476 (stock 12), oppure verificare che il land pattern DreamLNK coincida \\
+\end{longtable}}
+
+\subsubsection[10.3 Posizioni senza codice: proposta Murata]{10.3 Posizioni senza codice: proposta Murata}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1364}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1877}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1165}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2619}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2976}{40pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Valore, pad, nodo} & \textbf{Richiesto} & \textbf{Proposta (codice JLC, stock)} & \textbf{Note} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C240, C246 & 10n 0402, 3V3 & ≥ 25 V & GRM155R71E103KA01D \textbf{C77013} (132k) &  \\\midrule[0.15pt]
+C252 & 10n 0402, APC ≤ 3 V & ≥ 16 V & \textbf{C77013} & C253 rimosso in rev. 1.2 \\\midrule[0.15pt]
+C241, C247, C257 & 1n 0402, 3V3 & ≥ 25 V & GRM1555C1H102JA01D \textbf{C76947} (932k) &  \\\midrule[0.15pt]
+C244, C248 & 330p 0402, VCC1/\allowbreak{}VCC2 & ≥ 25 V & GRM1555C1H331JA01D \textbf{C76965} (46k) &  \\\midrule[0.15pt]
+C245, C256 & 10u 0805, 3V3 & ≥ 25 V & GRM21BR61E106KA73L \textbf{C84416} (135k) & 25 V X5R: a 3.3 V restano circa 8 µF effettivi \\\midrule[0.15pt]
+C251 & 100p 0402, 3V3 & ≥ 25 V & \textbf{C77177} &  \\\midrule[0.15pt]
+C258 & 47p 0402, 3V3 & ≥ 25 V & GRM1555C1H470JA01D \textbf{C76970} (154k) & stesso codice dell'EVB Qorvo \\\midrule[0.15pt]
+C255 & 56p 0402, ingresso PA & ≥ 16 V & GCM1555C1H560JA16D \textbf{C393672} (2798) & GRM equivalente a stock 0 \\\midrule[0.15pt]
+C260 & 27p 0603, collettore (37 V) & ≥ 50 V, 1 \% come Qorvo & GCM1885C2A270FA16D 100V 1\% \textbf{C2176861} (7293) & oppure 5 \%: C909846 (20k) \\\midrule[0.15pt]
+C261 & 22p 0402, uscita 50 Ω (63 V) & ≥ 100 V & GRM1555C2A220JA01D 100V \textbf{C710855} (1657) &  \\\midrule[0.15pt]
+C262 & 2p 0402, uscita 50 Ω (63 V) & ≥ 100 V & \tg{tagwarn}{nessun Murata 100 V 0402 disponibile} & (a) 0805 GQM2195C2E2R0BB12D 250V \textbf{C237472} (5462), con cambio footprint; (b) GJM1555C1H2R0BB01D 50V C161316, valido solo con PA limitato a 30 dBm (10 V × 5 = 50 V). Consiglio (a) \\\midrule[0.15pt]
+C701 & 100p 0402, dopo il match TX (3.2 V picco) & ≥ 16 V & \textbf{C77177} &  \\\midrule[0.15pt]
+C702 & 9.1p 0402, pin TX (8 V picco) & ≥ 40 V & GRM1555C1H9R1DA01D 50V \textbf{C415411} (1399) &  \\\midrule[0.15pt]
+C704 & 15p 0402 & ≥ 40 V & GRM1555C1H150JA01D 50V \textbf{C76950} (148k) &  \\\midrule[0.15pt]
+L202 & 120n 0402, bias LNA (circa 40 mA a 3.3 V) & ≥ 60 mA & LQW15ANR12J00D \textbf{C113123} 110 mA (27k) &  \\\midrule[0.15pt]
+L240 & 12n 0603, VCC1 & – & LQW18AN12NG00D \textbf{C98068} 600 mA (90k) &  \\\midrule[0.15pt]
+L241 & 6.8n 0603, VCC2 & – & LQW18AN6N8C00D \textbf{C86136} 750 mA (5.4k) &  \\\midrule[0.15pt]
+L243 & 2.7n 0603, uscita PA (circa 0.6 A RF) & ≥ 0.9 A & \tg{tagwarn}{nessun Murata wire-wound 0603} & (a) 0402 LQW15AN2N7G80D 1.5 A \textbf{C412269} (12.8k), come l'EVB Qorvo (0402 W/\allowbreak{}W), con cambio footprint; (b) 0603 multistrato LQG18HN2N7S00D 1 A C162551, Q più basso. Consiglio (a) \\\midrule[0.15pt]
+L242 & 0.9u 1008, choke PA (circa 1.0–1.1 A) & ≥ 1.5 A, SRF ≈ 433 MHz & \tg{tagwarn}{nessun Murata adatto su JLCPCB} & Wire-wound LQW2UAS: massimo 380 mA. LQW21FTR47: 0.9–1 A, troppo poco. Power inductor DFE/\allowbreak{}LQM: SRF 50–100 MHz, a 433 MHz non fanno da choke. Serve un'\textbf{eccezione alla regola Murata} (Coilcraft 1008AF-901XJR o 2222SQ): decisione P2 \\\midrule[0.15pt]
+L702 & 33n 0805 & – & LQW2BAN33NG00L \textbf{C1330869} 1.5 A (2001) &  \\\midrule[0.15pt]
+L703 & 220n 0805, choke TX Si4464 (circa 85 mA) & ≥ 130 mA & \tg{tagwarn}{nessun Murata 0805 disponibile} & 0603 LQW18ANR22J80D 280 mA \textbf{C2046586} (3766), con cambio footprint (AN648 cita proprio Murata LQW18A) \\\midrule[0.15pt]
+R240, R703 & 0 Ω 0402 (R244 rimosso in rev. 1.2) &  & \textbf{C17168} (base) &  \\\midrule[0.15pt]
+R241 & 0 Ω 0603, VCC2 &  & \textbf{C21189} (base) &  \\\midrule[0.15pt]
+R242 & 33 Ω 0402 &  & \textbf{C25105} (base) &  \\\midrule[0.15pt]
+R243 & 240 Ω 0402 (35 mW) &  & YAGEO RC0402FR-07240RL \textbf{C114755} & 35 mW su 62.5 mW (56 \%): accettabile \\\midrule[0.15pt]
+R245, R247 & 100 Ω 0402 &  & \textbf{C25076} (base) & con Si4464 a +20 dBm R245 dissipa circa 50 mW: limitare PA\_\allowbreak{}PWR\_\allowbreak{}LVL (§3) \\\midrule[0.15pt]
+R246 & 68 Ω 0603 &  & \textbf{C27592} &  \\\midrule[0.15pt]
+R248 & 180 Ω 0402 &  & \textbf{C38941} &  \\\midrule[0.15pt]
+IC2 & QPA9510TR7 &  & \textbf{C52059849} & \tg{tagwarn}{stock 0} su JLCPCB: preordine o fornitura in conto lavoro \\\midrule[0.15pt]
+TP701–TP703 & pin di test THT &  & – & montaggio manuale \\
+\end{longtable}}
+
+\textbf{Cambi di footprint impliciti nelle proposte:} C206 e C208 a 0805 (opzione a); C262 a 0805; L243 a 0402; L703 a 0603. Nessuna modifica eseguita: è la proposta \textbf{P4}, serve approvazione.
+
+{\small Fonti: catalogo JLCPCB (jlcpcb.com/\allowbreak{}parts) e LCSC (lcsc.com), consultati il 19/\allowbreak{}10/\allowbreak{}2026; Si4464 datasheet rev 1.4, Tabella 7 (picco RF sul pin TX 6.5 V continuativi, 8 V istantanei); QPA9510 EVB Test Summary (BOM 410–470 MHz); TQP3M9036 datasheet (I\textsubscript{DD} 40–90 mA).}
+
+\subsubsection[10.4 Aggiornamento rev. 1.3 – codici applicati]{10.4 Aggiornamento rev. 1.3 – codici applicati}
+
+\begin{okbox}
+\textbf{Approvato da Brik81 il 19/\allowbreak{}10/\allowbreak{}2026 alle 17:11, eseguito alle 17:13.} Su indicazione di Brik81 la regola della tensione diventa: \textbf{tensione nominale ≥ 3 × la tensione di lavoro} (meglio fino a 5×, se disponibile). Ogni codice è stato riletto sul catalogo JLCPCB e su LCSC (marca, sigla, valore, package, tensione, stock) prima di essere scritto nello schema.\newline{} \textbf{Nota su C204:} sullo schema C204 è un condensatore (simbolo C\_\allowbreak{}Small, valore 10n). Il problema era il codice: C21585 sul catalogo JLCPCB è \textquotedblleft{}Murata LQG15HN10NJ02D, 10nH … Inductors (SMD)\textquotedblright{}, cioè un induttore. JLCPCB avrebbe montato quello.
+\end{okbox}
+
+Con la regola ≥ 3× alcune proposte della v1.1 si semplificano: C206 e C208 restano 0402, con un Murata da 100 V nello stesso package, e C262 resta 0402 da 50 V (3.97×). Gli unici cambi di footprint sono L243 (0603 → 0402, come l'EVB Qorvo) e L703 (0805 → 0603).
+
+{\scriptsize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.0676}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1225}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3380}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0902}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0927}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0897}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0907}{64pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1086}{64pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Codice JLC} & \textbf{Componente (dal catalogo)} & \textbf{Package} & \textbf{Nominale} & \textbf{Lavoro (picco)} & \textbf{Rapporto} & \textbf{Stock JLC} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C201 & C77014 & muRata GRM155R71E104KE14D 100nF & 0402 & 25V & 3.4 V & 7.4× & 538605 \\\midrule[0.15pt]
+C203 & C77014 & muRata GRM155R71E104KE14D 100nF & 0402 & 25V & 3.4 V & 7.4× & 538605 \\\midrule[0.15pt]
+C211 & C77014 & muRata GRM155R71E104KE14D 100nF & 0402 & 25V & 5.0 V & 5.0× & 538605 \\\midrule[0.15pt]
+C202 & C77009 & muRata GRM155R61E105KA12D 1uF & 0402 & 25V & 3.4 V & 7.4× & 606821 \\\midrule[0.15pt]
+C215 & C77009 & muRata GRM155R61E105KA12D 1uF & 0402 & 25V & 3.4 V & 7.4× & 606821 \\\midrule[0.15pt]
+C204 & C77013 & muRata GRM155R71E103KA01D 10nF & 0402 & 25V & 3.4 V & 7.4× & 132158 \\\midrule[0.15pt]
+C206 & C21366878 & muRata GRM1555C2A101GA01D 100pF & 0402 & 100V & 12.6 V & 7.9× & 3109 \\\midrule[0.15pt]
+C208 & C21366878 & muRata GRM1555C2A101GA01D 100pF & 0402 & 100V & 12.6 V & 7.9× & 3109 \\\midrule[0.15pt]
+C207 & C77177 & muRata GRM1555C1H101JA01D 100pF & 0402 & 50V & 3.4 V & 14.7× & 987374 \\\midrule[0.15pt]
+C230 & C913752 & muRata GRM21A5C2E560JW01D 56pF & 0805 & 250V & 12.6 V & 19.8× & 1853 \\\midrule[0.15pt]
+C240 & C77013 & muRata GRM155R71E103KA01D 10nF & 0402 & 25V & 3.4 V & 7.4× & 132158 \\\midrule[0.15pt]
+C246 & C77013 & muRata GRM155R71E103KA01D 10nF & 0402 & 25V & 3.4 V & 7.4× & 132158 \\\midrule[0.15pt]
+C252 & C77013 & muRata GRM155R71E103KA01D 10nF & 0402 & 25V & 3.0 V & 8.3× & 132158 \\\midrule[0.15pt]
+C241 & C76947 & muRata GRM1555C1H102JA01D 1nF & 0402 & 50V & 3.4 V & 14.7× & 931729 \\\midrule[0.15pt]
+C247 & C76947 & muRata GRM1555C1H102JA01D 1nF & 0402 & 50V & 3.4 V & 14.7× & 931729 \\\midrule[0.15pt]
+C257 & C76947 & muRata GRM1555C1H102JA01D 1nF & 0402 & 50V & 3.4 V & 14.7× & 931729 \\\midrule[0.15pt]
+C244 & C76965 & muRata GRM1555C1H331JA01D 330pF & 0402 & 50V & 4.0 V & 12.5× & 46337 \\\midrule[0.15pt]
+C248 & C76965 & muRata GRM1555C1H331JA01D 330pF & 0402 & 50V & 4.0 V & 12.5× & 46337 \\\midrule[0.15pt]
+C245 & C84416 & muRata GRM21BR61E106KA73L 10uF & 0805 & 25V & 3.4 V & 7.4× & 134890 \\\midrule[0.15pt]
+C256 & C84416 & muRata GRM21BR61E106KA73L 10uF & 0805 & 25V & 3.4 V & 7.4× & 134890 \\\midrule[0.15pt]
+C251 & C77177 & muRata GRM1555C1H101JA01D 100pF & 0402 & 50V & 3.4 V & 14.7× & 987374 \\\midrule[0.15pt]
+C258 & C76970 & muRata GRM1555C1H470JA01D 47pF & 0402 & 50V & 3.4 V & 14.7× & 153724 \\\midrule[0.15pt]
+C255 & C393672 & muRata GCM1555C1H560JA16D 56pF & 0402 & 50V & 1.0 V & 50.0× & 2798 \\\midrule[0.15pt]
+C260 & C2176861 & muRata GCM1885C2A270FA16D 27pF & 0603 & 100V & 7.3 V & 13.7× & 7293 \\\midrule[0.15pt]
+C261 & C710855 & muRata GRM1555C2A220JA01D 22pF & 0402 & 100V & 12.6 V & 7.9× & 1657 \\\midrule[0.15pt]
+C262 & C161316 & muRata GJM1555C1H2R0BB01D 2pF & 0402 & 50V & 12.6 V & 4.0× & 263837 \\\midrule[0.15pt]
+C701 & C77177 & muRata GRM1555C1H101JA01D 100pF & 0402 & 50V & 3.2 V & 15.6× & 987374 \\\midrule[0.15pt]
+C702 & C415411 & muRata GRM1555C1H9R1DA01D 9.1pF & 0402 & 50V & 8.0 V & 6.2× & 1399 \\\midrule[0.15pt]
+C704 & C76950 & muRata GRM1555C1H150JA01D 15pF & 0402 & 50V & 8.0 V & 6.2× & 147682 \\\midrule[0.15pt]
+L202 & C113123 & muRata LQW15ANR12J00D & 0402 &  & – &  & 27500 \\\midrule[0.15pt]
+L240 & C98068 & muRata LQW18AN12NG00D 12nH & 0603 & 600mA & – &  & 89703 \\\midrule[0.15pt]
+L241 & C86136 & muRata LQW18AN6N8C00D 6.8nH & 0603 & 750mA & – &  & 5412 \\\midrule[0.15pt]
+L243 & C412269 & muRata LQW15AN2N7G80D 2.7nH & 0402 & 1.5A & – &  & 12795 \\\midrule[0.15pt]
+L702 & C1330869 & muRata LQW2BAN33NG00L 33nH & 0805 & 1.5A & – &  & 2001 \\\midrule[0.15pt]
+L703 & C2046586 & muRata LQW18ANR22J80D 220nH & 0603 & 280mA & – &  & 3766 \\\midrule[0.15pt]
+R240 & C17168 & UNI-ROYAL 0402WGF0000TCE 0Ω & 0402 & 50V & – &  & 10655480 \\\midrule[0.15pt]
+R703 & C17168 & UNI-ROYAL 0402WGF0000TCE 0Ω & 0402 & 50V & – &  & 10655480 \\\midrule[0.15pt]
+R241 & C21189 & UNI-ROYAL 0603WAF0000T5E 0Ω & 0603 & 75V & – &  & 23287013 \\\midrule[0.15pt]
+R242 & C25105 & UNI-ROYAL 0402WGF330JTCE 33Ω & 0402 & 50V & – &  & 2443294 \\\midrule[0.15pt]
+R243 & C114755 & YAGEO RC0402FR-07240RL 240Ω & 0402 & 50V & – &  & 1385606 \\\midrule[0.15pt]
+R245 & C25076 & UNI-ROYAL 0402WGF1000TCE 100Ω & 0402 & 50V & – &  & 7749467 \\\midrule[0.15pt]
+R247 & C25076 & UNI-ROYAL 0402WGF1000TCE 100Ω & 0402 & 50V & – &  & 7749467 \\\midrule[0.15pt]
+R246 & C27592 & UNI-ROYAL 0603WAF680JT5E 68Ω & 0603 & 75V & – &  & 1826362 \\\midrule[0.15pt]
+R248 & C38941 & UNI-ROYAL 0402WGF1800TCE 180Ω & 0402 & 50V & – &  & 88412 \\\midrule[0.15pt]
+IC2 & C52059849 & Qorvo QPA9510TR7 & - &  & – &  & 0 \\
+\end{longtable}}
+
+\textbf{Controllo finale su tutto il foglio UHF} (78 componenti montati): tutti i condensatori e gli induttori con codice sono Murata, e ogni package del codice corrisponde al footprint. Restano:
+
+\begin{itemize}
+\item \textbf{L242} senza codice: nessun Murata adatto su JLCPCB (decisione P2).
+\item \textbf{J201}: il codice non corrisponde al footprint (decisione P7).
+\item \textbf{Stock 0:} IC2 QPA9510, IC204 Si4464, C217 e C218 (5.6p 0805: il codice è giusto, ma oggi non è disponibile).
+\item \textbf{Stock basso:} L205 (46), FL201 (50), Y201 (54).
+\item Q701: il codice è un FDN308P compatibile di TECH PUBLIC, non l'originale onsemi.
+\end{itemize}
+
+\subsection[11. Azioni necessarie (stato rev. 1.3)]{11. Azioni necessarie (stato rev. 1.3)}
+
+\begin{itemize}
+\item \textbf{KiCad:} UHF.kicad\_\allowbreak{}sch è stato modificato su disco (rev. 1.3 alle 17:13). Chiudi l'editor schematico \textbf{senza salvare} e riaprilo, altrimenti salvando sovrascrivi le modifiche. Poi lancia ERC: 189 segnalazioni, invariate anche in rev. 1.3 (erano 198 in rev. 1.1, 201 in rev. 1.0, 202 all'inizio).
+\item \textbf{PCB:} \textquotedblleft{}Update PCB from Schematic\textquotedblright{} (rev. 1.0: L703 e C704 nuovi, footprint di C245, C256, C260, L242; rev. 1.1: Q701 con nuovo simbolo, stesso footprint; rev. 1.2: R244 e C253 da togliere dal PCB; rev. 1.3: footprint di L243 a 0402 e di L703 a 0603) e \textquotedblleft{}Update Footprints from Library\textquotedblright{} per IC2 (via termiche).
+\item \textbf{Codici JLC:} assegnati in rev. 1.3 (§10.4). Restano L242 (P2) e J201 (P7).
+\item \textbf{Firmware:} \code{POWER\_\allowbreak{}UP} con opzione TCXO e XO cap bank a 0 (§2); limite su \code{PA\_\allowbreak{}PWR\_\allowbreak{}LVL} (§3); PA intorno a 30 dBm e sequenza switch/\allowbreak{}PA senza hot switching (§4).
+\item \textbf{Laboratorio:} verifica del match TX del Si4464 e del match d'uscita del PA, spurie e armoniche (ETSI EN 300 220); verifica che la scheda si alimenti dalla dock a 5 V (§1.3).
+\item \textbf{Storico:} fare un commit git per la rev. 1.3, così il registro di questo documento corrisponde a una versione dei file.
+\end{itemize}
+
+\subsection[12. Riferimenti]{12. Riferimenti}
+
+\begin{itemize}
+\item Silicon Labs, Si4464/\allowbreak{}63/\allowbreak{}61/\allowbreak{}60 datasheet rev 1.4 (file locale \code{DESIGN/\allowbreak{}Si4464-63-61-60.\allowbreak{}pdf}).
+\item Silicon Labs, AN648 \textquotedblleft{}Si4063/\allowbreak{}Si4463/\allowbreak{}64/\allowbreak{}68 TX Matching\textquotedblright{} rev 0.3 – Tabella 2, Figura 1 (copia: github.com/\allowbreak{}Engidea/\allowbreak{}e-datasheet/\allowbreak{}…/\allowbreak{}AN648-TX-matching.pdf; originale silabs.com/\allowbreak{}documents/\allowbreak{}public/\allowbreak{}application-notes/\allowbreak{}AN648.pdf).
+\item Qorvo, QPA9510 datasheet 23/\allowbreak{}06/\allowbreak{}2025 – mm.digikey.com/\allowbreak{}Volume0/\allowbreak{}opasdata/\allowbreak{}d220001/\allowbreak{}medias/\allowbreak{}docus/\allowbreak{}7704/\allowbreak{}QPA9510EVB.pdf
+\item Qorvo, QPA9510 410–470 MHz EVB Test Summary 30/\allowbreak{}06/\allowbreak{}2025 – forum.qorvo.com/\allowbreak{}uploads/\allowbreak{}short-url/\allowbreak{}5ml5goIaFdYCl2xZ1HdC6rCkucV.pdf
+\item Analog Devices, HMC349AMS8G datasheet rev F (file locale \code{DESIGN/\allowbreak{}HMC349AMS8G.\allowbreak{}pdf}).
+\item Qorvo, TQP3M9036 datasheet 27/\allowbreak{}11/\allowbreak{}2018 – shutdown e choke.
+\item Texas Instruments, TPS2121 datasheet SLVSEA3F – ti.com/\allowbreak{}lit/\allowbreak{}ds/\allowbreak{}symlink/\allowbreak{}tps2121.pdf
+\item Texas Instruments, TPSM863257 datasheet – ti.com/\allowbreak{}lit/\allowbreak{}ds/\allowbreak{}symlink/\allowbreak{}tpsm863257.pdf
+\item Coilcraft, 1008AF datasheet (Doc. 578); Coilcraft 0805CS-221 (220 nH, 400 mA, SRF 820 MHz); Coilcraft 2222SQ series.
+\item onsemi, FDN308P datasheet – onsemi.com/\allowbreak{}download/\allowbreak{}data-sheet/\allowbreak{}pdf/\allowbreak{}fdn308p-d.pdf
+\item Catalogo JLCPCB Parts (jlcpcb.com/\allowbreak{}parts) e LCSC (lcsc.com), consultati il 19/\allowbreak{}10/\allowbreak{}2026: dati di valore, package, tensione e stock dei codici in §10.
+\item Murata, serie GRM/\allowbreak{}GCM/\allowbreak{}GQM/\allowbreak{}GJM (MLCC) e LQW15AN/\allowbreak{}LQW18AN/\allowbreak{}LQW2BAN/\allowbreak{}LQW2UAS/\allowbreak{}LQW21FT (induttori wire-wound), dai dati di catalogo JLCPCB.
+\end{itemize}

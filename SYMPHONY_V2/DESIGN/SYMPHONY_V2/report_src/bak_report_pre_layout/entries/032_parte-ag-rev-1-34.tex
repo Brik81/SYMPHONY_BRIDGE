@@ -1,0 +1,68 @@
+\clearpage
+\section[Parte AG – Rev. 1.34 – Supervisore della radio escludibile (R-19)]{Parte AG – Rev. 1.34 – Supervisore della radio escludibile (R-19)}
+
+\subsection[46. IC205: rischio di reset in TX e ripiego hardware]{46. IC205: rischio di reset in TX e ripiego hardware}
+
+\providecommand{\modoAB}[4]{%
+\begin{circuitikz}[scale=0.8,transform shape,european resistors]
+ \draw (0,1.9) node[left]{PC4} to[short,o-] (1.2,1.9) coordinate(mr);
+ \draw (mr) to[R,l=$R208$,*-] ++(0,2.2) node[above]{\scriptsize pull-up};
+ \draw (mr) -- (2.4,1.9);
+ \draw[thick,accent] (2.4,1.5) rectangle (4.9,3.1);
+ \node at (3.65,2.9) {\scriptsize IC205};
+ \node[anchor=west] at (2.45,1.9) {\scriptsize $\overline{\mathrm{MR}}$};
+ \node[anchor=east] at (4.85,2.5) {\scriptsize RESET};
+ \draw (4.9,2.5) to[R,l=$R204$,#1] (7.6,2.5) coordinate(sdn);
+ \draw (mr) |- (1.2,0.4) to[R,l=$R205$,#2] (7.6,0.4) -- (sdn);
+ \draw (sdn) to[short,*-] ++(1.0,0) node[right]{\scriptsize RF\_SDN (Si4464)};
+ \node[anchor=north] at (6.2,2.2) {\scriptsize #3};
+ \node[anchor=north] at (4.4,0.25) {\scriptsize #4};
+\end{circuitikz}}
+
+\begin{center}
+\begin{minipage}{0.49\linewidth}\centering
+\textbf{\small Modo A (di serie)}\\[2pt]
+\modoAB{}{color=gray!60,dashed}{R204 montata}{R205 DNP}
+\end{minipage}\hfill
+\begin{minipage}{0.49\linewidth}\centering
+\textbf{\small Modo B (ripiego)}\\[2pt]
+\modoAB{color=gray!60,dashed}{}{R204 rimossa}{R205 = 0R montata}
+\end{minipage}
+
+{\small Schema semplificato dei due modi di montaggio; i componenti grigi tratteggiati non sono montati.}
+\end{center}
+
+\textbf{Rischio.} La soglia del TPS3825-33 è 2,88 /\allowbreak{} 2,93 /\allowbreak{} 3,00 V (min /\allowbreak{} tip /\allowbreak{} max, datasheet TI SLVS165O, Electrical Characteristics). In trasmissione il PA assorbe ≈ 1,7 A dal 3V3. Se il rail scende sotto la soglia, IC205 spegne l'Si4464 (SDN alto per ≈ 200 ms), la trasmissione si interrompe e il ciclo si può ripetere. Non c'è danno: l'Si4464 funziona fino a 1,8 V. La stima del minimo in TX è ≈ 3,15–3,2 V, ma non è verificata, perché manca la risposta al gradino del TPSM863257 e il PCB non esiste ancora. La variante TPS3825-30 (soglia 2,63 V, stessa piedinatura) non risulta in vendita; la TPS3823-30 (C55505) ha una piedinatura diversa. Brik81 ha scelto di lasciare IC205 e di prevedere un ripiego.
+
+\textbf{Circuito A/\allowbreak{}B.}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1426}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2037}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3172}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1293}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2072}{40pt}{0pt}}}
+\toprule
+\textbf{Modo} & \textbf{Montaggio} & \textbf{Chi comanda SDN} & \textbf{PC4 basso} & \textbf{PC4 alto /\allowbreak{} alta impedenza} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+\textbf{A} (di serie) & R204 montata, R205 DNP & IC205 (supervisore); PC4 agisce tramite \textasciitilde{}MR & radio in reset & radio attiva \\\midrule[0.15pt]
+\textbf{B} (ripiego) & R204 rimossa, R205 = 0R montata & direttamente PC4; IC205 escluso dall'uscita & \textbf{radio attiva} & radio spenta (pull-up R208) \\
+\end{longtable}}
+
+Nel modo B, durante boot e reset dell'MCU (PC4 in alta impedenza), R208 tiene SDN alto e quindi la radio resta spenta finché il firmware non la accende: è il comportamento giusto per una partenza pulita. Il LED D203 segue ancora IC205 e nel modo B non indica più lo stato della radio.
+
+\begin{notebox}
+\textbf{Aggiunte alle note per il firmware (§41)}
+
+\begin{center}{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\cw{0.1988}{16pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.8012}{16pt}{0pt}}}
+\toprule
+\textbf{ID} & \textbf{Requisito} \\
+\midrule
+\textbf{F-05} (aggiornata) & Il firmware deve sapere in che modo è montata la scheda (costante di compilazione MODO\_\allowbreak{}A /\allowbreak{} MODO\_\allowbreak{}B). \textbf{Modo A:} PC4 basso = reset della radio; dopo il rilascio aspettare ≥ 200 ms (IC205) più il POR dell'Si4464, poi CTS. \textbf{Modo B:} logica invertita. Accensione: PC4 alto (SDN alto) per il tempo minimo richiesto dal datasheet Si4464 → PC4 basso → attesa del POR → controllo di CTS. I tempi esatti di SDN e POR vanno presi dal datasheet Si4464 (non verificati in questa revisione) \\\midrule[0.15pt]
+\textbf{F-10} & Dopo ogni trasmissione controllare che l'Si4464 risponda ancora (CTS /\allowbreak{} PART\_\allowbreak{}INFO, oppure lo stato del chip). Se risulta resettato: reinizializzare, contare l'evento e segnalarlo in telemetria. Serve a vedere subito un eventuale reset da calo del 3V3 in TX \\
+\bottomrule
+\end{tabular}}\end{center}
+
+\textbf{Misura obbligatoria sul prototipo M-03:} oscilloscopio sul 3V3 al pin 5 (VDD) di IC205 durante una trasmissione a piena potenza, con il limite F-01. Requisito: minimo ≥ 3,05 V (50 mV sopra la soglia massima di 3,00 V). Se non passa, si passa al modo B (togliere R204, montare R205 0R) e si aggiorna il firmware (F-05).
+\end{notebox}
+
+\textbf{Verifica.} Netlist esportata dopo il salvataggio delle 13:11 e confrontata con quella della rev 1.33. Le uniche differenze: IC205 pin 3 passa a Net-(IC205-RESET) insieme a R204 pin 2; R204 pin 1 e R205 pin 2 sono su /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}SDN; R205 pin 1 è su RF\_\allowbreak{}MR\_\allowbreak{}N. R205 ha il flag DNP. Il resto è identico. R-19 è chiuso.

@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART '504050_0891'
+CLASS = IO
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Molex", "504050-0891" (!) = "", "5040500891", "Other", "538-504050-0891", "https://www.mouser.co.uk/ProductDetail/Molex/504050-0891?qs=bvCPb%252BE7ys1stUSzZy9loA%3D%3D", "MOLEX - 504050-0891 - CONNECTOR, RECEPTACLE, 8POS, 1ROW, 1.5MM", "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets_SAMA/0f179cfa5a733aa9aa129f4f66cd7677.pdf", "2 mm"
+END_PART
+
+END.

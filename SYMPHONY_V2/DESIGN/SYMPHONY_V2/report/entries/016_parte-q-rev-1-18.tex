@@ -1,0 +1,40 @@
+\clearpage
+\section[Parte Q – Rev. 1.18 – Componenti del foglio SENSORS (S-06)]{Parte Q – Rev. 1.18 – Componenti del foglio SENSORS (S-06)}
+
+Tutti i componenti delle due catene PT1000 hanno ora un codice d'acquisto, sempre nel footprint già presente nello schema. Con la rev. 1.17 (collegamento all'ADC) \textbf{S-06 è chiuso}.
+
+\subsection[30. Resistenze di precisione e PT1000]{30. Resistenze di precisione e PT1000}
+
+\subsubsection[30.1 Resistenze (footprint 0402 invariato)]{30.1 Resistenze (footprint 0402 invariato)}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=0.5710\hsize\raggedright\arraybackslash}X>{\hsize=0.7580\hsize\raggedright\arraybackslash}X>{\hsize=1.9960\hsize\raggedright\arraybackslash}X>{\hsize=0.9500\hsize\raggedright\arraybackslash}X>{\hsize=0.7250\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{Ref} & \textbf{Valore} & \textbf{Componente} & \textbf{JLCPCB Parts} & \textbf{Stock 24/\allowbreak{}10} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{5}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+R4, R8 & 3.16 kΩ & Yageo RT0402BRD073K16L & C852759 & 30 410 \\\midrule[0.15pt]
+R5, R12 & 105 kΩ & Viking ARG02BTC1053 & C2984407 & 12 786 \\\midrule[0.15pt]
+R6, R9 & 63.4 kΩ & Yageo RT0402BRD0763K4L & C852877 & 13 196 \\\midrule[0.15pt]
+R7, R10 & 19.6 kΩ & Yageo RT0402BRD0719K6L & C852589 & 1 824 \\
+\end{xltabular}}
+
+Tutte a film sottile, ±0.1 \%, ±25 ppm/\allowbreak{}°C, come richiesto da sch\_\allowbreak{}check\_\allowbreak{}2010 per la precisione della misura.
+
+\subsubsection[30.2 PT1000 (footprint 0603 invariato)]{30.2 PT1000 (footprint 0603 invariato)}
+
+\begin{itemize}
+\item Su JLCPCB non esiste nessuna PT1000 in 0603 (solo PT100 in 0603 e PT1000 in 1206). Il 1206 non entra nello spazio disponibile: la PT1000 si compra a parte e si salda a mano.
+\item \textbf{Yageo Nexensos (ex Heraeus) SMD 0603, Pt1000, classe F0.3 (B), codice d'ordine 32207638}. Corpo 1.7 × 0.9 × 0.45 mm, compatibile con il footprint R\_\allowbreak{}0603. Classe B valida da −50 a +130 °C, 3850 ppm/\allowbreak{}K, DIN EN IEC 60751. In alternativa, classe 2B: 32207637.
+\item Nota: Vishay PTS0603, indicata in un primo momento, esiste solo da 100 Ω; in 1000 Ω la serie PTS è solo 1206.
+\item Su Mouser e DigiKey si trova cercando il codice costruttore 32207638. Il codice interno del distributore non è stato verificato (il sito non risponde alle ricerche automatiche).
+\item Nello schema: Manufacturer e MPN compilati, \textquotedblleft{}JLCPCB Parts\textquotedblright{} vuoto, quindi JLCPCB lascia vuote le piazzole.
+\end{itemize}
+
+\subsubsection[30.3 Nota sulla corrente di misura]{30.3 Nota sulla corrente di misura}
+
+Con R4/\allowbreak{}R8 = 3.16 kΩ dal 3V3, nella PT1000 passano circa 0.8 mA (a 0 °C), contro 0.1–0.3 mA consigliati dal datasheet. L'autoriscaldamento (0.8 K/\allowbreak{}mW) è circa 0.5 K: accettabile per il controllo della temperatura di PA e convertitore, e in gran parte tolto dalla calibrazione a un punto. Se servisse più precisione, va ridimensionato il ponte (resistenze più grandi e nuovo guadagno): non fatto, il circuito resta quello verificato in sch\_\allowbreak{}check\_\allowbreak{}2010.
+
+\textbf{Verifica.} BOM esportata: tutti i codici e campi come in tabella, footprint invariati. Netlist identica alla rev. 1.17. ERC identico (138).

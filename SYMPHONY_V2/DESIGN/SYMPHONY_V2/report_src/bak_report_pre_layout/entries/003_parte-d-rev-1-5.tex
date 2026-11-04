@@ -1,0 +1,40 @@
+\clearpage
+\section[Parte D – Rev. 1.5 – Correzioni del 20/\allowbreak{}10 e supervisore sulla SDN del Si4464]{Parte D – Rev. 1.5 – Correzioni del 20/\allowbreak{}10 e supervisore sulla SDN del Si4464}
+
+Questa revisione registra le correzioni fatte da Brik81 dopo la rev. 1.4 (§16) e la modifica S-01 eseguita da Claude Code (§17). La verifica completa dei passivi è nel report separato \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf}.
+
+\subsection[16. Correzioni di Brik81 (1.4+)]{16. Correzioni di Brik81 (1.4+) \tg{tagdone}{modificato da Brik81}}
+
+Rilevate confrontando la netlist della rev. 1.4 con quella del salvataggio KiCad delle 14:38, e verificate in \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf} §2. Le proposte P8–P12 e P14 risultano chiuse. Righe 1.4+-01…09 del registro modifiche.
+
+\subsection[17. S-01 – Supervisore TPS3825-33 sulla SDN del Si4464]{17. S-01 – Supervisore TPS3825-33 sulla SDN del Si4464 \tg{tagdone}{modificato v1.5}}
+
+\textbf{Problema.} SDN era a GND, quindi il POR del Si4464 dipendeva solo dalla rampa del 3V3. Il datasheet chiede una rampa ≤ 1 ms, mentre il soft-start del buck TPSM863257 è circa 1.6 ms. In alternativa serve un impulso su SDN (alto ≥ 10 µs, poi basso).
+
+\textbf{Soluzione (scelta di Brik81).} Supervisore TI TPS3825-33DBVR (soglia 2.93 V, ritardo circa 200 ms, uscite push-pull, ingresso \textasciitilde{}MR):
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1731}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3005}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.5264}{24pt}{0pt}}}
+\toprule
+\textbf{Pin IC205} & \textbf{Collegamento} & \textbf{Funzione} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+5 VDD & 3V3, C263 100n a GND & alimentazione \\\midrule[0.15pt]
+2 GND & GND & – \\\midrule[0.15pt]
+3 RESET (attivo alto) & RF\_\allowbreak{}SDN → IC204 pin 1 & SDN alto finché 3V3 < 2.93 V e per circa 200 ms dopo: POR pulito del Si4464, indipendente dalla rampa \\\midrule[0.15pt]
+4 \textasciitilde{}MR & RF\_\allowbreak{}MR\_\allowbreak{}N → PC4 (U301 pin 24), R208 10k a 3V3 & PC4 basso = reset della radio da firmware. Con PC4 in alta impedenza (boot, reset MCU) la pull-up tiene la radio attiva \\\midrule[0.15pt]
+1 \textasciitilde{}RESET (attivo basso) & R209 1k5 → D203 LED rosso → GND & LED acceso = radio fuori reset. I ≈ (3.3 − 1.9) /\allowbreak{} 1.5 k ≈ 0.9 mA \\
+\end{longtable}}
+
+\begin{itemize}
+\item \textbf{PC4}: pin libero, non serve per l'ADC dei sensori (PA2, PA3, PA4, PC1, PB0, PB1 restano liberi). Nessun conflitto con PC3 (5v\_\allowbreak{}TX\_\allowbreak{}EN).
+\item \textbf{Firmware}: dopo aver rilasciato \textasciitilde{}MR (o all'accensione) aspettare almeno 200 ms di ritardo del supervisore, più il tempo di POR del Si4464, prima di mandare comandi SPI (controllare CTS).
+\item \textbf{Codici JLCPCB} (stock al 20/\allowbreak{}10): IC205 C473344 (1 285 pz), R209 C25867 Basic (1.75 M), D203 C130719 (556 k), R208 C71617, C263 C77014 (già usati nel progetto).
+\end{itemize}
+
+\textbf{Verifica.} Netlist rigenerata con kicad-cli: RF\_\allowbreak{}SDN = IC204.1 + IC205.3; RF\_\allowbreak{}MR\_\allowbreak{}N = IC205.4 + R208.2 + U301.24; nessun'altra rete cambiata rispetto a prima della modifica. ERC: stesso elenco di prima, con un solo avviso nuovo (C263, lib\_\allowbreak{}symbol\_\allowbreak{}mismatch, uguale a quello degli altri C\_\allowbreak{}Small del foglio) e uno in meno (PC4 non più scollegato).
+
+\begin{notebox}
+\textbf{Da fare in KiCad.} KiCad era aperto durante la modifica: \textbf{ricaricare} UHF e MCU senza salvare sopra la versione aperta. Poi aggiornare il PCB da schema (compaiono IC205, C263, R208, R209, D203).
+\end{notebox}

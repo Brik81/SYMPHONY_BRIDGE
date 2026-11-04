@@ -1,0 +1,9 @@
+Manufacturer=Analog Devices
+PartNumber=HMC349AMS8GE
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=9
+Version=6.1
+Released=2020-11-25 08:25:29
+Downloaded=2026-06-11 07:29:46
+3D=Y

@@ -1,0 +1,149 @@
+\clearpage
+\section[Parte K – Rev. 1.12 – Netclass RF e guida al layout UHF]{Parte K – Rev. 1.12 – Netclass RF e guida al layout UHF}
+
+Le reti RF del foglio UHF hanno ora una netclass con larghezza e distanze adatte. La coppia RX del Si4464 è una coppia differenziale. Questa parte serve come guida per quando inizierà il PCB (il PCB non esiste ancora: niente qui va applicato finché lo schema non è finito).
+
+\subsection[24. Netclass e layout della parte RF]{24. Netclass e layout della parte RF \tg{tagdone}{modificato v1.12}}
+
+\subsubsection[24.1 Stackup e linee a 50 Ω]{24.1 Stackup e linee a 50 Ω}
+
+\begin{itemize}
+\item Stackup del progetto: 4 strati, 1.6 mm. F.Cu – prepreg 0.1 mm – In1.Cu – core 0.535 mm – In2.Cu – prepreg 0.1 mm – B.Cu (come JLC04161H-3313, prepreg 3313 εr ≈ 4.1; nel progetto εr 4.5).
+\item Riferimento delle linee RF su F.Cu: \textbf{In1.Cu = GND pieno} sotto tutta la zona RF, senza tagli e senza altre piste.
+\item \textbf{Linea consigliata: coplanare con massa (CPWG), pista 0.20 mm, distanza dal GND di F.Cu 0.20 mm.} Calcolo: 51 Ω con εr 4.1, 49 Ω con εr 4.5. Microstriscia semplice a 50 Ω: circa 0.17 mm.
+\item Prima di sbrogliare, verificare con il calcolatore di impedenza JLCPCB per lo stackup scelto e, se cambia, aggiornare la larghezza della netclass RF\_\allowbreak{}50R.
+\item A 435 MHz λ in scheda ≈ 390 mm: piste RF di pochi mm sono corte, ma vanno comunque tenute a 50 Ω, dritte e senza stub. Curve a 45° o ad arco.
+\item Via di cucitura GND lungo le linee RF e lungo il bordo del GND di F.Cu: \textbf{passo ≤ 2 mm} (copre anche le armoniche del PA fino a qualche GHz).
+\end{itemize}
+
+\subsubsection[24.2 Netclass]{24.2 Netclass}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=0.5624\hsize\raggedright\arraybackslash}X>{\hsize=0.7672\hsize\raggedright\arraybackslash}X>{\hsize=0.3280\hsize\raggedright\arraybackslash}X>{\hsize=2.3424\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{Netclass} & \textbf{Pista /\allowbreak{} distanza} & \textbf{Via} & \textbf{Reti} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{4}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+\textbf{RF\_\allowbreak{}50R} & 0.20 /\allowbreak{} 0.20 mm & 0.6 /\allowbreak{} 0.3 & tutta la catena a 50 Ω: J201 – C206 – IC202 (RFC, RF1, RF2), catena RX fino a C218/\allowbreak{}L204, FL201 ingresso e uscita, nodo C230/\allowbreak{}L243, catena TX dal pin TX del Si4464 fino a RF\_\allowbreak{}IN del PA (20 reti) \\\midrule[0.15pt]
+\textbf{RF\_\allowbreak{}DIFF} & 0.20 mm, gap 0.20 mm & – & /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}P, /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}N (pin RXP/\allowbreak{}RXN del Si4464, dopo la rete AN643) \\\midrule[0.15pt]
+\textbf{RF\_\allowbreak{}PA\_\allowbreak{}OUT} & 1.0 /\allowbreak{} 0.25 mm & 0.8 /\allowbreak{} 0.4 & Net-(IC2-RF\_\allowbreak{}OUT\_\allowbreak{}1): uscita del PA, RF e fino a 1.7 A DC da L242 \\\midrule[0.15pt]
+\textbf{RF\_\allowbreak{}CLK} & 0.20 /\allowbreak{} 0.30 mm & – & TCXO Y201 → C204 → R201 → XIN del Si4464 \\\midrule[0.15pt]
+\textbf{PA\_\allowbreak{}BIAS} & 0.50 /\allowbreak{} 0.20 mm & 0.8 /\allowbreak{} 0.4 & VCC1 e VCC2 del PA (L240, L241 con i loro filtri) \\\midrule[0.15pt]
+\textbf{PWR} & 0.50 /\allowbreak{} 0.20 mm & 0.8 /\allowbreak{} 0.4 & 3V3, 5V0 \\
+\end{xltabular}}
+
+Le assegnazioni sono nel progetto (Impostazioni → Netclass → assegnazioni). Molte reti RF hanno nomi automatici, tipo Net-(C230-Pad2): se un componente viene rinumerato, l'assegnazione si perde. Prima del layout, ricontrollare che tutte le 31 assegnazioni trovino ancora la rete (oppure dare un nome alle reti RF con etichette).
+
+\textbf{Coppia differenziale RX.} La coppia RF\_\allowbreak{}RX\_\allowbreak{}P /\allowbreak{} RF\_\allowbreak{}RX\_\allowbreak{}N va dalla rete AN643 ai pin 2 e 3 del Si4464. L'impedenza differenziale non è il punto (l'ingresso del LNA è circa 480 Ω): conta che le due piste siano \textbf{corte (< 3 mm), uguali e simmetriche}. L206 va messo direttamente tra i pad RXP e RXN, C220 vicino al pad RXN con via GND subito accanto.
+
+\subsubsection[24.3 Schema di posizionamento]{24.3 Schema di posizionamento}
+
+\begin{center}
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[x=0.0265cm,y=-0.0265cm]
+\path[fill={rgb,255:red,250;green,250;blue,250},draw={rgb,255:red,153;green,153;blue,153},dash pattern=on 3pt off 2pt] (2,2) rectangle (638,328);
+\node[inner sep=0pt,font=\fontsize{4.8pt}{5.8pt}\selectfont,text={rgb,255:red,102;green,102;blue,102},anchor=base west] at (10,16) {schema indicativo, non in scala. Tutta la zona RF ha In1.Cu = GND pieno, senza tagli};
+\path[fill={rgb,255:red,85;green,85;blue,85}] (2,120) rectangle (10,190);
+\node[inner sep=0pt,font=\fontsize{4.2pt}{5.2pt}\selectfont,anchor=base west] at (14,200) {bordo scheda};
+\path[fill={rgb,255:red,221;green,221;blue,221},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (14,135) rectangle (60,175);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (37.0,151.0) {\bfseries J201};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (37.0,163.0) {MMCX};
+\path[fill={rgb,255:red,255;green,255;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (80,140) rectangle (114,170);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (97.0,158.0) {\bfseries C206};
+\path[fill={rgb,255:red,238;green,238;blue,238},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (132,130) rectangle (186,180);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (159.0,151.0) {\bfseries IC202};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (159.0,163.0) {HMC349 switch};
+\path[fill={rgb,255:red,219;green,233;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (132,40) rectangle (186,80);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (159.0,56.0) {\bfseries C207 L201};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (159.0,68.0) {C209 C210};
+\path[fill={rgb,255:red,219;green,233;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (206,40) rectangle (254,80);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (230.0,56.0) {\bfseries C212};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (230.0,68.0) {ingresso LNA};
+\path[fill={rgb,255:red,219;green,233;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (272,32) rectangle (328,88);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (300.0,56.0) {\bfseries Q201};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (300.0,68.0) {TQP3M9036 + L202};
+\path[fill={rgb,255:red,219;green,233;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (346,40) rectangle (416,80);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (381.0,56.0) {\bfseries C213 L203};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (381.0,68.0) {C216 C217 L204 C218};
+\path[fill={rgb,255:red,219;green,233;blue,255},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (434,40) rectangle (498,80);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (466.0,56.0) {\bfseries C219 L205};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (466.0,68.0) {L206 C220 (AN643)};
+\path[fill={rgb,255:red,232;green,246;blue,232},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (520,70) rectangle (600,160);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (560.0,111.0) {\bfseries IC204};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (560.0,123.0) {Si4464};
+\path[fill={rgb,255:red,255;green,247;blue,192},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (440,125) rectangle (500,159);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (470.0,138.0) {\bfseries Y201};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (470.0,150.0) {TCXO 30 MHz};
+\path[fill={rgb,255:red,255;green,225;blue,214},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (520,230) rectangle (600,270);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (560.0,246.0) {\bfseries L703 C702};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (560.0,258.0) {L702 C704 C701};
+\path[fill={rgb,255:red,255;green,225;blue,214},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (430,230) rectangle (502,270);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (466.0,246.0) {\bfseries R245–R248};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (466.0,258.0) {pad + C255};
+\path[fill={rgb,255:red,255;green,201;blue,181},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (330,215) rectangle (412,285);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (371.0,246.0) {\bfseries IC2};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (371.0,258.0) {QPA9510 + vias termici};
+\path[fill={rgb,255:red,244;green,244;blue,244},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (330,295) rectangle (412,323);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (371.0,305.0) {\bfseries L240 L241 L242};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (371.0,317.0) {C240…C258, C245 C256};
+\path[fill={rgb,255:red,255;green,225;blue,214},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (242,225) rectangle (312,275);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (277.0,246.0) {\bfseries L243 C260};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (277.0,258.0) {C261 C262 C230};
+\path[fill={rgb,255:red,255;green,225;blue,214},draw={rgb,255:red,51;green,51;blue,51},line width=0.8pt,rounded corners=1.5pt] (150,225) rectangle (220,275);
+\node[inner sep=0pt,font=\fontsize{5.1pt}{6.1pt}\selectfont,anchor=base] at (185.0,246.0) {\bfseries FL201};
+\node[inner sep=0pt,font=\fontsize{3.9pt}{4.9pt}\selectfont,anchor=base] at (185.0,258.0) {LFCG-490 + C208};
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (60,155) -- (80,155);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (114,155) -- (132,155);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (159,130) -- (159,80);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (186,60) -- (206,60);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (254,60) -- (272,60);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (328,60) -- (346,60);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (416,60) -- (434,60);
+\draw[draw={rgb,255:red,0;green,102;blue,204},line width=2pt,-{Stealth[length=3pt]}] (498,70) -- (520,100);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (560,160) -- (560,230);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (520,250) -- (502,250);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (430,250) -- (412,250);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (330,250) -- (312,250);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (242,250) -- (220,250);
+\draw[draw={rgb,255:red,204;green,0;blue,0},line width=2pt,-{Stealth[length=3pt]}] (185,225) -- (172,180);
+\draw[draw={rgb,255:red,153;green,153;blue,153},line width=1pt,dash pattern=on 3pt off 2pt] (500,142) -- (520,142);
+\node[inner sep=0pt,font=\fontsize{5.4pt}{6.4pt}\selectfont,text={rgb,255:red,0;green,102;blue,204},anchor=base west] at (250,110) {\bfseries RX (blu, piccolo segnale)};
+\node[inner sep=0pt,font=\fontsize{5.4pt}{6.4pt}\selectfont,text={rgb,255:red,204;green,0;blue,0},anchor=base west] at (200,210) {\bfseries TX (rosso, fino a +35 dBm)};
+\draw[draw={rgb,255:red,136;green,136;blue,136},line width=1pt,dash pattern=on 3pt off 2pt] (10,195) -- (630,195);
+\node[inner sep=0pt,font=\fontsize{4.2pt}{5.2pt}\selectfont,text={rgb,255:red,85;green,85;blue,85},anchor=base west] at (300,191) {separazione RX /\allowbreak{} TX: fila di via GND + via di cucitura};
+\node[inner sep=0pt,font=\fontsize{4.2pt}{5.2pt}\selectfont,text={rgb,255:red,85;green,85;blue,85},anchor=base west] at (420,320) {3V3 al PA: pour ≥ 1 mm dal regolatore};
+\end{tikzpicture}\end{adjustbox}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Percorso del segnale in linea, senza tornare indietro}: J201 sul bordo → C206 → switch IC202. Da lì la catena RX (sopra) e la catena TX (sotto) partono in direzioni opposte e non si incrociano.
+\item \textbf{RX}: IC202 RF1 → C207/\allowbreak{}L201 → C212 → LNA Q201 → filtro C213…C218 → rete AN643 → Si4464. Il LNA va vicino allo switch: ogni mm di pista prima del LNA aggiunge rumore.
+\item \textbf{TX}: Si4464 TX → L703/\allowbreak{}C702/\allowbreak{}L702/\allowbreak{}C704/\allowbreak{}C701 → attenuatore R245–R248 → C255 → PA IC2 → L243/\allowbreak{}C260/\allowbreak{}C261/\allowbreak{}C262 → C230 → FL201 (passa-basso, toglie le armoniche) → C208 → IC202 RF2.
+\item \textbf{FL201 tra PA e switch}, con ingresso e uscita lontani tra loro: se si vedono, le armoniche passano sopra il filtro.
+\item \textbf{PA lontano} dall'ingresso RX del Si4464, dal LNA e dal TCXO Y201 (almeno 10–15 mm). Una fila di via GND separa la zona TX dalla zona RX.
+\item \textbf{Y201 vicino al pin XIN del Si4464}, pista corta (RF\_\allowbreak{}CLK), lontano dal PA e dalle piste di potenza.
+\item Su B.Cu sotto la zona RF solo GND. Le piste digitali (SPI, IRQ, controllo switch) arrivano dal lato MCU e non passano sotto le linee RF.
+\item Se servirà uno schermo metallico: solo clip o telaio SMD (niente componenti a foro passante).
+\end{itemize}
+
+\subsubsection[24.4 Alimentazione e calore del PA]{24.4 Alimentazione e calore del PA}
+
+\begin{itemize}
+\item 3V3 → L242 → RF\_\allowbreak{}OUT porta fino a 1.7 A. Secondo IPC-2221 (+10 °C) servono almeno 0.62 mm su strato esterno da 35 µm, oppure 1.6 mm su strato interno. Nel vuoto il calore non va via per convezione: \textbf{usare 1 mm o un pour} dal regolatore fino a L242, con almeno 4 via 0.4 mm per ogni cambio di strato.
+\item Disaccoppiamento di ogni pin di alimentazione del PA: condensatore piccolo (100 p /\allowbreak{} 330 p /\allowbreak{} 1 n) attaccato al pin, poi 10 n, poi 10 µ. Ogni condensatore con il suo via GND direttamente sul pad.
+\item Il PA alla massima potenza dissipa circa \textbf{2.1 W} (5.3 W assorbiti, 3.2 W in uscita). Pad termico di IC2: \textbf{9 via 0.3 mm} (matrice 3×3, meglio riempite e chiuse), collegate a GND interno e a un'ampia area di rame su B.Cu, che va accoppiata termicamente alla struttura del CubeSat. Stesso trattamento, più leggero, per il pad del Si4464 e del LNA.
+\item Se la trasmissione dura a lungo, verificare la temperatura del PA con il ciclo di lavoro reale (S-14).
+\end{itemize}
+
+\subsubsection[24.5 Cose a cui stare attenti]{24.5 Cose a cui stare attenti}
+
+\begin{itemize}
+\item I footprint \textquotedblleft{}HandSolder\textquotedblright{} hanno pad più grandi della pista da 0.2 mm. A 435 MHz è accettabile, ma i pad grandi aggiungono capacità: per C219, C220, L205, L206 e la rete d'uscita del PA vanno bene i footprint standard (senza HandSolder) se il montaggio è fatto da JLCPCB.
+\item Nessun via sulla linea RF salvo necessità. Se serve, metterci accanto 2–4 via GND.
+\item MMCX J201: GND di F.Cu intorno al pad centrale con molti via. Il primo componente (C206) va subito dopo il connettore.
+\item Nessun piano di alimentazione sotto le linee RF: In2.Cu è per le alimentazioni, ma In1.Cu deve restare GND tra le due.
+\item I valori della rete d'uscita del PA (C260, L243, C261, C262) e della rete RX (C219, L205, C220, L206) andranno ritoccati sul prototipo con un VNA: lasciare spazio per sostituirli a mano.
+\end{itemize}
+
+\textbf{Verifica.} Netlist: stessi collegamenti della rev. 1.11, cambiano solo i nomi delle due reti RX. ERC identico (138, nessuna nuova). Tutte le 31 assegnazioni di netclass trovano la loro rete.

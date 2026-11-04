@@ -1,0 +1,21 @@
+*PADS-LIBRARY-PART-TYPES-V9*
+
+CX2016DB24000D0FLJC6 CX2016DB32000D0WZRC1 I OSC 7 1 0 0 0
+TIMESTAMP 2025.10.12.17.26.24
+"Mouser Part Number" 581-CX2016DB24000DLJ
+"Mouser Price/Stock" https://www.mouser.co.uk/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D
+"Manufacturer_Name" Kyocera AVX
+"Manufacturer_Part_Number" CX2016DB24000D0FLJC6
+"Description" Crystals AEC-Q200 24MHz 8pF 2x1.6mm
+"Datasheet Link" https://www.mouser.in/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D
+"Geometry.Height" 0mm
+GATE 1 4 0
+CX2016DB24000D0FLJC6
+1 0 U HOT_1
+2 0 U GND
+3 0 U HOT_2
+4 0 U GND(NC)
+
+*END*
+*REMARK* SamacSys ECAD Model
+1658330/1290185/2.50/4/4/Crystal or Oscillator

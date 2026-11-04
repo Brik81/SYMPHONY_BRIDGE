@@ -1,0 +1,6 @@
+\clearpage
+\section[Parte AI – Rev. 1.36 – C39 sul 5 V del dock (R-14)]{Parte AI – Rev. 1.36 – C39 sul 5 V del dock (R-14)}
+
+\subsection[48. C39 sull'ingresso IN1 del TPS2121]{48. C39 sull'ingresso IN1 del TPS2121}
+
+C39 (10 µF 0402 10 V X5R, Samsung CL05A106MP5NUNC, LCSC C315248) e C40 (100 nF) filtrano la rete 5V del dock (J708 pin 1/\allowbreak{}3) all'ingresso IN1 (pin 7) del TPS2121 IC4. Un X5R 0402 da 10 V polarizzato a 5 V perde gran parte della capacità; la quantità non è stata verificata sulla curva DC-bias Samsung. Sull'ingresso VBUS c'è invece C38 (10 µF 0805 25 V, C15850). Lo schema funziona anche così: Brik81 ha deciso di lasciare C39 com'è. R-14 è chiuso.

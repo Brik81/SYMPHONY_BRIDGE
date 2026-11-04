@@ -1,0 +1,9 @@
+Manufacturer=STMicroelectronics
+PartNumber=M41T82ZM6F
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=8
+Version=6.1
+Released=2015-04-16 09:48:08
+Downloaded=2026-06-19 22:13:18
+3D=Y

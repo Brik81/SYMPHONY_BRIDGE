@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'S2_LPCBQTR'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "STMicroelectronics", "S2-LPCBQTR" (!) = "", "QFN50P400X400X105-25N-D", "Quad Flat No-Lead", "511-S2-LPCBQTR", "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/S2-LPCBQTR?qs=W0yvOO0ixfES%2FSAqpeZX6Q%3D%3D", "Ultra-low power, high performance, sub-1GHz transceiver", "https://www.st.com/resource/en/datasheet/s2-lp.pdf", "1.05 mm"
+END_PART
+
+END.

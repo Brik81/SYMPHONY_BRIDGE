@@ -1,0 +1,37 @@
+\clearpage
+\section[Parte R – Rev. 1.19 – Rilievi minori S-07…S-14]{Parte R – Rev. 1.19 – Rilievi minori S-07…S-14}
+
+Esito di tutti i rilievi rimasti di sch\_\allowbreak{}check\_\allowbreak{}2010 secondo le decisioni di Brik81 del 24/\allowbreak{}10.
+
+\subsection[31. Stato dei rilievi S-01…S-14]{31. Stato dei rilievi S-01…S-14}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=0.4251\hsize\raggedright\arraybackslash}X>{\hsize=0.3378\hsize\raggedright\arraybackslash}X>{\hsize=2.2371\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{ID} & \textbf{Esito} & \textbf{Dettaglio} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{3}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+S-01 & \tg{tagdone}{chiuso} & SDN del Si4464 comandato da IC205 TPS3825-33 (uscita RESET attiva alta): radio spenta finché il 3V3 non è stabile, poi rilasciata; reset della radio dall'MCU con PC4 (RF\_\allowbreak{}MR\_\allowbreak{}N → MR). \\\midrule[0.15pt]
+S-02…S-06 & \tg{tagdone}{chiusi} & rev. 1.7, 1.9–1.18 \\\midrule[0.15pt]
+S-07 & \tg{tagdone}{chiuso v1.19} & R245 in 0603 (1.19-01). Da fare in firmware: limitare la potenza del Si4464 (PA\_\allowbreak{}PWR\_\allowbreak{}LVL), il PA in saturazione non ha bisogno di +20 dBm. \\\midrule[0.15pt]
+S-08 & \tg{tagdone}{chiuso} & R203: DNP attivo e fuori BOM, corretto da Brik81 e verificato. \\\midrule[0.15pt]
+S-09 & \tg{tagdone}{chiuso v1.20} & vedi §31.1 e §32 \\\midrule[0.15pt]
+S-10 & \tg{tagdone}{chiuso} & Etichetta 5v\_\allowbreak{}TX\_\allowbreak{}EN tolta da Brik81. PC3 ora libero: l'ERC segnala \textquotedblleft{}pin non collegato\textquotedblright{} su U301 pin 11 (manca il simbolo di non connesso). \\\midrule[0.15pt]
+S-11 & \tg{tagdone}{chiuso v1.23} & Pull-up I²C1 su JP201 volute (configurazione personalizzata). D202 sostituito con PESD5V0L2BT (§35). \\\midrule[0.15pt]
+S-12 & lasciato così & Decisione di Brik81. \\\midrule[0.15pt]
+S-13 & \tg{tagdone}{chiuso, invariato} & D9 NationStar NCD0402G1 verde smeraldo (V\textsubscript{f} ≈ 2.4 V a corrente bassa) con R49 10 kΩ: circa 0.09 mA. Il LED deve vedersi poco (serve solo per il debug iniziale): valore corretto così. \\\midrule[0.15pt]
+S-14 & \tg{tagdone}{chiuso v1.19} & C307 in 0603 16 V, L241 in 0402 1.45 A (1.19-02, 1.19-03). \\
+\end{xltabular}}
+
+\subsubsection[31.1 S-09 – Pull-up di 32KHZ e INT/\allowbreak{}SQW del DS3231M]{31.1 S-09 – Pull-up di 32KHZ e INT/\allowbreak{}SQW del DS3231M}
+
+\begin{itemize}
+\item \textbf{Perché ci sono.} Datasheet DS3231M: 32KHZ e INT/\allowbreak{}SQW sono uscite \textit{open-drain}, che senza resistenza di pull-up non danno mai il livello alto. Le pull-up sono quindi obbligatorie solo se le uscite si usano. Per entrambe il datasheet dice anche che il pin \textbf{può essere lasciato aperto se non usato}.
+\item \textbf{32KHZ (R410).} All'accensione il bit EN32KHZ vale 1: l'uscita a 32.768 kHz è attiva e funziona anche da batteria. Con R410 10 kΩ al 3V3 si sprecano circa 165 µA (3.3 V /\allowbreak{} 10 kΩ × 50 \% di duty) finché la scheda è accesa. Da backup (3V3 spento) R410 non consuma, ma l'uscita attiva aumenta un po' la corrente presa da VBAT (le correnti di batteria del datasheet sono date con EN32KHZ = 0).
+\item \textbf{INT/\allowbreak{}SQW (R411).} All'accensione INTCN = 1 e gli allarmi sono disattivati: il pin resta in alta impedenza e R411 non consuma nulla. Non è collegato all'MCU, quindi gli allarmi non sono utilizzabili.
+\item \textbf{Conclusione: non è critico.} Il circuito funziona così com'è; il costo è circa 165 µA sul 3V3. Proposta in attesa di approvazione: R410 DNP (l'uscita 32 kHz non è usata) e, in firmware, EN32KHZ = 0 (registro 0Fh, bit 3) all'avvio, che riduce anche il consumo dai supercap di S-02.
+\end{itemize}
+
+\textbf{Verifica.} BOM: R245 0603 C22775, C307 0603 C19666, L241 0402 C882467. Netlist identica. ERC 138: rispetto alla rev. 1.18 sparisce \textquotedblleft{}etichetta isolata 5v\_\allowbreak{}TX\_\allowbreak{}EN\textquotedblright{} e compare \textquotedblleft{}pin non collegato\textquotedblright{} su PC3 (modifica S-10 di Brik81).

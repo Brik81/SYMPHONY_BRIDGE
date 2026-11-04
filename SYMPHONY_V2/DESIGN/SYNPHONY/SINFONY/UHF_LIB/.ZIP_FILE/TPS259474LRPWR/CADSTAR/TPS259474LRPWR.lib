@@ -1,0 +1,16 @@
+.TPS259474LRPWR :1 ;Hot Swap Voltage Controllers 2.7-V to 23-V, 28-m?, 5.5-A eFuse with integrated reverse polarity protection
+TPS259474LRPWR
+*STM IC
+*NGS
+*PLB 1="EN/UVLO_1" 2="OVLO/ OVCSEL" 3="PG/ AUXOFF" 4="PGTH/'FLT_1'" 5="IN" 6="OUT" 7="DVDT_1" 8="GND" 9="ILM" 10="ITIMER_1" 11="EN/UVLO_2" 12="PGTH/'FLT_2'" 13="DVDT_2" 14="ITIMER_2"
+*MXP 14
+*DFN TPS259474LRPWR
+~!Mouser Part Number (595-TPS259474LRPWR)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS259474LRPWR?qs=iLbezkQI%252BsixXidX03eIQA%3D%3D)
+~!Manufacturer_Name (Texas Instruments)
+~!Manufacturer_Part_Number (TPS259474LRPWR)
+~!Link Datasheet (https://www.ti.com/lit/gpn/tps25981)
+~!Height (1mm)
+~!3D_Model (TPS259474LRPWR)
+TPS259474LRPWR
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 6.1!U 7.1!U 8.1!U 9.1!U 10.1!U 11.1!U 12.1!U 13.1!U 14.1!U 

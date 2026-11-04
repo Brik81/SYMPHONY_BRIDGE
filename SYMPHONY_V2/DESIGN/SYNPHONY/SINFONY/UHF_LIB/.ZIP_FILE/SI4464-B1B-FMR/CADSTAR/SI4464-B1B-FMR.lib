@@ -1,0 +1,16 @@
+.SI4464-B1B-FMR :1 ;RF Transceiver +20 dBm sub-GHz transmitter
+QFN50P400X400X90-21N-D
+*STM IC
+*NGS
+*PLB 1="SDN" 2="RXP" 3="RXN" 4="TX" 5="NC" 6="VDD_1" 7="TXRAMP" 8="VDD_2" 9="GPIO0" 10="GPIO1" 11="NIRQ" 12="SCLK" 13="SDO" 14="SDI" 15="NSEL" 16="XOUT" 17="XIN" 18="GND_1" 19="GPIO2" 20="GPIO3" 21="GND_2"
+*MXP 21
+*DFN SI4464-B1B-FMR
+~!Mouser Part Number (634-SI4464-B1X-FMR)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Silicon-Labs/SI4464-B1B-FMR?qs=v11sNlF%252BHAdMGha0TrMSMw%3D%3D)
+~!Manufacturer_Name (Silicon Labs)
+~!Manufacturer_Part_Number (SI4464-B1B-FMR)
+~!Link Datasheet (https://www.silabs.com/documents/public/data-sheets/Si4464-63-61-60.pdf)
+~!Height (0.9mm)
+~!3D_Model (SI4464-B1B-FMR)
+SI4464-B1B-FMR
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 6.1!U 7.1!U 8.1!U 9.1!U 10.1!U 15.1!U 14.1!U 13.1!U 12.1!U 11.1!U 21.1!U 20.1!U 19.1!U 18.1!U 17.1!U 16.1!U 

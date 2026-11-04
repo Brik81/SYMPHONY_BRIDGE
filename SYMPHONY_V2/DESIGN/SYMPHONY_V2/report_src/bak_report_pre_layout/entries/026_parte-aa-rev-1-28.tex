@@ -1,0 +1,10 @@
+\clearpage
+\section[Parte AA – Rev. 1.28 – Condensatori RF Murata GQM (R-10) e connettore USB-C (R-09)]{Parte AA – Rev. 1.28 – Condensatori RF Murata GQM (R-10) e connettore USB-C (R-09)}
+
+\subsection[40. Chiusura di R-10 e R-09]{40. Chiusura di R-10 e R-09}
+
+\textbf{R-10.} Otto condensatori del percorso RF erano Murata GRM/\allowbreak{}GCM, cioè della serie standard e non di quella ad alta Q. Su JLC (ricerca del 30/\allowbreak{}10) la serie GJM1555 in 0402 arriva al massimo a 47 pF, la GQM1555 (0402) e la GQM2195 (0805) sono a stock 0. Per mantenere i valori, compreso C255 = 56 pF che è il C1 della EVB Qorvo, Brik81 ha approvato il passaggio di tutti e otto a \textbf{GQM1875 0603}: GQM1875C2E101FB12D (C17308632, 2634 a stock, 6 pezzi) e GQM1875C2E560JB12D (C237591, 3805 a stock, 2 pezzi). Il PCB non esiste ancora, quindi il cambio di footprint non costa nulla. La tensione nominale passa a 250 V: è la stessa di prima per C212, C213 e C230, ed è più alta per gli altri. La corrente RF ammessa dal 0603 non è stata verificata sul datasheet; a questi livelli di potenza un 0603 C0G è normalmente adeguato.
+
+\textbf{R-09.} Brik81 ha deciso di lasciare J15 com'è: codice C393939 con footprint GCT\_\allowbreak{}USB4105 e 4 linguette THT del guscio. Il pin schermo era già stato allineato al footprint (S1 → SH) nella rev 1.27.
+
+\textbf{Verifica.} Netlist prima e dopo: le reti sono identiche, e gli 8 condensatori risultano con il footprint 0603 e i nuovi codici. Il gruppo B (R-08, R-09, R-10) è chiuso.

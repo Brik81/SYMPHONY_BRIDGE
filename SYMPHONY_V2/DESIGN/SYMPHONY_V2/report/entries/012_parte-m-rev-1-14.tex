@@ -1,0 +1,25 @@
+\clearpage
+\section[Parte M – Rev. 1.14 – Chiusura di S-03]{Parte M – Rev. 1.14 – Chiusura di S-03}
+
+Verifica finale della rete RX del Si4464 (§21) sullo schema della rev. 1.13. Tutti i controlli sono passati: \textbf{S-03 è chiuso}.
+
+\subsection[26. Verifica finale di S-03]{26. Verifica finale di S-03 \tg{tagdone}{chiuso v1.14}}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{xltabular}{\linewidth}{>{\hsize=0.6843\hsize\raggedright\arraybackslash}X>{\hsize=2.0799\hsize\raggedright\arraybackslash}X>{\hsize=0.2358\hsize\raggedright\arraybackslash}X}
+\toprule
+\textbf{Controllo} & \textbf{Risultato} & \textbf{Esito} \\
+\midrule
+\endhead
+\midrule[0.15pt]\multicolumn{3}{r}{\footnotesize\itshape continua sulla pagina seguente\ldots}\\\bottomrule\endfoot
+\bottomrule\endlastfoot
+Valori contro AN643 rev. 0.4, tabella 5 (434 MHz) & CR1 = C220 4.7 pF, LR1 = L206 62 nH, CR2 = C219 2.2 pF, LR2 = L205 56 nH: identici & OK \\\midrule[0.15pt]
+Collegamenti (netlist rev. 1.13) & /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}MATCH: C218, L204, C219, L205 (uscita filtro).\newline{}/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}P: C219, L206, IC204 pin 2 (RXP).\newline{}/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}N: L205, L206, C220, IC204 pin 3 (RXN).\newline{}C220 lato 1 a GND.\newline{}CR2 in serie verso RXP, LR2 dall'ingresso a RXN, CR1 da RXN a GND, LR1 tra RXP e RXN, come AN643 & OK \\\midrule[0.15pt]
+Componenti del vecchio balun & C222, C223 non più presenti in nessun foglio. Il blocco DC su RXP lo fa C219, RXN è a DC tramite L205/\allowbreak{}L206 come in AN643 & OK \\\midrule[0.15pt]
+Componenti & Tutti Murata RF: C219 GQM1875C2E2R2BB12D (C2179335), C220 GQM2195C2E4R7BB12D (C5646702), L205 LQW18AN56NG00D (C98079), L206 LQW18AN62NG00D (C162649). Codice nel campo \textquotedblleft{}JLCPCB Parts\textquotedblright{}. Footprint standard (rev. 1.13) & OK \\\midrule[0.15pt]
+Simulazione (ripetuta) & Rete da sola: −0.44 dB, RL 21.8 dB. Catena intera dall'uscita del LNA: −1.3 dB, RL 9.4 dB (prima −6.7 dB). RXP/\allowbreak{}RXN: ampiezze 1.03:1, fase −178°, cioè differenziale bilanciato & OK \\\midrule[0.15pt]
+ERC & Nessun errore di collegamento sulla rete. Restano solo gli avvisi \textquotedblleft{}lib\_\allowbreak{}symbol\_\allowbreak{}mismatch\textquotedblright{} su C218, C219, C220, che ci sono su tutto il progetto (simbolo C\_\allowbreak{}Small diverso dalla libreria: grafica, nessun effetto elettrico) & OK \\\midrule[0.15pt]
+Netclass e layout & RF\_\allowbreak{}RX\_\allowbreak{}P /\allowbreak{} RF\_\allowbreak{}RX\_\allowbreak{}N in RF\_\allowbreak{}DIFF, RF\_\allowbreak{}RX\_\allowbreak{}MATCH in RF\_\allowbreak{}50R. Regole di layout in §24.2–§24.5 & OK \\
+\end{xltabular}}
+
+\textbf{Resta per il prototipo (non blocca lo schema).} I valori di AN643 sono ottimizzati sulla scheda di prova Silicon Labs: sul nostro PCB andranno ritoccati con un VNA (S11 all'uscita del filtro con il Si4464 in RX), insieme al filtro C216–C218 /\allowbreak{} L203–L204, per portare il return loss della catena oltre 10 dB.

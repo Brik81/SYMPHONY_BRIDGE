@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'TCM1_63AX_'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Mini-Circuits", "TCM1-63AX+" (!) = "", "TCM163AX", "Other", "139-TCM1-63AX", "https://www.mouser.co.uk/ProductDetail/Mini-Circuits/TCM1-63AX%2b?qs=xZ%2FP%252Ba9zWqaLvjkaLlAVvw%3D%3D", "RF Balun 10MHz ~ 6GHz 50 / 50Ohm 6-SMD Module 10MHz ~ 6GHz 9.42dB 2.5dB", "https://www.minicircuits.com/pdfs/TCM1-63AX+.pdf?srsltid=AfmBOopccNdTW2iQ-1Z0eqWfv7bI4WP4UY3kaUh0VYjPlJWZI-4Uwe80", "4.06 mm"
+END_PART
+
+END.

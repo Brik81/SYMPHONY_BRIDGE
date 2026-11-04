@@ -1,0 +1,83 @@
+\clearpage
+\section[Rev. 1.40 -- R-21: stock dei componenti, C217/C218]{Rev. 1.40 \textendash{} R-21: stock dei componenti e sostituzione di C217/C218}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.40.
+
+\subsection{Titolo}
+R-21: stock dei componenti e sostituzione di C217/C218.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio UHF (\code{UHF.kicad\_sch}); copia precedente in \code{report\_src/bak\_pre140/UHF.kicad\_sch}.
+\item \code{C217}: rete \code{/UHF/RF\_RX\_F3}, con C213 e L203.
+\item \code{C218}: rete \code{/UHF/RF\_RX\_MATCH}, con C219, L204 e L205.
+\item Percorso di ricezione (adattamento LNA).
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Valore \SI{5,6}{\pico\farad} invariato; tabella uguale per C217 e C218. Collegamenti invariati.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}p{0.14\linewidth}p{0.4\linewidth}p{0.4\linewidth}@{}}
+\toprule
+ & \textbf{Prima} & \textbf{Dopo}\\
+\midrule
+Componente & Murata \code{GQM2195C2E5R6BB12D} & Murata \code{GQM1875C2E5R6BB12D}\\
+Dielettrico, tolleranza, tensione & C0G, $\pm$\SI{0,1}{\pico\farad}, \SI{250}{\volt} & C0G, $\pm$\SI{0,1}{\pico\farad}, \SI{250}{\volt}\\
+Package & 0805 & 0603\\
+JLCPCB & C2357067 & C2297617\\
+Footprint & \code{Capacitor\_SMD:C\_0805\_2012Metric} & \code{Capacitor\_SMD:C\_0603\_1608Metric}\\
+\bottomrule
+\end{tabular}}
+
+\subsection{Motivazione}
+Revisione indipendente del 27/10/2026, punto R-21 (stock). Stock JLC ricontrollato il 03/11/2026 su tutti i 93 codici della BOM (API JLCPCB; LCSC dà valori diversi, conta JLC). Tutte le varianti 0805 GQM2195 \SI{5,6}{\pico\farad} sono a stock 0. Scelto GQM1875 0603: stessa serie, tolleranza (B = $\pm$\SI{0,1}{\pico\farad}, letta dal codice Murata) e tensione dell'originale, stessa famiglia usata nella rev 1.28 (R-10); stock JLC 342, servono 2 pezzi per scheda. Il vicino C219 è già 0603. In ricezione la potenza è trascurabile, quindi corrente e tensione non sono critiche. Eccezione alla regola \textquotedblleft{}footprint esistenti\textquotedblright{} approvata (il PCB non esiste ancora).
+
+Altri candidati scartati: \code{GQM1875C2E5R6CB12D} C2171689 ($\pm$\SI{0,25}{\pico\farad}, stock 5389); \code{GJM1555C1H5R6BB01D} C161329 (0402, $\pm$\SI{0,1}{\pico\farad}, \SI{50}{\volt}, stock 56660), accettabile come ripiego.
+
+Approvazione di Brik81 (03/11/2026): \textquotedblleft{}si trovami un sostituto C217/C218\textquotedblright{} e, sulla proposta C2297617 0603, \textquotedblleft{}Si, se trovi anche 0402 non piango\textquotedblright{}.
+
+\subsubsection*{Fotografia dello stock JLC al 03/11/2026}
+\textbf{A stock 0 su JLC} (parti specifiche del progetto senza equivalente, nessuna modifica):
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}llp{0.45\linewidth}@{}}
+\toprule
+\textbf{Codice JLC} & \textbf{Rif.} & \textbf{Componente}\\
+\midrule
+C1236664 & U301 & STM32L562RET6P\\
+C482027 & IC204 & SI4464-B1B-FMR\\
+C52059849 & IC2 & QPA9510TR7\\
+C7278162 & J708 & Samtec FSI-110-03-G-D-AB\\
+\bottomrule
+\end{tabular}}
+
+\medskip
+\textbf{Disponibili su JLC} (a differenza di quanto indicato nella revisione del 27/10 su dati LCSC):
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}lp{0.5\linewidth}r@{}}
+\toprule
+\textbf{Codice JLC} & \textbf{Componente} & \textbf{Stock}\\
+\midrule
+C70583 & quarzo X322524MMB4SI & 26006\\
+C25092 & \SI{22}{\ohm} 0402 & 2,7 M (base)\\
+C25105 & \SI{33}{\ohm} 0402 & 1,8 M (base)\\
+C5646702 & GQM2195C2E4R7BB12D & 653\\
+C84494 & GRM32ER71A476KE15L (\SI{47}{\micro\farad}) & 97\\
+\bottomrule
+\end{tabular}}
+
+Lo STM32 nello schema è ora C1236664 (STM32L562RET6P, variante corretta; la revisione segnalava C1236672).
+
+\subsection{Impatti e criticità}
+\begin{notebox}
+Il Q del GQM1875 a \SI{435}{\mega\hertz} non è verificato sul datasheet Murata; il cambio di package 0805 $\rightarrow$ 0603 modifica di poco le parassite dell'adattamento RX. Lo stock di C2297617 (342) è basso: se scende, ripiego C161329 (0402).
+\end{notebox}
+
+\subsection{Verifiche da fare}
+Già eseguite: netlist prima e dopo, reti identiche; cambiano solo footprint e codice JLCPCB di C217 e C218.
+\begin{itemize}
+\item In collaudo misurare l'adattamento d'ingresso dell'LNA / la sensibilità RX a \SI{435}{\mega\hertz}.
+\end{itemize}

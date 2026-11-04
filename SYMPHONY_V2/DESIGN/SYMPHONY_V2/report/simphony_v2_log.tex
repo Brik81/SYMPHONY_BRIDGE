@@ -1,0 +1,195 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% font: Libertinus (serif + sans per i titoli), Inconsolata per i codici
+\usepackage{libertinus-type1}
+\usepackage{libertinust1math}
+\usepackage[scaled=0.92]{zi4}
+\usepackage[italian]{babel}
+\usepackage[a4paper,margin=1.8cm,top=2.2cm,bottom=1.9cm,footskip=24pt,headheight=20pt,headsep=12pt]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{array,booktabs,multirow,tabularx,xltabular}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{needspace}
+\usepackage{adjustbox}
+\usepackage{microtype}
+\usepackage{siunitx}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[siunitx,european]{circuitikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{titlesec}
+\usepackage{xurl}
+
+\sisetup{output-decimal-marker={,},input-decimal-markers={,.},range-phrase={\ldots},range-units=single}
+
+% simboli Unicode usati nel testo
+\DeclareUnicodeCharacter{2212}{\textminus}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2225}{\ensuremath{\parallel}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{2213}{\ensuremath{\mp}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+
+% palette
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{rulec}{HTML}{9AA5B1}
+\definecolor{extrow}{HTML}{FFF8E6}
+\definecolor{tagdone}{HTML}{1D5E27}
+\definecolor{tagcheck}{HTML}{173A6B}
+\definecolor{tagwarn}{HTML}{7A3D00}
+\definecolor{tagcrit}{HTML}{8A1414}
+\definecolor{tagnote}{HTML}{444444}
+\definecolor{boxwarn}{HTML}{C25E00}
+\definecolor{boxwarnbg}{HTML}{FFF5EA}
+\definecolor{boxcrit}{HTML}{B01C1C}
+\definecolor{boxcritbg}{HTML}{FDF0F0}
+\definecolor{boxok}{HTML}{1F7A1F}
+\definecolor{boxokbg}{HTML}{EEF8EE}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\tg}[2]{\textcolor{#1}{\textbf{[#2]}}}
+\newcommand{\cw}[3]{\dimexpr#1\dimexpr\linewidth-#2\relax+#3\relax}
+
+\tcbset{bx/.style={enhanced,breakable,frame hidden,boxrule=0pt,left=7pt,right=5pt,top=3pt,bottom=3pt,
+  before skip=5pt,after skip=5pt,fontupper=\small}}
+\newtcolorbox{notebox}{bx,colback=boxwarnbg,borderline west={2.5pt}{0pt}{boxwarn}}
+\newtcolorbox{critbox}{bx,colback=boxcritbg,borderline west={2.5pt}{0pt}{boxcrit}}
+\newtcolorbox{okbox}{bx,colback=boxokbg,borderline west={2.5pt}{0pt}{boxok}}
+
+% liste e tabelle
+\setlist{nosep,topsep=2pt,itemsep=1pt,leftmargin=*}
+\setlength{\LTpre}{2pt}\setlength{\LTpost}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\setlength{\extrarowheight}{0pt}
+
+% paragrafi, vedove e orfane
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\tolerance=1200
+\emergencystretch=3em
+\hbadness=3000\raggedbottom
+\clubpenalty=9999
+\widowpenalty=9999
+\displaywidowpenalty=9999
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+% titoli (sans) e spazio minimo a fondo pagina
+\titleformat{\section}{\Large\bfseries\sffamily\color{accent}}{}{0pt}{}[\vspace{-2pt}{\color{accent}\titlerule[1.2pt]}]
+\titleformat{\subsection}{\large\bfseries\sffamily\color{accent}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\sffamily}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{8pt}
+\titlespacing*{\subsection}{0pt}{10pt}{3pt}
+\titlespacing*{\subsubsection}{0pt}{7pt}{2pt}
+\let\oldsubsection\subsection
+\renewcommand*{\subsection}{\Needspace{5\baselineskip}\oldsubsection}
+\let\oldsubsubsection\subsubsection
+\renewcommand*{\subsubsection}{\Needspace{5\baselineskip}\oldsubsubsection}
+
+% collegamenti e metadati PDF
+\usepackage[colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,
+  bookmarksnumbered=false,bookmarksopen=true,bookmarksopenlevel=1,bookmarksdepth=2,
+  pdftitle={SYMPHONY V2 -- registro hardware (version log), rev. 1.43},
+  pdfauthor={Brik81},
+  pdfsubject={Registro delle modifiche hardware, decisioni e verifiche di progetto},
+  pdfkeywords={SYMPHONY V2, CubeSat, UHF 435 MHz, KiCad 10},
+  pdfcreator={pdfLaTeX},pdflang={it}]{hyperref}
+
+% intestazione e piede di pagina
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{accent}SYMPHONY V2 -- registro hardware}
+\fancyhead[R]{\small\sffamily rev.\ 1.43}
+\fancyfoot[C]{\small\sffamily pag.\ \thepage\ di \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulec}\leaders\hrule height \headrulewidth\hfill}}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\sffamily pag.\ \thepage\ di \pageref{LastPage}}}
+
+\begin{document}
+
+\begin{titlepage}
+\raggedright
+\sffamily
+{\color{accent}\rule{\linewidth}{4pt}}\\[8mm]
+{\color{accent}\bfseries\small 2NDSPACE \textperiodcentered{} SYMPHONY V2 \textperiodcentered{} REGISTRO MODIFICHE E VERIFICHE}\\[4mm]
+{\fontsize{26}{30}\selectfont\bfseries SYMPHONY V2 \textendash{} version log}\\[3mm]
+{\large\color{tagnote} Revisioni, modifiche approvate, decisioni e verifiche di progetto}\\[10mm]
+{\color{rulec}\rule{\linewidth}{0.4pt}}\\[4mm]
+\begin{tabularx}{\linewidth}{@{}>{\hsize=0.45\hsize\raggedright\arraybackslash}X>{\hsize=1.55\hsize\raggedright\arraybackslash}X@{}}
+\textbf{Revisione corrente} & \textbf{1.43} del 03/11/2026 \textendash{} Revisione finale indipendente: decisioni su P-02, P-03, P-05, P-06\\[4pt]
+\textbf{Progetto} & SYMPHONY\_V2, branch SYM\_V2, KiCad 10.0 (CubeSat, UHF 435 MHz)\\[4pt]
+\textbf{Data} & 03/11/2026\\[4pt]
+\textbf{Redatto da} & Claudio Codazzi\\[4pt]
+\textbf{Approvazioni} & Brik81\\
+\end{tabularx}\\[3mm]
+{\color{rulec}\rule{\linewidth}{0.4pt}}
+\vfill
+{\small Il log dalla rev.\ 1.37 in poi \`e scritto in \LaTeX; le revisioni precedenti sono state migrate senza modifiche di contenuto dal vecchio log HTML.}
+\end{titlepage}
+\setcounter{page}{2}
+
+\renewcommand{\contentsname}{Indice}
+\tableofcontents
+\clearpage
+
+\input{entries/000_registri}
+\input{entries/001_parte-b-analisi-e-modifiche}
+\input{entries/002_parte-c-rev-1-4}
+\input{entries/003_parte-d-rev-1-5}
+\input{entries/004_parte-e-rev-1-6}
+\input{entries/005_parte-f-rev-1-7}
+\input{entries/006_parte-g-rev-1-8}
+\input{entries/007_parte-h-rev-1-9}
+\input{entries/008_parte-i-rev-1-10}
+\input{entries/009_parte-j-rev-1-11}
+\input{entries/010_parte-k-rev-1-12}
+\input{entries/011_parte-l-rev-1-13}
+\input{entries/012_parte-m-rev-1-14}
+\input{entries/013_parte-n-rev-1-15}
+\input{entries/014_parte-o-rev-1-16}
+\input{entries/015_parte-p-rev-1-17}
+\input{entries/016_parte-q-rev-1-18}
+\input{entries/017_parte-r-rev-1-19}
+\input{entries/018_parte-s-rev-1-20}
+\input{entries/019_parte-t-rev-1-21}
+\input{entries/020_parte-u-rev-1-22}
+\input{entries/021_parte-v-rev-1-23}
+\input{entries/022_parte-w-rev-1-24}
+\input{entries/023_parte-x-rev-1-25}
+\input{entries/024_parte-y-rev-1-26}
+\input{entries/025_parte-z-rev-1-27}
+\input{entries/026_parte-aa-rev-1-28}
+\input{entries/027_parte-ab-rev-1-29}
+\input{entries/028_parte-ac-rev-1-30}
+\input{entries/029_parte-ad-rev-1-31}
+\input{entries/030_parte-ae-rev-1-32}
+\input{entries/031_parte-af-rev-1-33}
+\input{entries/032_parte-ag-rev-1-34}
+\input{entries/033_parte-ah-rev-1-35}
+\input{entries/034_parte-ai-rev-1-36}
+\input{entries/035_r18-precisione-pt1000}
+\input{entries/036_r17-shdn-tcan3414}
+\input{entries/037_r20-quarzo-y1-margine}
+\input{entries/038_r21-stock-c217-c218}
+\input{entries/039_watchdog-stwd100-u403}
+\input{entries/040_watchdog-disattivazione-hw-r413}
+\input{entries/041_revisione-finale-p02-p03-p05-p06}
+
+\end{document}

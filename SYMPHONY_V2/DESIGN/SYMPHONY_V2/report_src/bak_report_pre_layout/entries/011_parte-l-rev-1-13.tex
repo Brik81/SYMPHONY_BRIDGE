@@ -1,0 +1,55 @@
+\clearpage
+\section[Parte L – Rev. 1.13 – Nomi delle reti RF e footprint standard]{Parte L – Rev. 1.13 – Nomi delle reti RF e footprint standard}
+
+Completa le due raccomandazioni della Parte K: reti RF con un nome fisso e footprint con pad piccoli sul percorso RF.
+
+\subsection[25. Reti RF con nome e footprint standard]{25. Reti RF con nome e footprint standard \tg{tagdone}{modificato v1.13}}
+
+\subsubsection[25.1 Nomi delle reti]{25.1 Nomi delle reti}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.5274}{16pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.4726}{16pt}{0pt}}}
+\toprule
+\textbf{Prima} & \textbf{Ora} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Net-(J201-In) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}ANT} \\\midrule[0.15pt]
+Net-(IC202-RFC) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}SW\_\allowbreak{}COM} \\\midrule[0.15pt]
+Net-(IC202-RF1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}SW\_\allowbreak{}RX} \\\midrule[0.15pt]
+Net-(IC202-RF2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}SW\_\allowbreak{}TX} \\\midrule[0.15pt]
+Net-(FL201-OUTPUT) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}LPF\_\allowbreak{}OUT} \\\midrule[0.15pt]
+Net-(FL201-INPUT) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}LPF\_\allowbreak{}IN} \\\midrule[0.15pt]
+Net-(C230-Pad2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}PA\_\allowbreak{}MATCH} \\\midrule[0.15pt]
+Net-(C207-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}F1} \\\midrule[0.15pt]
+Net-(C209-Pad2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}F2} \\\midrule[0.15pt]
+Net-(Q201-RF\_\allowbreak{}IN) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}LNA\_\allowbreak{}IN} \\\midrule[0.15pt]
+Net-(Q201-RF\_\allowbreak{}OUT) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}LNA\_\allowbreak{}OUT} \\\midrule[0.15pt]
+Net-(C213-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}F3} \\\midrule[0.15pt]
+Net-(C216-Pad2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}F4} \\\midrule[0.15pt]
+Net-(C218-Pad2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}MATCH} \\\midrule[0.15pt]
+Net-(IC204-TX) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}SI\_\allowbreak{}TX} \\\midrule[0.15pt]
+Net-(C702-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}TX\_\allowbreak{}M1} \\\midrule[0.15pt]
+Net-(C701-Pad2) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}TX\_\allowbreak{}M2} \\\midrule[0.15pt]
+Net-(C701-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}ATT\_\allowbreak{}IN} \\\midrule[0.15pt]
+Net-(C255-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}ATT\_\allowbreak{}OUT} \\\midrule[0.15pt]
+Net-(IC2-RF\_\allowbreak{}IN) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}PA\_\allowbreak{}IN} \\\midrule[0.15pt]
+Net-(IC2-RF\_\allowbreak{}OUT\_\allowbreak{}1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}PA\_\allowbreak{}OUT} \\\midrule[0.15pt]
+Net-(Y201-OUT) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}TCXO\_\allowbreak{}OUT} \\\midrule[0.15pt]
+Net-(C204-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}TCXO\_\allowbreak{}AC} \\\midrule[0.15pt]
+Net-(IC204-XIN) & \textbf{/\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}XIN} \\\midrule[0.15pt]
+Net-(IC2-VCC1) & \textbf{/\allowbreak{}UHF/\allowbreak{}PA\_\allowbreak{}VCC1} \\\midrule[0.15pt]
+Net-(C244-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}PA\_\allowbreak{}VCC1\_\allowbreak{}F} \\\midrule[0.15pt]
+Net-(IC2-NC\_\allowbreak{}1) & \textbf{/\allowbreak{}UHF/\allowbreak{}PA\_\allowbreak{}VCC2} \\\midrule[0.15pt]
+Net-(C248-Pad1) & \textbf{/\allowbreak{}UHF/\allowbreak{}PA\_\allowbreak{}VCC2\_\allowbreak{}F} \\
+\end{longtable}}
+
+Insieme a /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}P e /\allowbreak{}UHF/\allowbreak{}RF\_\allowbreak{}RX\_\allowbreak{}N (rev. 1.12), tutte le 30 reti con netclass RF hanno un nome. Le etichette sono sui terminali dei componenti e si possono spostare in KiCad per pulizia grafica.
+
+\subsubsection[25.2 Footprint]{25.2 Footprint}
+
+Passano al footprint standard della stessa misura (per esempio \code{C\_\allowbreak{}0805\_\allowbreak{}2012Metric\_\allowbreak{}Pad1.\allowbreak{}18x1.\allowbreak{}45mm\_\allowbreak{}HandSolder} → \code{C\_\allowbreak{}0805\_\allowbreak{}2012Metric}): C209, C210, C212, C213, C216, C217, C218, C219, C220, C230, C255, C260, C261, C262, L201, L203, L204, L205, L206, L242, L243, L702, L703, R245, R246, R247, R248.
+
+Restano HandSolder i componenti di alimentazione e polarizzazione (disaccoppiamento, R240–R243, L240, L241), dove i pad grandi non disturbano. Montaggio: JLCPCB, ritocchi a mano ancora possibili sui pad standard.
+
+\textbf{Verifica.} Netlist: stessi collegamenti della rev. 1.12, ognuna delle 28 reti rinominate ha esattamente gli stessi terminali. ERC identico (138, nessuna nuova). Tutte le assegnazioni di netclass trovano la loro rete. Nessun footprint HandSolder rimasto sui 27 componenti.

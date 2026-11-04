@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'TQP3M9036'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Qorvo", "TQP3M9036" (!) = "", "SON50P200X200X95-9N-D", "Small Outline No-lead", "772-TQP3M9036", "https://www.mouser.co.uk/ProductDetail/Qorvo/TQP3M9036?qs=73ok1p1Z9vuHVw3N%2FSkE8w%3D%3D", "RF Amplifier 400-2000MHz NF.45dB Gain 19dB @.9GHz LNA", "https://www.qorvo.com/products/d/da005543", "0.95 mm"
+END_PART
+
+END.

@@ -1,0 +1,21 @@
+*PADS-LIBRARY-PART-TYPES-V9*
+
+ECS-TXO-20CSMV4-320-AY-TR ECSTXO20CSMV4320AYTR I OSC 7 1 0 0 0
+TIMESTAMP 2026.06.11.10.49.49
+"Farnell Part Number" 
+"Farnell Price/Stock" 
+"Manufacturer_Name" ECS
+"Manufacturer_Part_Number" ECS-TXO-20CSMV4-320-AY-TR
+"Description" XTAL OSC TCXO 32.0000MHZ CLPSW
+"Datasheet Link" 
+"Geometry.Height" 0.8mm
+GATE 1 4 0
+ECS-TXO-20CSMV4-320-AY-TR
+1 0 U GROUND_1
+2 0 U GROUND_2
+3 0 U OUTPUT
+4 0 U VDD
+
+*END*
+*REMARK* SamacSys ECAD Model
+18903678/1290185/2.50/4/3/Crystal or Oscillator

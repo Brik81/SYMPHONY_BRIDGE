@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'CX2016DB24000D0FLJC6'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Kyocera AVX", "CX2016DB24000D0FLJC6" (!) = "", "CX2016DB32000D0WZRC1", "Other", "581-CX2016DB24000DLJ", "https://www.mouser.co.uk/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D", "Crystals AEC-Q200 24MHz 8pF 2x1.6mm", "https://www.mouser.in/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D", "0 mm"
+END_PART
+
+END.

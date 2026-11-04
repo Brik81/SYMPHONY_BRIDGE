@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SI4464-B1B-FMR
+D RF Transceiver +20 dBm sub-GHz transmitter
+K
+F https://www.silabs.com/documents/public/data-sheets/Si4464-63-61-60.pdf
+$ENDCMP
+#
+#End Doc Library

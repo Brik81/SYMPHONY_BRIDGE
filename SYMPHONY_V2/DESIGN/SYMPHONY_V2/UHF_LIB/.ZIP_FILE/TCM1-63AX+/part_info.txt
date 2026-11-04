@@ -1,0 +1,9 @@
+Manufacturer=Mini-Circuits
+PartNumber=TCM1-63AX+
+PartCategory=Transformer
+PackageCategory=Other
+PinCount=6
+Version=2.13
+Released=2015-09-17 07:10:04
+Downloaded=2026-06-11 08:20:28
+3D=Y

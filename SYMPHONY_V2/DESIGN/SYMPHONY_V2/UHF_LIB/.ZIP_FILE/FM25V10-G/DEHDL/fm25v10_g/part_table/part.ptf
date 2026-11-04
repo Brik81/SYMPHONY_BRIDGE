@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'FM25V10_G'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Infineon", "FM25V10-G" (!) = "", "SOIC127P602X173-8N", "Small Outline Packages", "877-FM25V10-G", "https://www.mouser.co.uk/ProductDetail/Infineon-Technologies/FM25V10-G?qs=pA5MXup5wxFqKGjf8NeQmw%3D%3D", "F-RAM,128KB,SPI,40MHz,3V,SOIC8 FM25V10-G Serial-SPI FRAM Memory, 1Mbit, 2  3.6 V 8-Pin SOIC", "http://www.cypress.com/file/41691/download", "1.727 mm"
+END_PART
+
+END.

@@ -1,0 +1,49 @@
+\clearpage
+\section[Rev. 1.37 -- R-18: precisione della catena PT1000]{Rev. 1.37 \textendash{} R-18: precisione della catena PT1000, chiuso senza modifiche}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.37.
+
+\subsection{Titolo}
+R-18: precisione della catena PT1000, chiuso senza modifiche.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio SENSORS (file \code{CONNECTORS.kicad\_sch}).
+\item Sensori PT1000 \code{R\_RTD1} e \code{R\_RTD2}.
+\item Amplificatori TLV9051 \code{IC1} e \code{IC5}.
+\item Ingressi ADC1: canale 16 (PB1, \code{V\_TEMP\_PA}) e canale 2 (PC1, \code{V\_TEMP\_BUCK}).
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Nulla sullo schema. Valori della revisione indipendente, usati per la decisione:
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}p{0.42\linewidth}p{0.5\linewidth}@{}}
+\toprule
+\textbf{Grandezza} & \textbf{Valore}\\
+\midrule
+Guadagno della catena & \num{8,01}\\
+Sensibilità & $\approx$ \SI{17,3}{\milli\volt\per\celsius}\\
+Offset TLV9051 (max, \SIrange{-40}{125}{\celsius}) & $\pm$\SI{2}{\milli\volt}\\
+Offset riportato in uscita & $\approx$ $\pm$\SI{16}{\milli\volt}, cioè $\approx$ $\pm$\SI{0,9}{\celsius}\\
+Uscita a \SI{-40}{\celsius} & \SI{0,10}{\volt}\\
+Uscita a \SI{+125}{\celsius} & \SI{2,97}{\volt}\\
+Range utile senza saturazione & $\approx$ \SIrange{-45}{150}{\celsius}\\
+\bottomrule
+\end{tabular}}
+
+\subsection{Motivazione}
+La revisione indipendente del 27/10/2026 (punto R-18, suggerimento) calcola guadagno \num{8,01} e sensibilità $\approx$ \SI{17,3}{\milli\volt\per\celsius}. L'offset del TLV9051 (max $\pm$\SI{2}{\milli\volt} su \SIrange{-40}{125}{\celsius}) diventa $\approx$ $\pm$\SI{16}{\milli\volt} in uscita, cioè $\approx$ $\pm$\SI{0,9}{\celsius}. Il range utile senza saturazione è $\approx$ \SIrange{-45}{150}{\celsius} (\SI{0,10}{\volt} a \SI{-40}{\celsius}, \SI{2,97}{\volt} a \SI{+125}{\celsius}). L'errore di offset si corregge con la calibrazione a un punto per canale, già prevista dalla nota firmware F-08 (rev 1.29, §41).
+
+Approvazione di Brik81 (03/11/2026): \textquotedblleft{}NON MO DIFICHIAMO ANDIAMO AVANTI\textquotedblright{}.
+
+\subsection{Impatti e criticità}
+\begin{notebox}
+Nessun impatto hardware. Senza calibrazione l'errore di offset resta $\approx$ $\pm$\SI{0,9}{\celsius}.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item In collaudo eseguire la calibrazione a un punto per canale (F-08) e registrare gli offset.
+\end{itemize}

@@ -1,0 +1,14 @@
+\clearpage
+\section[Parte Z – Rev. 1.27 – Gruppo B: correzioni senza scelte]{Parte Z – Rev. 1.27 – Gruppo B: correzioni senza scelte}
+
+\subsection[39. Test point SMD, condensatori RF GJM, schermo USB-C]{39. Test point SMD, condensatori RF GJM, schermo USB-C}
+
+\begin{itemize}
+\item \textbf{R-08.} I test point TP701–TP703 avevano un footprint a spina through-hole, in contrasto con la regola \textquotedblleft{}solo SMD\textquotedblright{}. Ora usano il pad SMD da 1 mm, come TP1. Il pad su RF\_\allowbreak{}XIN (clock del TCXO) aggiunge qualche decimo di pF, trascurabile per un clipped sine accoppiato in AC.
+\item \textbf{R-10, parte.} I tre condensatori RF per cui esiste un Murata GJM a stock su JLC con lo stesso valore e lo stesso footprint 0402 sono stati sostituiti, scegliendo la tolleranza più stretta disponibile: C261 22 pF ±1 \%, C702 9,1 pF ±0,1 pF, C704 15 pF ±1 \%. La serie GJM15 arriva solo fino a 33 pF, quindi per i 100 pF e 56 pF serve una decisione (vedi sotto).
+\item \textbf{R-09 (a).} Il pin schermo del simbolo USB-C si chiamava S1, mentre il footprint ha i pad SH: il guscio non sarebbe stato collegato. Ora il pin si chiama SH, come nel simbolo standard di KiCad 10.
+\end{itemize}
+
+\textbf{Ancora da decidere.} R-10: C206, C207, C208, C701 (100 pF 0402), C255 (56 pF 0402), C212, C213 (100 pF 0805) e C230 (56 pF 0805) non hanno un Murata GQM/\allowbreak{}GJM a stock su JLC con lo stesso footprint. R-09 (b, c): linguette THT del guscio e codice JLC del connettore.
+
+\textbf{Verifica.} Netlist prima e dopo: l'unica differenza è J15/\allowbreak{}S1 → J15/\allowbreak{}SH sulla rete GND. Footprint e codici risultano quelli indicati.

@@ -1,0 +1,8 @@
+\clearpage
+\section[Parte AE – Rev. 1.32 – TCXO Y201 (R-07)]{Parte AE – Rev. 1.32 – TCXO Y201 (R-07)}
+
+\subsection[44. Range di temperatura del TCXO]{44. Range di temperatura del TCXO}
+
+Il TCXO ECS-TXO-20CSMV4-320-\textbf{AY} è specificato fino a −30 °C. La versione −40 °C (-AN) a 32 MHz non risulta in vendita: ECS la offre solo a 19,2, 26, 50 e 52 MHz. È stata valutata come alternativa l'Epson TG2016SMN 32 MHz (X1G0054410305, C3007493): ±0,5 ppm da −40 a +85 °C, stesso package 2016. Richiederebbe però di lasciare aperto il pin 1, che è N.C. e non va collegato a GND (datasheet Epson ver. 1.3, pag. 14), mentre oggi è a GND, e di verificare il footprint.
+
+Brik81 ha scelto di lasciare l'ECS -AY. Motivazione tecnica a supporto: sotto i −30 °C il TCXO continua a oscillare con una deriva di qualche ppm (≈ 1–2 kHz a 435 MHz), molto più piccola dello scostamento Doppler in orbita bassa (≈ ±10 kHz) che la stazione di terra insegue comunque; inoltre la scheda, dentro il satellite, difficilmente scende sotto −30 °C. Nota d'acquisto: al 02/\allowbreak{}11 su JLC c'erano solo 36 pezzi a stock.

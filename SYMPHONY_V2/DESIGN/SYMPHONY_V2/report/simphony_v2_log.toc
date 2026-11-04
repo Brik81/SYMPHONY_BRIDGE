@@ -1,0 +1,188 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {section}{Riepilogo del documento}{4}{section*.1}%
+\contentsline {subsection}{File di progetto modificati per revisione}{5}{subsection*.2}%
+\contentsline {section}{Parte A – Registri}{7}{section*.3}%
+\contentsline {subsection}{Registro revisioni}{7}{subsection*.4}%
+\contentsline {subsection}{Registro modifiche}{10}{subsection*.5}%
+\contentsline {subsection}{Registro decisioni (nessuna modifica ai file)}{21}{subsection*.6}%
+\contentsline {subsection}{Proposte in attesa di approvazione}{21}{subsection*.7}%
+\contentsline {section}{Parte B – Analisi e modifiche del 19/\allowbreak {}10/\allowbreak {}2026 (rev. 0.1–1.3)}{22}{section*.8}%
+\contentsline {subsection}{0. Sommario}{22}{subsection*.9}%
+\contentsline {subsection}{1. Verifica alimentazione (DNP esclusi)}{22}{subsection*.10}%
+\contentsline {subsubsection}{1.1 Rail 3V3 – OK}{22}{subsubsection*.11}%
+\contentsline {subsubsection}{1.2 Attenzioni (non sono errori)}{22}{subsubsection*.12}%
+\contentsline {subsubsection}{1.3 PROBLEMA TROVATO – partitori OV1 /\allowbreak {} PR1 del TPS2121 (IC4)}{23}{subsubsection*.13}%
+\contentsline {subsection}{2. TCXO collegato a XIN del Si4464}{23}{subsection*.14}%
+\contentsline {subsection}{3. Match TX del Si4464}{23}{subsection*.15}%
+\contentsline {subsection}{4. HMC349 alimentato da 5V0 – verifica}{24}{subsection*.16}%
+\contentsline {subsection}{5. APC del PA e gate di Q701}{24}{subsection*.17}%
+\contentsline {subsection}{6. Simbolo di Q701 – correzione}{24}{subsection*.18}%
+\contentsline {subsection}{M. Modifiche minori}{25}{subsection*.19}%
+\contentsline {subsection}{9. Verifica 1 – IC2 (QPA9510) ha bisogno di tutti questi passivi?}{25}{subsection*.20}%
+\contentsline {subsection}{10. Verifica 2 – codici JLCPCB, pad, tensione e Murata}{26}{subsection*.21}%
+\contentsline {subsubsection}{10.1 Errori nei codici esistenti}{26}{subsubsection*.22}%
+\contentsline {subsubsection}{10.2 Codici esistenti corretti}{27}{subsubsection*.23}%
+\contentsline {subsubsection}{10.3 Posizioni senza codice: proposta Murata}{28}{subsubsection*.24}%
+\contentsline {subsubsection}{10.4 Aggiornamento rev. 1.3 – codici applicati}{29}{subsubsection*.25}%
+\contentsline {subsection}{11. Azioni necessarie (stato rev. 1.3)}{30}{subsection*.26}%
+\contentsline {subsection}{12. Riferimenti}{30}{subsection*.27}%
+\contentsline {section}{Parte C – Rev. 1.4 – Verifica completa del progetto, foglio per foglio}{32}{section*.28}%
+\contentsline {subsection}{13. Metodo e quadro generale}{32}{subsection*.29}%
+\contentsline {subsubsection}{13.1 Foglio radice (SYMPHONY)}{32}{subsubsection*.30}%
+\contentsline {subsubsection}{13.2 POWER}{32}{subsubsection*.31}%
+\contentsline {subsubsection}{13.3 IF}{33}{subsubsection*.32}%
+\contentsline {subsubsection}{13.4 MCU}{33}{subsubsection*.33}%
+\contentsline {subsubsection}{13.5 UHF}{34}{subsubsection*.34}%
+\contentsline {subsubsection}{13.6 SENSORS (file CONNECTORS.kicad\_\allowbreak {}sch)}{35}{subsubsection*.35}%
+\contentsline {subsubsection}{13.7 MOUNTING\_\allowbreak {}HOLES}{35}{subsubsection*.36}%
+\contentsline {subsubsection}{13.8 PCB – allineamento con lo schema}{36}{subsubsection*.37}%
+\contentsline {subsection}{14. Conferma finale – dimensionamento e collegamenti, foglio per foglio}{36}{subsection*.38}%
+\contentsline {subsection}{15. Azioni necessarie (rev. 1.4)}{36}{subsection*.39}%
+\contentsline {section}{Parte D – Rev. 1.5 – Correzioni del 20/\allowbreak {}10 e supervisore sulla SDN del Si4464}{37}{section*.40}%
+\contentsline {subsection}{16. Correzioni di Brik81 (1.4+)}{37}{subsection*.41}%
+\contentsline {subsection}{17. S-01 – Supervisore TPS3825-33 sulla SDN del Si4464}{37}{subsection*.42}%
+\contentsline {section}{Parte E – Rev. 1.6 – Backup dell'RTC con supercondensatore}{38}{section*.43}%
+\contentsline {subsection}{18. S-02 – VBAT del DS3231M (U404)}{38}{subsection*.44}%
+\contentsline {subsubsection}{18.1 Situazione prima della modifica}{38}{subsubsection*.45}%
+\contentsline {subsubsection}{18.2 Soluzione}{38}{subsubsection*.46}%
+\contentsline {subsubsection}{18.3 Funziona con le sole alimentazioni a 3V3?}{38}{subsubsection*.47}%
+\contentsline {subsubsection}{18.4 Autonomia}{38}{subsubsection*.48}%
+\contentsline {subsubsection}{18.5 Note e vincoli}{38}{subsubsection*.49}%
+\contentsline {section}{Parte F – Rev. 1.7 – S-02 rifatto in SMD}{40}{section*.50}%
+\contentsline {subsection}{19. S-02 – VBAT del DS3231M con 10 × CPH3225A}{40}{subsection*.51}%
+\contentsline {subsubsection}{19.1 Circuito}{40}{subsubsection*.52}%
+\contentsline {subsubsection}{19.2 Autonomia}{40}{subsubsection*.53}%
+\contentsline {subsubsection}{19.3 Note e vincoli}{40}{subsubsection*.54}%
+\contentsline {section}{Parte G – Rev. 1.8 – UART di programmazione su USART1}{42}{section*.55}%
+\contentsline {subsection}{20. U402 su USART1}{42}{subsection*.56}%
+\contentsline {subsubsection}{20.1 Situazione e modifica}{42}{subsubsection*.57}%
+\contentsline {subsubsection}{20.2 Verifica}{42}{subsubsection*.58}%
+\contentsline {subsubsection}{20.3 Note}{42}{subsubsection*.59}%
+\contentsline {section}{Parte H – Rev. 1.9 – Rete RX del Si4464 secondo AN643}{43}{section*.60}%
+\contentsline {subsection}{21. S-03 – Rete RX del Si4464}{43}{subsection*.61}%
+\contentsline {subsubsection}{21.1 Situazione prima della modifica}{43}{subsubsection*.62}%
+\contentsline {subsubsection}{21.2 Rete nuova (AN643 §4.2, Tab. 5, 434 MHz)}{43}{subsubsection*.63}%
+\contentsline {subsubsection}{21.3 Confronto simulato (434 MHz, induttori con Q = 40, carico 480 Ω ∥ 0.97 pF)}{43}{subsubsection*.64}%
+\contentsline {subsubsection}{21.4 Note}{43}{subsubsection*.65}%
+\contentsline {section}{Parte I – Rev. 1.10 – Campo \textquotedblleft {}JLCPCB Parts\textquotedblright {} unificato}{45}{section*.66}%
+\contentsline {subsection}{22. Unificazione del campo codice JLCPCB}{45}{subsection*.67}%
+\contentsline {subsubsection}{22.1 Verifica}{45}{subsubsection*.68}%
+\contentsline {subsubsection}{22.2 Componenti senza codice JLCPCB (30)}{45}{subsubsection*.69}%
+\contentsline {section}{Parte J – Rev. 1.11 – Induttore L242 del PA e verifica degli induttori}{46}{section*.70}%
+\contentsline {subsection}{23. L242 – induttore di alimentazione dello stadio finale del QPA9510}{46}{subsection*.71}%
+\contentsline {subsubsection}{23.1 Corrente}{46}{subsubsection*.72}%
+\contentsline {subsubsection}{23.2 Scelta}{46}{subsubsection*.73}%
+\contentsline {subsubsection}{23.3 Verifica di tutti gli induttori del progetto}{46}{subsubsection*.74}%
+\contentsline {section}{Parte K – Rev. 1.12 – Netclass RF e guida al layout UHF}{47}{section*.75}%
+\contentsline {subsection}{24. Netclass e layout della parte RF}{47}{subsection*.76}%
+\contentsline {subsubsection}{24.1 Stackup e linee a 50 Ω}{47}{subsubsection*.77}%
+\contentsline {subsubsection}{24.2 Netclass}{47}{subsubsection*.78}%
+\contentsline {subsubsection}{24.3 Schema di posizionamento}{48}{subsubsection*.79}%
+\contentsline {subsubsection}{24.4 Alimentazione e calore del PA}{48}{subsubsection*.80}%
+\contentsline {subsubsection}{24.5 Cose a cui stare attenti}{48}{subsubsection*.81}%
+\contentsline {section}{Parte L – Rev. 1.13 – Nomi delle reti RF e footprint standard}{49}{section*.82}%
+\contentsline {subsection}{25. Reti RF con nome e footprint standard}{49}{subsection*.83}%
+\contentsline {subsubsection}{25.1 Nomi delle reti}{49}{subsubsection*.84}%
+\contentsline {subsubsection}{25.2 Footprint}{49}{subsubsection*.85}%
+\contentsline {section}{Parte M – Rev. 1.14 – Chiusura di S-03}{50}{section*.86}%
+\contentsline {subsection}{26. Verifica finale di S-03}{50}{subsection*.87}%
+\contentsline {section}{Parte N – Rev. 1.15 – Quarzo HSE Y1 (S-04)}{51}{section*.88}%
+\contentsline {subsection}{27. S-04 – Quarzo Y1 dell'STM32L562}{51}{subsection*.89}%
+\contentsline {section}{Parte O – Rev. 1.16 – Condensatori su IN1 del TPS2121 (S-05)}{52}{section*.90}%
+\contentsline {subsection}{28. S-05 – Ingresso IN1 del TPS2121}{52}{subsection*.91}%
+\contentsline {section}{Parte P – Rev. 1.17 – Sensori di temperatura sull'ADC (S-06)}{53}{section*.92}%
+\contentsline {subsection}{29. S-06 – Uscite V\_\allowbreak {}TEMP verso l'ADC}{53}{subsection*.93}%
+\contentsline {subsubsection}{29.1 Ingressi ADC disponibili}{53}{subsubsection*.94}%
+\contentsline {subsubsection}{29.2 Ancora aperto in S-06}{53}{subsubsection*.95}%
+\contentsline {section}{Parte Q – Rev. 1.18 – Componenti del foglio SENSORS (S-06)}{54}{section*.96}%
+\contentsline {subsection}{30. Resistenze di precisione e PT1000}{54}{subsection*.97}%
+\contentsline {subsubsection}{30.1 Resistenze (footprint 0402 invariato)}{54}{subsubsection*.98}%
+\contentsline {subsubsection}{30.2 PT1000 (footprint 0603 invariato)}{54}{subsubsection*.99}%
+\contentsline {subsubsection}{30.3 Nota sulla corrente di misura}{54}{subsubsection*.100}%
+\contentsline {section}{Parte R – Rev. 1.19 – Rilievi minori S-07…S-14}{55}{section*.101}%
+\contentsline {subsection}{31. Stato dei rilievi S-01…S-14}{55}{subsection*.102}%
+\contentsline {subsubsection}{31.1 S-09 – Pull-up di 32KHZ e INT/\allowbreak {}SQW del DS3231M}{55}{subsubsection*.103}%
+\contentsline {section}{Parte S – Rev. 1.20 – S-09, pin non usati dell'MCU, VBAT del DS3231M}{56}{section*.104}%
+\contentsline {subsection}{32. Dettaglio}{56}{subsection*.105}%
+\contentsline {section}{Parte T – Rev. 1.21 – Footprint CPH3225A e pulizia}{57}{section*.106}%
+\contentsline {subsection}{33. Origine del footprint CPH3225A}{57}{subsection*.107}%
+\contentsline {section}{Parte U – Rev. 1.22 – Etichetta EN\_\allowbreak {}RX\_\allowbreak {}LNA nel foglio MCU}{58}{section*.108}%
+\contentsline {subsection}{34. UHF.EN\_\allowbreak {}RX\_\allowbreak {}LNA}{58}{subsection*.109}%
+\contentsline {section}{Parte V – Rev. 1.23 – Protezione ESD dell'I²C1 (S-11)}{59}{section*.110}%
+\contentsline {subsection}{35. D202: TVS per CAN o per I²C}{59}{subsection*.111}%
+\contentsline {section}{Parte W – Rev. 1.24 – Revisione indipendente del 27/\allowbreak {}10: R-01 e R-02}{60}{section*.112}%
+\contentsline {subsection}{36. Correzione dei codici JLC di U301 e IC1/\allowbreak {}IC5}{60}{subsection*.113}%
+\contentsline {section}{Parte X – Rev. 1.25 – Choke del PA: ritorno alla rete Qorvo (R-03, R-11)}{61}{section*.114}%
+\contentsline {subsection}{37. L242 = 1 µH e C260 = 27 pF}{61}{subsection*.115}%
+\contentsline {section}{Parte Y – Rev. 1.26 – Codici JLC (R-05) e datasheet di U701 (R-22)}{62}{section*.116}%
+\contentsline {subsection}{38. Correzioni di BOM e documentazione}{62}{subsection*.117}%
+\contentsline {section}{Parte Z – Rev. 1.27 – Gruppo B: correzioni senza scelte}{63}{section*.118}%
+\contentsline {subsection}{39. Test point SMD, condensatori RF GJM, schermo USB-C}{63}{subsection*.119}%
+\contentsline {section}{Parte AA – Rev. 1.28 – Condensatori RF Murata GQM (R-10) e connettore USB-C (R-09)}{64}{section*.120}%
+\contentsline {subsection}{40. Chiusura di R-10 e R-09}{64}{subsection*.121}%
+\contentsline {section}{Parte AB – Rev. 1.29 – Potenza TX (R-04) e note per il firmware}{65}{section*.122}%
+\contentsline {subsection}{41. R-04 e raccolta delle note per il firmware}{65}{subsection*.123}%
+\contentsline {section}{Parte AC – Rev. 1.30 – Backup dell'RTC (R-06, R-24)}{66}{section*.124}%
+\contentsline {subsection}{42. Requisito del backup dell'RTC}{66}{subsection*.125}%
+\contentsline {section}{Parte AD – Rev. 1.31 – Pin non usati del connettore dock J708 (R-12)}{67}{section*.126}%
+\contentsline {subsection}{43. J708: +12V, +3V3\_\allowbreak {}CONN e RS485}{67}{subsection*.127}%
+\contentsline {section}{Parte AE – Rev. 1.32 – TCXO Y201 (R-07)}{68}{section*.128}%
+\contentsline {subsection}{44. Range di temperatura del TCXO}{68}{subsection*.129}%
+\contentsline {section}{Parte AF – Rev. 1.33 – TPS2121: pin ST e OV2 (R-16)}{69}{section*.130}%
+\contentsline {subsection}{45. Pin ST e OV2 del TPS2121}{69}{subsection*.131}%
+\contentsline {section}{Parte AG – Rev. 1.34 – Supervisore della radio escludibile (R-19)}{70}{section*.132}%
+\contentsline {subsection}{46. IC205: rischio di reset in TX e ripiego hardware}{70}{subsection*.133}%
+\contentsline {section}{Parte AH – Rev. 1.35 – Pull-up di I2C1 (R-13)}{71}{section*.134}%
+\contentsline {subsection}{47. Pull-up di I2C1 tramite JP201}{71}{subsection*.135}%
+\contentsline {section}{Parte AI – Rev. 1.36 – C39 sul 5 V del dock (R-14)}{72}{section*.136}%
+\contentsline {subsection}{48. C39 sull'ingresso IN1 del TPS2121}{72}{subsection*.137}%
+\contentsline {section}{Rev. 1.37 -- R-18: precisione della catena PT1000}{73}{section*.138}%
+\contentsline {subsection}{Data e revisione}{73}{subsection*.139}%
+\contentsline {subsection}{Titolo}{73}{subsection*.140}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{73}{subsection*.141}%
+\contentsline {subsection}{Cosa è cambiato}{73}{subsection*.142}%
+\contentsline {subsection}{Motivazione}{73}{subsection*.143}%
+\contentsline {subsection}{Impatti e criticità}{73}{subsection*.144}%
+\contentsline {subsection}{Verifiche da fare}{73}{subsection*.145}%
+\contentsline {section}{Rev. 1.38 -- R-17: pin SHDN del TCAN3414 a GND}{74}{section*.146}%
+\contentsline {subsection}{Data e revisione}{74}{subsection*.147}%
+\contentsline {subsection}{Titolo}{74}{subsection*.148}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{74}{subsection*.149}%
+\contentsline {subsection}{Cosa è cambiato}{74}{subsection*.150}%
+\contentsline {subsection}{Motivazione}{74}{subsection*.151}%
+\contentsline {subsection}{Impatti e criticità}{74}{subsection*.152}%
+\contentsline {subsection}{Verifiche da fare}{74}{subsection*.153}%
+\contentsline {section}{Rev. 1.39 -- R-20: margine di oscillazione del quarzo Y1}{75}{section*.154}%
+\contentsline {subsection}{Data e revisione}{75}{subsection*.155}%
+\contentsline {subsection}{Titolo}{75}{subsection*.156}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{75}{subsection*.157}%
+\contentsline {subsection}{Cosa è cambiato}{75}{subsection*.158}%
+\contentsline {subsection}{Motivazione e calcoli}{75}{subsection*.159}%
+\contentsline {subsection}{Impatti e criticità}{75}{subsection*.160}%
+\contentsline {subsection}{Verifiche da fare}{75}{subsection*.161}%
+\contentsline {section}{Rev. 1.40 -- R-21: stock dei componenti, C217/C218}{76}{section*.162}%
+\contentsline {subsection}{Data e revisione}{76}{subsection*.163}%
+\contentsline {subsection}{Titolo}{76}{subsection*.164}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{76}{subsection*.165}%
+\contentsline {subsection}{Cosa è cambiato}{76}{subsection*.166}%
+\contentsline {subsection}{Motivazione}{76}{subsection*.167}%
+\contentsline {subsection}{Impatti e criticità}{77}{subsection*.168}%
+\contentsline {subsection}{Verifiche da fare}{77}{subsection*.169}%
+\contentsline {section}{Rev. 1.41 -- Watchdog esterno STWD100 (U403)}{78}{section*.170}%
+\contentsline {subsection}{Data e revisione}{78}{subsection*.171}%
+\contentsline {subsection}{Titolo}{78}{subsection*.172}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{78}{subsection*.173}%
+\contentsline {subsection}{Cosa è cambiato}{78}{subsection*.174}%
+\contentsline {subsection}{Motivazione}{78}{subsection*.175}%
+\contentsline {subsection}{Impatti e criticità}{79}{subsection*.176}%
+\contentsline {subsection}{Verifiche fatte}{79}{subsection*.177}%
+\contentsline {subsection}{Verifiche da fare}{79}{subsection*.178}%
+\contentsline {section}{Rev. 1.42 -- Watchdog U403: disattivazione solo hardware}{80}{section*.179}%
+\contentsline {subsection}{Data e revisione}{80}{subsection*.180}%
+\contentsline {subsection}{Titolo}{80}{subsection*.181}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{80}{subsection*.182}%
+\contentsline {subsection}{Cosa è cambiato}{80}{subsection*.183}%
+\contentsline {subsection}{Motivazione}{80}{subsection*.184}%
+\contentsline {subsection}{Impatti e criticit\`a}{80}{subsection*.185}%
+\contentsline {subsection}{Verifiche da fare}{80}{subsection*.186}%

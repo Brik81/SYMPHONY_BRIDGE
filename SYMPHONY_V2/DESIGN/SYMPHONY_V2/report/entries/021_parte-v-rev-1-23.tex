@@ -1,0 +1,12 @@
+\clearpage
+\section[Parte V – Rev. 1.23 – Protezione ESD dell'I²C1 (S-11)]{Parte V – Rev. 1.23 – Protezione ESD dell'I²C1 (S-11)}
+
+\subsection[35. D202: TVS per CAN o per I²C]{35. D202: TVS per CAN o per I²C}
+
+\begin{itemize}
+\item \textbf{Domanda.} \textquotedblleft{}Se va bene per il CAN va bene anche per l'I²C?\textquotedblright{} No. ESD2CAN24 è fatto per il CAN, dove le linee devono reggere guasti fino a ±24 V senza che il diodo conduca: per questo interviene solo sopra circa 25 V e durante una scarica lascia salire la linea a circa 35–37 V.
+\item \textbf{Sull'I²C1.} SCL e SDA lavorano a 3,3 V e vanno ai pin 57 e 58 dell'STM32 (massimo circa 5,5 V) e ai connettori esterni J203 e J708. Con ESD2CAN24 la scarica veniva assorbita quasi tutta dalle protezioni interne dell'STM32: il diodo non faceva danni ma proteggeva poco.
+\item \textbf{Scelta.} Nexperia PESD5V0L2BT,215 (JLCPCB C12324): lavoro 5 V, sopra i 3,3 V del bus e sotto il massimo dei pin; 75 pF per linea, compatibile con il limite di 400 pF del bus I²C anche a 400 kHz. Stesso SOT-23 e stessa disposizione dei pin, nessun filo spostato. Scartato il TI TPD2E2U06 (1,5 pF): non disponibile in SOT-23 su JLCPCB.
+\end{itemize}
+
+\textbf{Verifica.} Netlist identica (D202 pin 1 = I2C1.SCL, pin 2 = I2C1.SDA, pin 3 = GND). ERC invariato (112). Con questa modifica S-11 è chiuso.

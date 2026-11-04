@@ -1,0 +1,9 @@
+Manufacturer=Guerrilla RF
+PartNumber=GRF5604
+PartCategory=Integrated Circuit
+PackageCategory=Quad Flat No-Lead
+PinCount=17
+Version=1.1
+Released=2025-03-19 12:14:45
+Downloaded=2025-10-22 20:44:11
+3D=Y

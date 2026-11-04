@@ -1,0 +1,9 @@
+Manufacturer=Texas Instruments
+PartNumber=TPS79650DRBR
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline No-lead
+PinCount=9
+Version=1.1
+Released=2021-02-19 10:26:23
+Downloaded=2026-07-16 16:21:53
+3D=Y

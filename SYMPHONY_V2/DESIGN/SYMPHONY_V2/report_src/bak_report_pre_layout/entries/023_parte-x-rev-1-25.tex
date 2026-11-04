@@ -1,0 +1,16 @@
+\clearpage
+\section[Parte X – Rev. 1.25 – Choke del PA: ritorno alla rete Qorvo (R-03, R-11)]{Parte X – Rev. 1.25 – Choke del PA: ritorno alla rete Qorvo (R-03, R-11)}
+
+\subsection[37. L242 = 1 µH e C260 = 27 pF]{37. L242 = 1 µH e C260 = 27 pF}
+
+\textbf{Origine.} Nella revisione indipendente del 27/\allowbreak{}10, L242 = 22 nH era stato segnalato come critico (R-03), e C260 = 33 pF come diverso dalla EVB (R-11). Rileggendo i report si è visto che il 22 nH era voluto: nella rev 1.11 (§23) era stato scelto perché nessun Murata LQW da circa 1 µH su JLC regge la corrente del PA (LQW2UAS 1 µH: 0,37 A), e C260 era stato portato a 33 pF per dare al nodo la stessa suscettanza a 435 MHz. Nessuna application note Qorvo usa però 22 nH. PK090 (400 MHz) e la EVB-02 (450 MHz, datasheet QPA9510 pag. 15–18) montano L3 = 1 µH, e il riepilogo EVB 410–470 MHz del 30/\allowbreak{}06/\allowbreak{}2025 dà C10 = 27 pF. Brik81 ha chiesto di restare coerenti con Qorvo, anche se il componente non si trova su JLC.
+
+\textbf{Componente.} Sul forum Qorvo, L3 della EVB-02 risulta un Taiyo Yuden NR3012T1R0N (3×3 mm, Isat 1,5 A, SRF ≥ 110 MHz), oggi in \textit{phaseout} (TY-COMPAS: rinominato LSXBD3030MKT1R0N, Phaseout) e a stock 0 su JLC. Si usa il Taiyo Yuden \textbf{NRS2012T1R0NGJV}, proposto da Brik81 da Mouser: stessa costruzione (filo su ferrite, schermato), stesso valore e più corrente. Dati da TY-COMPAS (LCXND2020MKT1R0N0G, produzione di serie): Isat 1,9 A, Itemp 1,7 A, DCR 84 mΩ max, −40…+125 °C, AEC-Q200. Footprint KiCad \code{L\_\allowbreak{}Taiyo-Yuden\_\allowbreak{}NR-20xx}, la libreria standard per la serie NR/\allowbreak{}NRS 2020.
+
+\begin{itemize}
+\item \textbf{Corrente.} A piena potenza il PA assorbe circa 1,7 A. L'Isat (1,9 A) è sopra l'originale Qorvo (1,5 A). La corrente termica di 1,7 A va bene per trasmissioni a impulsi; in trasmissione continua alla massima potenza l'induttore si scalda di circa 40 °C.
+\item \textbf{Comportamento a 435 MHz.} Come l'NR3012, l'induttore lavora sopra la sua frequenza di risonanza e verso massa vale circa 2 pF (|X| ≈ 190 Ω). È trascurabile rispetto a C260 (13,5 Ω), e il lato 3V3 è messo a massa in RF da C258 = 47 pF. La SRF dell'NRS2012 non è indicata da Taiyo Yuden: è \tg{tagwarn}{da verificare} sul prototipo, misurando l'adattamento d'uscita (S22 o potenza), come già previsto per C260 e C261.
+\item \textbf{Eccezioni alle regole di progetto}, approvate da Brik81 solo per L242: non è un Murata LQW, perché in quella posizione serve un induttore di potenza e non un induttore RF; il footprint passa da 0805 a 2020; il componente non è su JLC e va fornito a parte (Mouser), quindi il campo JLCPCB Parts è vuoto.
+\end{itemize}
+
+\textbf{Verifica.} Netlist riesportata con kicad-cli dopo la modifica: L242 = 1u, L\_\allowbreak{}Taiyo-Yuden\_\allowbreak{}NR-20xx, MPN NRS2012T1R0NGJV; C260 = 27p, C2360423. I nodi (3V3 – L242 – RF\_\allowbreak{}PA\_\allowbreak{}OUT, C260 tra RF\_\allowbreak{}PA\_\allowbreak{}OUT e GND) sono gli stessi di prima. R-03 e R-11 sono chiusi.

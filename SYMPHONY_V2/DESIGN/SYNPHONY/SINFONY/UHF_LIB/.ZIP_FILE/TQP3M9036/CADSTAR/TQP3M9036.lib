@@ -1,0 +1,16 @@
+.TQP3M9036 :1 ;RF Amplifier 400-2000MHz NF.45dB Gain 19dB @.9GHz LNA
+SON50P200X200X95-9N-D
+*STM Q
+*NGS
+*PLB 1="NC_1" 2="RF IN" 3="NC_2" 4="NC_3" 5="NC_4" 6="SHUT DOWN" 7="RF OUT" 8="NC_5" 9="GND"
+*MXP 9
+*DFN TQP3M9036
+~!Mouser Part Number (772-TQP3M9036)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Qorvo/TQP3M9036?qs=73ok1p1Z9vuHVw3N%2FSkE8w%3D%3D)
+~!Manufacturer_Name (Qorvo)
+~!Manufacturer_Part_Number (TQP3M9036)
+~!Link Datasheet (https://www.qorvo.com/products/d/da005543)
+~!Height (0.95mm)
+~!3D_Model (TQP3M9036)
+TQP3M9036
+1.1!U 2.1!I 3.1!U 4.1!U 9.1!G 8.1!U 7.1!Y 6.1!I 5.1!U 

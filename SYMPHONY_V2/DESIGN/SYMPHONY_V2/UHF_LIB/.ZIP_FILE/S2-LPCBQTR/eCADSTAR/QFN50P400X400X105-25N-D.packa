@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "S2-LPCBQTR"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2022-09-08-06:25:02)
+    (mountForm default
+        (footprintRef "QFN50P400X400X105-25N-D")
+        (spec "System")
+    )
+)

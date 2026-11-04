@@ -1,0 +1,137 @@
+\clearpage
+\section[Rev. 1.41 -- Watchdog esterno STWD100 (U403)]{Rev. 1.41 \textendash{} Watchdog esterno STWD100 (U403) sul reset dell'MCU}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.41.
+
+\subsection{Titolo}
+Watchdog esterno STWD100 (U403) sul reset dell'MCU.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio MCU (\code{MCU.kicad\_sch}) e libreria di progetto \code{UHF\_LIB/SYMBOL/IC.kicad\_sym} (nuovo simbolo \code{IC:STWD100NYWY3F}). Copie precedenti in \code{report\_src/bak\_pre141/} (\code{MCU.kicad\_sch}, \code{IC.kicad\_sym}).
+\item Reti: \code{/IF/DBG.nRST} (NRST dell'STM32 U301 pin 7, pull-up R2 \SI{10}{\kilo\ohm}, C3 \SI{100}{\nano\farad}, debugger TC2030 J1 pin 3), nuova rete \code{/MCU/WDT\_WDI}, \code{3V3}, \code{GND}, nuova rete \code{Net-(U403-\textasciitilde{}EN)}.
+\item Simbolo nuovo con riquadro \textquotedblleft{}WATCHDOG\textquotedblright{} sotto il blocco FRAM.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Aggiunti tre componenti.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}llllp{0.3\linewidth}@{}}
+\toprule
+\textbf{Rif.} & \textbf{Parte} & \textbf{JLCPCB} & \textbf{Footprint} & \textbf{Note}\\
+\midrule
+U403 & STMicroelectronics \code{STWD100NYWY3F} & C46043 & \code{IC:SOT95P280X145-5N} & stock JLC 21\,124 al 03/11/2026; stesso SOT23-5 di IC205, IC1, IC5\\
+C425 & \SI{100}{\nano\farad} 0402 & C1525 & \code{Capacitor\_SMD:C\_0402\_1005Metric} & disaccoppiamento VCC di U403\\
+R413 & \SI{0}{\ohm} 0402 & C17168 & \code{Resistor\_SMD:R\_0402\_1005Metric} & DNP (Value \code{0R} + flag DNP)\\
+\bottomrule
+\end{tabular}}
+
+\medskip
+Collegamenti:
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Pin U403} & \textbf{Nome} & \textbf{Collegato a} & \textbf{Rete}\\
+\midrule
+1 & \textasciitilde{}WDO (open drain, attivo basso) & NRST di U301 (pin 7) & \code{/IF/DBG.nRST}\\
+2 & GND & GND & \code{GND}\\
+3 & \textasciitilde{}EN & R413 (DNP) $\rightarrow$ 3V3 & \code{Net-(U403-\textasciitilde{}EN)}\\
+4 & WDI & U301 PC6 (pin 37) & \code{/MCU/WDT\_WDI}\\
+5 & VCC & 3V3, con C425 verso GND & \code{3V3}\\
+\bottomrule
+\end{tabular}}
+
+\medskip
+U301 PC6 (pin 37) era libero con no-connect, che è stato rimosso.
+
+\begin{center}
+\begin{circuitikz}[scale=0.9, transform shape]
+\draw (0,0) rectangle (3,3);
+\node at (1.5,1.5) {U403 STWD100};
+\node[anchor=west,font=\scriptsize] at (0.05,2.2) {3 EN};
+\node[anchor=west,font=\scriptsize] at (0.05,0.8) {4 WDI};
+\node[anchor=east,font=\scriptsize] at (2.95,1) {1 WDO};
+\node[anchor=north,font=\scriptsize] at (1.5,2.95) {5 VCC};
+\node[anchor=south,font=\scriptsize] at (1.5,0.05) {2 GND};
+% EN con R413 DNP a 3V3
+\draw (0,2.2) -- (-1.5,2.2) to[R, l_=R413 (DNP)] (-1.5,3.8) -- (5.5,3.8);
+\node[font=\scriptsize,anchor=south] at (-1.5,3.8) {3V3};
+% VCC e C425
+\draw (1.5,3) -- (1.5,3.8) node[circ]{};
+\draw (4,3.8) node[circ]{} to[C, l_=C425] (4,2.2) node[ground]{};
+% GND
+\draw (1.5,0) -- (1.5,-0.3) node[ground]{};
+% WDI
+\draw (0,0.8) -- (-3,0.8) node[anchor=east,font=\scriptsize]{WDT\_WDI $\leftarrow$ PC6 (U301)};
+% WDO e pull-up R2
+\draw (3,1) -- (5.5,1) node[circ]{} -- (7,1) node[anchor=west,font=\scriptsize]{nRST};
+\draw (5.5,3.8) to[R, l=R2] (5.5,1);
+\end{circuitikz}
+\end{center}
+
+\subsection{Motivazione}
+Brik81 vuole un watchdog esterno indipendente dall'MCU. Varianti JLC confrontate: \code{C46043} STWD100NYWY3F (\SI{1,6}{\second}, 21\,124 pz) scelto; \code{C1852782} STWD100NXWY3F (\SI{102}{\milli\second}, 1\,206 pz), \code{C1354132} STWD100YNXWY3F (\SI{102}{\milli\second} automotive, 209 pz) e \code{C2842415} STWD100NPWY3F (\SI{3,4}{\milli\second}, 88 pz) scartati: timeout troppo corti per scritture flash e trasmissioni.
+
+Il pin EN non è collegato a un GPIO per evitare che un firmware fuori controllo disabiliti il proprio watchdog; per debug e bootloader UART si monta R413 (EN alto = watchdog disabilitato). Vincolo di Brik81: passivi obbligatoriamente 0402.
+
+Dati dal datasheet ST STWD100, DocID14134 Rev 10 (settembre 2016):
+\begin{itemize}
+\item Figure 13, p.\,18, codice d'ordine: N = uscita open drain attiva bassa; Y = $t_{WD}$ \SI{1,6}{\second} e $t_{PW}$ \SI{210}{\milli\second}; WY = SOT23-5; 3 = \SIrange{-40}{125}{\celsius}.
+\item Table 1, p.\,3, pinout: 1 WDO, 2 GND, 3 EN, 4 WDI, 5 VCC.
+\item Table 4, p.\,12--13: vedi tabella sotto.
+\item §3.2: con uscita open drain serve un pull-up esterno (qui R2 \SI{10}{\kilo\ohm} già presente su NRST).
+\item §3.1: WDI va commutato entro $t_{WD}$; sulla versione Y conta anche il fronte di discesa.
+\end{itemize}
+
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Parametro (versione Y)} & \textbf{min} & \textbf{tip} & \textbf{max}\\
+\midrule
+$t_{WD}$ & \SI{1,12}{\second} & \SI{1,6}{\second} & \SI{2,24}{\second}\\
+$t_{PW}$ & \SI{140}{\milli\second} & \SI{210}{\milli\second} & \SI{280}{\milli\second}\\
+Pull-down interno EN & \SI{32}{\kilo\ohm} & \SI{63}{\kilo\ohm} & \SI{100}{\kilo\ohm}\\
+$V_{CC}$ & \SI{2,7}{\volt} & & \SI{5,5}{\volt}\\
+$I_{CC}$ & & \SI{13}{\micro\ampere} & \\
+\bottomrule
+\end{tabular}}
+
+\medskip
+Impulso minimo su WDI ed EN \SI{1}{\micro\second}; glitch $<$\SI{100}{\nano\second} ignorati.
+
+Approvazioni di Brik81 (03/11/2026): \textquotedblleft{}Si va bene mettiamo il C46043, come va connesso? se servono componenti passivi OBBLIGATORIO componenti da 0402 ok?\textquotedblright{} e, sullo schema di collegamento proposto (WDI su PC6, R413 0R DNP su EN, C425 \SI{100}{\nano\farad}), \textquotedblleft{}aggiungilo tu e io verificherò\textquotedblright{}.
+
+Eseguito da Claude Code il 03/11/2026; Brik81 verificherà in KiCad.
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+Con R413 non montato il watchdog è sempre attivo: in laboratorio la programmazione via SWD con l'MCU fermo e il bootloader UART (BOOT0) provocano un reset ogni circa \SI{1,6}{\second}. Montare R413 durante lo sviluppo e toglierlo per il volo.
+\end{critbox}
+\begin{notebox}
+Dopo un reset dell'MCU PC6 è in alta impedenza: se il firmware non riparte entro \SI{1,12}{\second} il watchdog resetta di nuovo (voluto).
+
+Al reset dell'MCU PC2 e PC4 vanno in alta impedenza: PA spento (pull-up R702), radio sotto il controllo di IC205 (modo A): comportamento sicuro.
+\end{notebox}
+
+\textbf{Note per il firmware} (continuano la serie F-01\ldots F-10 del §41):
+\begin{notebox}
+\textbf{F-11} Impulso su PC6 (\code{WDT\_WDI}) almeno ogni circa \SI{1}{\second}, anche durante operazioni lunghe ($t_{WD}$ minimo garantito \SI{1,12}{\second}).\\
+\textbf{F-12} Primo impulso entro \SI{1,12}{\second} dall'accensione, prima delle inizializzazioni lente.\\
+\textbf{F-13} All'avvio leggere \code{RCC\_CSR} per la causa del reset (pin NRST = watchdog esterno) e riportarla in telemetria.
+\end{notebox}
+
+\subsection{Verifiche fatte}
+\begin{itemize}
+\item Netlist prima/dopo: unica rete rimossa \code{unconnected-(U301-PC6-Pad37)}; aggiunte U403 pin 1 su \code{/IF/DBG.nRST}, U301 pin 37 e U403 pin 4 su \code{/MCU/WDT\_WDI}, C425, U403 pin 5 e R413 pin 2 su \code{3V3}, C425 pin 2 e U403 pin 2 su \code{GND}, R413 pin 1 e U403 pin 3 su \code{Net-(U403-\textasciitilde{}EN)}; nient'altro cambia.
+\item Schema stampato in PDF e controllato a vista.
+\item ERC: solo avvisi già presenti nel progetto (\code{lib\_symbol\_mismatch} di C\_Small, \code{pin\_to\_pin} con J1).
+\end{itemize}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item Misura M-04 in collaudo: con R413 DNP e firmware bloccato, oscilloscopio su NRST: impulso basso di circa \SI{210}{\milli\second} (\SIrange{140}{280}{\milli\second}) ogni circa \SI{1,6}{\second} (\SIrange{1,12}{2,24}{\second}); con R413 montato nessun reset.
+\item Verifica di Brik81 in KiCad.
+\end{itemize}

@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'HMC349AMS8GE'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Analog Devices", "HMC349AMS8GE" (!) = "", "SOP65P490X110-9N", "Small Outline Packages", "584-HMC349AMS8GE", "https://www.mouser.co.uk/ProductDetail/Analog-Devices/HMC349AMS8GE?qs=pceeu5JH%2FH9BjxXZlXR05g%3D%3D", "High Isolation, Nonreflective, GaAs, SPDT Switch,100 MHz to 4 GHz", "https://www.analog.com/HMC349AMS8G/datasheet", "1.1 mm"
+END_PART
+
+END.

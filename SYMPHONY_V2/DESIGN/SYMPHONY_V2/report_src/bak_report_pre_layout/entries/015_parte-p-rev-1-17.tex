@@ -1,0 +1,40 @@
+\clearpage
+\section[Parte P – Rev. 1.17 – Sensori di temperatura sull'ADC (S-06)]{Parte P – Rev. 1.17 – Sensori di temperatura sull'ADC (S-06)}
+
+Le due catene PT1000 del foglio SENSORS (temperatura del PA e del convertitore) ora arrivano a due ingressi ADC dell'STM32L562.
+
+\subsection[29. S-06 – Uscite V\_\allowbreak{}TEMP verso l'ADC]{29. S-06 – Uscite V\_\allowbreak{}TEMP verso l'ADC \tg{tagdone}{collegato v1.17} \tg{tagdone}{chiuso v1.18}}
+
+\subsubsection[29.1 Ingressi ADC disponibili]{29.1 Ingressi ADC disponibili}
+
+Nell'STM32L562 in LQFP64 tutti gli ingressi ADC (PC0–PC5, PA0–PA7, PB0–PB1) sono tra il pin 8 e il pin 26, cioè sul lato sinistro (pin 1–16) e sul lato inferiore (pin 17–32) del contenitore. Due pin ADC su lati opposti del chip non esistono: sono stati scelti i due liberi più distanti, su lati diversi.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1525}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2222}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1845}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.4408}{32pt}{0pt}}}
+\toprule
+\textbf{Pin} & \textbf{Porta} & \textbf{Canale} & \textbf{Stato prima della modifica} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+9 & PC1 & ADC1\_\allowbreak{}IN2 & libero → \textbf{V\_\allowbreak{}TEMP\_\allowbreak{}BUCK} \\\midrule[0.15pt]
+14–17, 20 & PA0–PA3, PA4 & IN5–IN9 & liberi (riserva) \\\midrule[0.15pt]
+25 & PB0 & IN15 & libero (riserva) \\\midrule[0.15pt]
+26 & PB1 & ADC1\_\allowbreak{}IN16 & libero → \textbf{V\_\allowbreak{}TEMP\_\allowbreak{}PA} \\\midrule[0.15pt]
+8, 10, 11, 21–24 & PC0, PC2, PC3, PA5–PA7, PC4 & – & già usati (UHF, SPI1, 5v\_\allowbreak{}TX\_\allowbreak{}EN) \\
+\end{longtable}}
+
+\begin{itemize}
+\item \textbf{V\_\allowbreak{}TEMP\_\allowbreak{}PA → PB1} (lato inferiore, verso l'angolo destro): sensore nella zona UHF. Vicini PB0 e PB2 liberi.
+\item \textbf{V\_\allowbreak{}TEMP\_\allowbreak{}BUCK → PC1} (metà del lato sinistro): sensore nella zona MCU. Tra PC0 (RF\_\allowbreak{}IRQ) e PC2 (comando switch), segnali digitali lenti.
+\item Distanza: 17 posizioni di pin, il massimo possibile tra i pin ADC liberi. Se nel layout servisse, si possono scambiare o spostare su PA0–PA4 /\allowbreak{} PB0 senza altre modifiche.
+\item Le uscite sono pilotate dagli operazionali TLV9051 (IC1, IC5): bassa impedenza, nessun componente in più per l'ADC.
+\end{itemize}
+
+\subsubsection[29.2 Ancora aperto in S-06]{29.2 Ancora aperto in S-06}
+
+\begin{itemize}
+\item Codice JLCPCB di R4–R10, R12 e delle PT1000 R\_\allowbreak{}RTD1, R\_\allowbreak{}RTD2. Resistenze allo 0.1 \% e calibrazione a un punto come indicato in sch\_\allowbreak{}check\_\allowbreak{}2010.
+\item Firmware: ADC1 canali 2 e 16, misura raziometrica sul 3V3 (VDDA).
+\end{itemize}
+
+\textbf{Verifica.} Netlist: nuove reti /\allowbreak{}MCU/\allowbreak{}V\_\allowbreak{}TEMP\_\allowbreak{}PA (IC1.1, R5.2, U301.26) e /\allowbreak{}MCU/\allowbreak{}V\_\allowbreak{}TEMP\_\allowbreak{}BUCK (IC5.1, R12.2, U301.9), nessun'altra rete cambiata. ERC: 138, spariti i due avvisi \textquotedblleft{}pin non collegato\textquotedblright{} su PB1 e PC1, nessuno nuovo.

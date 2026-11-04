@@ -1,0 +1,246 @@
+\clearpage
+\section[Parte C – Rev. 1.4 – Verifica completa del progetto, foglio per foglio]{Parte C – Rev. 1.4 – Verifica completa del progetto, foglio per foglio}
+
+Richiesta di Brik81 del 20/\allowbreak{}10/\allowbreak{}2026: controllo di tutti i fogli, con conferma finale di dimensionamento e collegamenti. I codici JLCPCB sono esclusi da questa verifica (li gestisce Brik81). \textbf{In questa revisione nessun file di progetto è stato modificato}: gli errori trovati diventano proposte (P8–P17) e aspettano l'approvazione.
+
+\subsection[13. Metodo e quadro generale]{13. Metodo e quadro generale}
+
+\begin{itemize}
+\item \textbf{Netlist} esportata con \code{kicad-cli 10.\allowbreak{}0} dai file salvati su disco (19/\allowbreak{}10/\allowbreak{}2026 17:26) e letta componente per componente, pin per pin: 173 componenti, di cui 12 DNP.
+\item \textbf{ERC} completo: \textbf{184 segnalazioni} (erano 189 in rev. 1.3). Le ho guardate tutte:
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.3492}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0543}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.5964}{24pt}{0pt}}}
+\toprule
+\textbf{Tipo} & \textbf{N.} & \textbf{Lettura} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+lib\_\allowbreak{}symbol\_\allowbreak{}mismatch & 80 & Simboli nello schema diversi dalla libreria. Estetico, nessun effetto sulla netlist \\\midrule[0.15pt]
+pin\_\allowbreak{}not\_\allowbreak{}connected & 71 & 47 sono i DNP avanzati sul foglio UHF (IC203 e passivi della vecchia rete), 24 sono GPIO liberi dell'MCU. Nessun pin funzionale dimenticato \\\midrule[0.15pt]
+pin\_\allowbreak{}to\_\allowbreak{}pin & 19 & Pin di tipo \textquotedblleft{}Unspecified\textquotedblright{} nei simboli di J1, U401 e IC3. Non sono errori \\\midrule[0.15pt]
+power\_\allowbreak{}pin\_\allowbreak{}not\_\allowbreak{}driven & 6 & Manca il PWR\_\allowbreak{}FLAG sulle reti alimentate da connettore o da regolatore. Non sono errori \\\midrule[0.15pt]
+isolated\_\allowbreak{}pin\_\allowbreak{}label /\allowbreak{} label\_\allowbreak{}dangling /\allowbreak{} hier\_\allowbreak{}label\_\allowbreak{}mismatch & 6 /\allowbreak{} 1 /\allowbreak{} 1 & Segnali della dock non usati, residui di etichette. Vedi §13.1, §13.3, P15, P16 \\
+\end{longtable}}
+ L'ERC \textbf{non vede} gli errori più gravi trovati qui sotto (IC501, VDD12, C1/\allowbreak{}C2): li ho trovati confrontando la netlist con i datasheet.
+\item \textbf{Confronto} con la netlist di fine sessione del 19/\allowbreak{}10 (17:13): le uniche differenze sono le rimozioni elencate nel registro come \textquotedblleft{}1.3+\textquotedblright{}, fatte in KiCad fuori dalla sessione Claude Code.
+\item \textbf{Datasheet usati:} STM32L562 /\allowbreak{} AN5211 (ST), TCAN3414, TPS2121, TPSM863257 (TI), TQP3M9036, QPA9510 (Qorvo), DS3231M, FM25V10, CH340E, TLV9051, più quelli già citati in §12.
+\end{itemize}
+
+\subsubsection[13.1 Foglio radice (SYMPHONY)]{13.1 Foglio radice (SYMPHONY)}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.2467}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0757}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.6776}{24pt}{0pt}}}
+\toprule
+\textbf{Controllo} & \textbf{Esito} & \textbf{Note} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Fogli gerarchici & \tg{tagdone}{OK} & 6 fogli: IF, MCU, UHF, POWER, SENSORS, MOUNTING\_\allowbreak{}HOLES \\\midrule[0.15pt]
+Collegamenti tra fogli & \tg{tagdone}{OK} & USB1, EN\_\allowbreak{}DOCK (IF↔POWER); DBG, I2C1, UART4, CAN\_\allowbreak{}MCU1 (IF↔MCU); SPI1, UHF\_\allowbreak{}SIG\_\allowbreak{}CTRL (MCU↔UHF). Nomi e direzioni coerenti \\\midrule[0.15pt]
+Etichette residue & \tg{tagnote}{pulizia} & Etichetta locale \code{UHF.\allowbreak{}EN\_\allowbreak{}RX\_\allowbreak{}LNA} scollegata a (275.6, 30.5) mm; global label \code{5v\_\allowbreak{}TX\_\allowbreak{}EN} collegata solo a PC3 dell'MCU (P16) \\\midrule[0.15pt]
+Nome del foglio & \tg{tagnote}{estetico} & Il foglio SENSORS usa il file \code{CONNECTORS.\allowbreak{}kicad\_\allowbreak{}sch} \\
+\end{longtable}}
+
+\subsubsection[13.2 POWER]{13.2 POWER}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1424}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.4674}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3115}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0787}{32pt}{0pt}}}
+\toprule
+\textbf{Blocco} & \textbf{Dimensionamento} & \textbf{Collegamenti} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+USB-C J15 & CC1/\allowbreak{}CC2 con R50/\allowbreak{}R51 5.1 kΩ verso GND (sink); VBUS con C38 10 µF & D+/\allowbreak{}D− verso IF (ESD e CH340E); SBU liberi; shield a GND & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Power mux IC4 TPS2121 & OV1 6.02 V, priorità alla dock sopra circa 3.3 V (rev. 1.1, D1). ILIM R44 33 kΩ: 3.2 A. Soft-start C4 1 µF: circa 88 V/\allowbreak{}s (Tab. 9-1), uscita a 5 V in circa 57 ms. Uscita con C33 22 µF e C35 100 nF & IN1 = dock 5V (J708.1/\allowbreak{}3), IN2 = VBUS, OUT = 5V0; OV2 e CP2 a GND come da D1; ST libero & \tg{tagdone}{OK} con P13 \\\midrule[0.15pt]
+Buck IC3 TPSM863257 & R47/\allowbreak{}R48 135k/\allowbreak{}30k: \textbf{3.30 V}. C\textsubscript{FF} C37 22 pF, valore della Tab. 8-2 TI. C\textsubscript{OUT} C36 47 µF 1210, nel campo 10–88 µF. C\textsubscript{IN} 22 µF + 100 nF, come chiede il §8.2.2.4 TI (> 10 µF + 0.1 µF) & VIN 5V0, VOUT 3V3, SW e PG liberi (SW: \textquotedblleft{}do not connect\textquotedblright{} da datasheet), EN da EN\_\allowbreak{}DOCK con R46 (D1, voluto) & \tg{tagdone}{OK} \\\midrule[0.15pt]
+LED D9 & R49 10 kΩ da 3V3: circa 0.1–0.15 mA, luce molto debole. Se il LED deve vedersi bene, 1–2.2 kΩ & Abilitato da JP1, aperto di default & \tg{tagdone}{OK} (nota) \\
+\end{longtable}}
+
+\textbf{Nota P13.} Sull'ingresso IN1 (rete \code{5V}, dalla dock) non c'è nessun condensatore, mentre IN2 ha C38. Il datasheet TI (§11) chiede condensatori di bypass su IN1, IN2 e OUT vicino all'IC, e una capacità più grande se l'ingresso arriva da cavi o connettori, per smorzare il ringing durante la commutazione. Proposta: 10 µF X5R/\allowbreak{}X7R ≥ 16 V (regola ≥ 3×) più 100 nF tra IN1 e GND, vicino al pin 7 di IC4.
+
+{\small Il simbolo di IC3 è \textquotedblleft{}TPSM863252\textquotedblright{} con valore e footprint TPSM863257. Il pinout della famiglia è identico (stesso datasheet SLUSF51C), quindi è solo estetico.}
+
+\subsubsection[13.3 IF]{13.3 IF}
+
+\begin{critbox}
+\textbf{ERRORE CRITICO – IC501 TCAN3414 collegato a specchio (P8).} Il simbolo ha i pin giusti (pin 1 TXD, 2 GND, 3 VCC, 4 RXD, 5 SHDN, 6 CANL, 7 CANH, 8 STB, come nel datasheet), ma i fili arrivano sul lato opposto: è come se il simbolo fosse stato ribaltato orizzontalmente dopo il cablaggio.
+\begin{center}{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\cw{0.0673}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1658}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3632}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.4037}{32pt}{0pt}}}
+\toprule
+\textbf{Pin} & \textbf{Funzione} & \textbf{Collegato oggi a} & \textbf{Dovrebbe essere} \\
+\midrule
+1 & TXD & \textcolor{tagcrit}{\textbf{GND}} & CAN\_\allowbreak{}MCU1.CAN\_\allowbreak{}TX (PA12) \\\midrule[0.15pt]
+2 & GND & \textcolor{tagcrit}{\textbf{CAN1.CANH (bus)}} & GND \\\midrule[0.15pt]
+3 & VCC & \textcolor{tagcrit}{\textbf{CAN1.CANL (bus)}} & 3V3 \\\midrule[0.15pt]
+4 & RXD & \textcolor{tagcrit}{\textbf{non collegato}} & CAN\_\allowbreak{}MCU1.CAN\_\allowbreak{}RX (PA11) \\\midrule[0.15pt]
+5 & SHDN & \textcolor{tagcrit}{\textbf{CAN\_\allowbreak{}MCU1.CAN\_\allowbreak{}RX}} & GND o GPIO \\\midrule[0.15pt]
+6 & CANL & \textcolor{tagcrit}{\textbf{3V3}} & CAN1.CANL \\\midrule[0.15pt]
+7 & CANH & \textcolor{tagcrit}{\textbf{GND}} & CAN1.CANH \\\midrule[0.15pt]
+8 & STB & \textcolor{tagcrit}{\textbf{CAN\_\allowbreak{}MCU1.CAN\_\allowbreak{}TX}} & GND (modo normale) o GPIO \\
+\bottomrule
+\end{tabular}}\end{center}
+ Effetto: il transceiver non è alimentato, il 3V3 finisce sul pin CANL, il GND sul pin CANH, e il bus della dock va sui pin di alimentazione. Il CAN non funziona e il componente rischia di danneggiarsi.\newline{} \textbf{Correzione:} specchiare IC501 in orizzontale. Con lo specchio i fili esistenti cadono tutti al posto giusto (1↔8, 2↔7, 3↔6, 4↔5): TXD = CAN\_\allowbreak{}TX, RXD = CAN\_\allowbreak{}RX, VCC = 3V3, GND = GND, STB = GND, CANH/\allowbreak{}CANL sul bus. Resta libero il pin 5 SHDN: se il datasheet non garantisce un pull-down interno, collegarlo a GND (o a un GPIO, se serve lo spegnimento). Dopo la correzione rigenerare la netlist e ricontrollare questi 8 pin.
+\end{critbox}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1750}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3948}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3640}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0661}{32pt}{0pt}}}
+\toprule
+\textbf{Blocco} & \textbf{Dimensionamento} & \textbf{Collegamenti} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+USB → UART (U402 CH340E) & Alimentato a 3.3 V con VCC e V3 insieme, come da datasheet WCH per 3.3 V. C401 100 nF e C231 1 µF & TXD → UART4.RX (PA1), RXD ← UART4.TX (PA0); RTS, CTS e TNOW liberi. ESD U202 TPD2EUSB30 su D+/\allowbreak{}D− & \tg{tagdone}{OK} \\\midrule[0.15pt]
+CAN (IC501 TCAN3414) & C205 e C232 100 nF; terminazione R27 120 Ω 0805 con JP6 (aperto); ESD D201 ESD2CAN24 & \textbf{Pin a specchio}, vedi riquadro & \tg{tagcrit}{ERRORE} P8 \\\midrule[0.15pt]
+I2C1 verso la dock (J203) & Pull-up R206/\allowbreak{}R207 10 kΩ, collegati al 3V3 solo con JP201, aperto di default & SDA/\allowbreak{}SCL tra PB7/\allowbreak{}PB6, J203 e J708 & \tg{tagnote}{da decidere} P15 \\\midrule[0.15pt]
+Protezione I2C (D202) & ESD2CAN24: TVS per CAN da 24 V. Non disturba, ma limita la tensione molto sopra i 3.3 V del bus, quindi protegge poco i pin dell'MCU & Su SDA/\allowbreak{}SCL & \tg{tagnote}{migliorabile} P17 \\\midrule[0.15pt]
+Connettore dock J708 & – & 5V (pin 1, 3) → IN1 di IC4; EN\_\allowbreak{}DOCK (15) → R46; CAN (10, 12) e I2C (9, 11) corretti; GND su 5, 7, 19, 20; +12V e +3V3\_\allowbreak{}CONN non usati (voluto, nota sul foglio). \textbf{GPIOSX\_\allowbreak{}0, GPIOSX\_\allowbreak{}2, GPIO\_\allowbreak{}PPS, RS485.A1/\allowbreak{}B1 non arrivano a nessun componente} (non c'è transceiver RS485) & \tg{tagnote}{da decidere} P15 \\\midrule[0.15pt]
+Debug TC2030 (J1) & R16, R17, R11 22 Ω in serie & 1 VCC, 2 SWDIO, 3 nRST, 4 SWCLK, 5 GND, 6 SWO: pinout ARM Cortex Tag-Connect corretto & \tg{tagdone}{OK} \\\midrule[0.15pt]
+\textquotedblleft{}DEBUG OLD\textquotedblright{} & \multicolumn{2}{>{\raggedright\arraybackslash}p{\cw{0.7589}{32pt}{8pt}}}{Riquadro vuoto: J3, R10, R14 e R15 (DNP) sono stati rimossi (registro 1.3+)} & \tg{tagdone}{OK} \\
+\end{longtable}}
+
+{\small L'etichetta gerarchica \code{CAN1\{CAN\}} non ha un pin nel foglio padre: il bus si usa solo dentro IF, quindi è solo estetico (P16).}
+
+\subsubsection[13.4 MCU]{13.4 MCU}
+
+\begin{critbox}
+\textbf{ERRORE CRITICO – pin VDD12 di U301 collegati al 3V3 (P9).} Il simbolo è \code{STM32L562RETxP}, e la nota sul foglio dice di usare la versione RET6P. Nelle versioni \textquotedblleft{}P\textquotedblright{} i pin 30 e 62 sono \textbf{VDD12}: l'ingresso a 1.2 V del core, da usare solo con un SMPS esterno. Nello schema sono sulla rete 3V3. ST (AN5211, AN4978 e risposte ST sul forum) indica che, senza SMPS esterno, i pin VDD12 vanno lasciati \textbf{non collegati}: il dispositivo usa il suo LDO interno. Questi pin non accettano nemmeno condensatori o carichi esterni. Con 3.3 V sul dominio del core a 1.2 V l'MCU si danneggia.\newline{} \textbf{Correzione:} scollegare i pin 30 e 62 dal 3V3 e mettere due marker no-connect.\newline{} \textbf{Variante del componente:} lo schema è disegnato per la versione P. La STM32L562RET6, senza P, ha un pinout diverso sui pin 25–30 e 54–62. Montando quella, I2C1, I2C2, SWO e BOOT0 finirebbero su pin sbagliati (tabella sotto). Il codice d'acquisto va quindi allineato alla versione P (l'allineamento dei codici lo gestisce Brik81).
+\begin{center}{\scriptsize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\cw{0.0777}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2518}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1103}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0396}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1010}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2913}{56pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1282}{56pt}{0pt}}}
+\toprule
+\textbf{Pin} & \textbf{RET6P (schema)} & \textbf{RET6} &  & \textbf{Pin} & \textbf{RET6P (schema)} & \textbf{RET6} \\
+\midrule
+25 & PB0 & PC5 &  & 54 & PB3 (SWO) & PD2 \\\midrule[0.15pt]
+26 & PB1 & PB0 &  & 55 & PB4 & PB3 \\\midrule[0.15pt]
+27 & PB2 & PB1 &  & 56 & PB5 & PB4 \\\midrule[0.15pt]
+28 & PB10 (I2C2\_\allowbreak{}SCL) & PB2 &  & 57 & PB6 (I2C1\_\allowbreak{}SCL) & PB5 \\\midrule[0.15pt]
+29 & PB11 (I2C2\_\allowbreak{}SDA) & PB10 &  & 58 & PB7 (I2C1\_\allowbreak{}SDA) & PB6 \\\midrule[0.15pt]
+30 & VDD12 & PB11 &  & 59 & PH3 (BOOT0) & PB7 \\\midrule[0.15pt]
+\multicolumn{4}{>{\raggedright\arraybackslash}p{\cw{0.4794}{56pt}{24pt}}}{} & 60–62 & PB8, PB9, VDD12 & PH3, PB8, PB9 \\
+\bottomrule
+\end{tabular}}\end{center}
+\end{critbox}
+
+\begin{critbox}
+\textbf{ERRORE CRITICO – condensatori del quarzo HSE da 10 nF (P10).} C1 e C2, i condensatori di carico di Y1, valgono \textbf{10n}. La nota sul foglio stessa calcola \textit{C\textsubscript{L} = 2·(10 − 5) pF = 10 pF}: il valore giusto è \textbf{10 pF}. Con 10 nF l'oscillatore HSE non parte. Inoltre il valore di Y1 è \textquotedblleft{}Crystal\_\allowbreak{}GND24\textquotedblright{}, senza frequenza né C\textsubscript{L}: vanno indicati, e va controllato che il quarzo scelto abbia davvero C\textsubscript{L} = 10 pF e un margine di guadagno adeguato (ST AN2867). C1/\allowbreak{}C2 10 pF C0G 0402.
+\end{critbox}
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1854}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3566}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3816}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0764}{32pt}{0pt}}}
+\toprule
+\textbf{Blocco} & \textbf{Dimensionamento} & \textbf{Collegamenti} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Alimentazioni U301 & C301–C306 100 nF, uno per pin VDD, più C307 4.7 µF. VDDA con C308 10 nF e C309 1 µF, come chiede ST & VDD (19, 32, 64), VDDA, VDDUSB e VBAT su 3V3; VSS e VSSA a GND. \textbf{VDD12 (30, 62) su 3V3: errore} & \tg{tagcrit}{ERRORE} P9 \\\midrule[0.15pt]
+HSE (Y1) & \textbf{C1/\allowbreak{}C2 10 nF invece di 10 pF}; R1 0 Ω & Y1.1 → PH0, Y1.3 → R1 → PH1, pin 2/\allowbreak{}4 a GND & \tg{tagcrit}{ERRORE} P10 \\\midrule[0.15pt]
+Reset e boot & NRST: R2 10 kΩ di pull-up e C3 100 nF. BOOT0 (PH3): R3 10 kΩ verso GND & NRST anche su J1.3 & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Assegnazione dei pin (versione P) & – & SPI1: PA5/\allowbreak{}PA6/\allowbreak{}PA7, CS su PA8. UART4: PA0 TX /\allowbreak{} PA1 RX. FDCAN1: PA11 RX /\allowbreak{} PA12 TX. I2C1: PB6/\allowbreak{}PB7. I2C2: PB10/\allowbreak{}PB11. SPI2: PB13/\allowbreak{}PB14/\allowbreak{}PB15, CS su PB12. SWD: PA13/\allowbreak{}PA14, SWO su PB3. RF\_\allowbreak{}IRQ su PC0, EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW su PC2. Tutte le funzioni alternative esistono su quei pin & \tg{tagdone}{OK} \\\midrule[0.15pt]
+PC3 → \code{5v\_\allowbreak{}TX\_\allowbreak{}EN} & – & La global label non arriva a nessun altro foglio: è un residuo della vecchia rete 5V\_\allowbreak{}RF & \tg{tagnote}{pulizia} P16 \\\midrule[0.15pt]
+FRAM U401 FM25V10 & VDD 3.3 V (campo 2.0–3.6 V); C412 e C414 100 nF & SPI2 e CS corretti; /\allowbreak{}WP e /\allowbreak{}HOLD a 3V3 & \tg{tagdone}{OK} \\\midrule[0.15pt]
+RTC U404 DS3231MZ & VCC 3.3 V (campo 2.3–5.5 V); C413 100 nF; pull-up I2C2 R407/\allowbreak{}R408 10 kΩ; R409 su RST (open-drain); R410/\allowbreak{}R411 su 32KHZ e INT/\allowbreak{}SQW & I2C2 corretto, RST su PB9. \textbf{INT/\allowbreak{}SQW non arriva all'MCU}, quindi allarmi e interrupt a 1 Hz non sono usabili (scelta da confermare). 32KHZ non usato & \tg{tagdone}{OK} (nota) \\\midrule[0.15pt]
+Batteria BT401 (MS621F) & MS621F è una cella ricaricabile da 3 V, circa 5.5 mAh, ma qui non ha circuito di ricarica: lavora come primaria. Con il consumo in backup del DS3231M (pochi µA) l'autonomia è nell'ordine di qualche mese & + su VBAT di U404, − a GND & \tg{tagdone}{OK} (nota) \\
+\end{longtable}}
+
+\subsubsection[13.5 UHF]{13.5 UHF}
+
+Stato del foglio: rev. 1.3, più la rimozione di C226, C227 e C228 fatta fuori sessione (1.3+). Ho ricontrollato da capo collegamenti e valori su tutte le catene. Le analisi di dettaglio restano quelle dei §2–§10.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1893}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3867}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3347}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0893}{32pt}{0pt}}}
+\toprule
+\textbf{Blocco} & \textbf{Dimensionamento} & \textbf{Collegamenti} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Si4464 – alimentazione & C201/\allowbreak{}C203 100 nF, C202/\allowbreak{}C215 1 µF, C214 100 pF: è lo schema di disaccoppiamento della Fig. 1 del datasheet (100p + 100n + 1µ), quindi la proposta P5 è chiusa & VDD (6, 8) su 3V3; GND ed EP a GND & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Si4464 – clock & TCXO Y201 a 32 MHz (il Si4464 accetta 25–32 MHz), C204 10 nF, R201 33 Ω & Su XIN, XOUT libero (§2), TP701 sul nodo & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Si4464 – TX & Rete AN648: L703 220n, C702 9.1p, L702 33n, C704 15p, C701 100p (§3) & TX → match → pad → PA & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Si4464 – RX & Balun e filtro: L205 18n con C219, L206 22n con C220, DC block C222/\allowbreak{}C223 100p. Valori invariati & LPF dopo l'LNA → balun → RXP/\allowbreak{}RXN & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Si4464 – controllo & – & SPI1 e NIRQ verso l'MCU. GPIO0–3 liberi. \textbf{SDN a GND} (P1, aperta) & \tg{tagdone}{OK} (P1) \\\midrule[0.15pt]
+LNA Q201 TQP3M9036 & Bias L202 120 nH dal 3V3 (§M), DC block C212/\allowbreak{}C213; filtro d'ingresso C209/\allowbreak{}C210 con L201; LPF d'uscita & Shutdown pilotato da EN\_\allowbreak{}RX\_\allowbreak{}LNA con R202 33k e R203 10k: \textbf{non si spegne mai}, vedi sotto & \tg{tagwarn}{DA CORREGGERE} P11 \\\midrule[0.15pt]
+Inverter U701 74AUP2G14 & VCC 3V3 & Porta 1: EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW → EN\_\allowbreak{}RX\_\allowbreak{}LNA. Porta 2: \textbf{ingresso (pin 3) flottante} & \tg{tagnote}{minore} P12 \\\midrule[0.15pt]
+PA IC2 QPA9510 & Rete Qorvo 410–470 MHz (§9), APC con R242/\allowbreak{}R243 33/\allowbreak{}240 Ω (§5), Q701 P-MOS (§6), via termiche (§M) & Ingresso dal pad R245–R248 con C255; uscita con L243 → C230 → FL201 & \tg{tagdone}{OK} (P2 aperta) \\\midrule[0.15pt]
+Switch IC202 HMC349 & VDD 5V0 con C211 (§4) & CTRL = EN\_\allowbreak{}TX\_\allowbreak{}ANT\_\allowbreak{}SW; EN a GND (abilitato); RF1 ← FL201 con C208, RF2 → RX con C207, RFC → C206 → J201 & \tg{tagdone}{OK} \\\midrule[0.15pt]
+Antenna J201 & – & MMCX, centrale verso C206, massa a GND & \tg{tagdone}{OK} (P7 aperta) \\\midrule[0.15pt]
+DNP rimasti & \multicolumn{2}{>{\raggedright\arraybackslash}p{\cw{0.7214}{32pt}{8pt}}}{IC203, C224, C225, C229, C703, FB201, L207–L209, R204, R205, R701: scollegati e DNP, quindi non entrano nel montaggio. Generano 47 avvisi ERC} & \tg{tagnote}{pulizia} P16 \\
+\end{longtable}}
+
+\begin{notebox}
+\textbf{LNA sempre acceso (P11).} Il partitore R202 33 kΩ /\allowbreak{} R203 10 kΩ è quello dell'EVB Qorvo, dove però il pin PD viene pilotato da un alimentatore da banco. Qui viene pilotato da una logica a 3.3 V: con EN\_\allowbreak{}RX\_\allowbreak{}LNA alto il pin vede 3.3 · 10/\allowbreak{}43 = \textbf{0.77 V}, e ancora meno con la corrente di 140 µA assorbita dal pin. Il datasheet TQP3M9036 chiede ≥ 2.5 V per lo spegnimento, e sotto 1 V l'LNA è acceso. Quindi in TX l'LNA resta acceso: spreca circa 68 mA e resta alimentato mentre il PA trasmette. Non si rompe, perché l'isolamento dell'HMC349 tiene basso il segnale al suo ingresso.\newline{} \textbf{Proposta:} R202 = 0 Ω (o 1 kΩ) e R203 DNP. Il pin vede circa 3.3 V ≥ 2.5 V, e l'uscita del 74AUP2G14 fornisce senza problemi i 140 µA richiesti.
+\end{notebox}
+
+\textbf{P12.} U701 ha la seconda porta inutilizzata con l'ingresso (pin 3, 2A) lasciato flottante. Un ingresso CMOS flottante può oscillare o assorbire corrente: collegarlo a GND e lasciare libera l'uscita (pin 4).
+
+\subsubsection[13.6 SENSORS (file CONNECTORS.kicad\_\allowbreak{}sch)]{13.6 SENSORS (file CONNECTORS.kicad\_\allowbreak{}sch)}
+
+La topologia corrisponde alla simulazione LTspice \code{SIMULATION/\allowbreak{}temp\_\allowbreak{}sens\_\allowbreak{}sim\_\allowbreak{}7.\allowbreak{}asc} (PT1000 in partitore, amplificatore non invertente con offset). Ho rifatto il calcolo con i valori della simulazione: G = 1 + 105k/\allowbreak{}(63.4k ∥ 19.6k) = \textbf{8.01}, V\textsubscript{th} = 3.3 · 19.6/\allowbreak{}83 = 0.779 V, uscita 0.10 V a −40 °C e 2.97 V a +125 °C. Coincide con la simulazione e resta dentro la dinamica rail-to-rail del TLV9051. Il PT1000 dissipa circa 0.6 mW (autoriscaldamento basso).
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1083}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3162}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1103}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2542}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2110}{40pt}{0pt}}}
+\toprule
+\textbf{Ref schema} & \textbf{Funzione} & \textbf{Ref LTspice} & \textbf{Valore da simulazione} & \textbf{Valore oggi nello schema} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+R4 & 3V3 → V\_\allowbreak{}RTD\_\allowbreak{}PA & R3 & 3.16 kΩ 0.1 \% ≤ 25 ppm 0402 & \textcolor{tagcrit}{\textbf{\textquotedblleft{}R\textquotedblright{} (non dimensionata)}} \\\midrule[0.15pt]
+R6 & 3V3 → V\_\allowbreak{}REF\_\allowbreak{}PA & R5 & 63.4 kΩ 0.1 \% & \textcolor{tagcrit}{\textbf{\textquotedblleft{}R\textquotedblright{}}} \\\midrule[0.15pt]
+R7 & V\_\allowbreak{}REF\_\allowbreak{}PA → GND & R6 & 19.6 kΩ 0.1 \% & \textcolor{tagcrit}{\textbf{\textquotedblleft{}R\textquotedblright{}}} \\\midrule[0.15pt]
+R5 & V\_\allowbreak{}REF\_\allowbreak{}PA → V\_\allowbreak{}TEMP\_\allowbreak{}PA (retroazione) & R1 & 105 kΩ 0.1 \% & \textcolor{tagcrit}{\textbf{\textquotedblleft{}R\textquotedblright{}}} \\\midrule[0.15pt]
+R\_\allowbreak{}RTD & V\_\allowbreak{}RTD\_\allowbreak{}PA → GND & R4 & PT1000 0603 classe F0.3 & PT1000 \\\midrule[0.15pt]
+C311 /\allowbreak{} C310 & filtro RF su IN+ /\allowbreak{} disaccoppiamento & C1 /\allowbreak{} C2 & 100 nF X7R & 100 nF \\
+\end{longtable}}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.2426}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0759}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.6816}{24pt}{0pt}}}
+\toprule
+\textbf{Controllo} & \textbf{Esito} & \textbf{Note} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Pinout TLV9051 (SOT-23-5) & \tg{tagdone}{OK} & 1 OUT, 2 V−, 3 IN+, 4 IN−, 5 V+: coerente con lo schema \\\midrule[0.15pt]
+Resistenze R4–R7 & \tg{tagcrit}{MANCANO I VALORI} & Valore \textquotedblleft{}R\textquotedblright{}: vanno inseriti quelli della tabella (P14) \\\midrule[0.15pt]
+Uscita V\_\allowbreak{}TEMP\_\allowbreak{}PA & \tg{tagcrit}{NON COLLEGATA} & La rete ha solo 2 nodi (IC1.1 e R5): la misura non arriva a nessun ADC. Pin liberi con ADC: PA2, PA3, PA4, PC1, PB0, PB1 (P14) \\\midrule[0.15pt]
+Secondo sensore & \tg{tagnote}{da fare} & Il commit ff4ed04 dice \textquotedblleft{}need to replicate for the second sensor\textquotedblright{} \\\midrule[0.15pt]
+Riferimento R\_\allowbreak{}RTD & \tg{tagnote}{estetico} & Non è nel formato standard, e kicad-cli segnala errori di annotazione: rinominarlo, per esempio RT1. Il simbolo è Thermistor\_\allowbreak{}NTC per un PT1000 (PTC): solo grafico \\
+\end{longtable}}
+
+\subsubsection[13.7 MOUNTING\_\allowbreak{}HOLES]{13.7 MOUNTING\_\allowbreak{}HOLES}
+
+H301–H304: fori M2 con pad, collegati a GND. \tg{tagdone}{OK}
+
+\subsubsection[13.8 PCB – allineamento con lo schema]{13.8 PCB – allineamento con lo schema}
+
+Il file \code{SYMPHONY.\allowbreak{}kicad\_\allowbreak{}pcb} è stato salvato il 19/\allowbreak{}10 alle 13:36 e \textbf{non è allineato}: contiene ancora L701, C226, C227, C228, J3, R10, R14 e R15, non ha C704, e R29 vale ancora 10k. Prima di andare avanti con il layout serve \textquotedblleft{}Update PCB from Schematic\textquotedblright{}, già indicato in §11, da fare dopo le correzioni P8–P14.
+
+\subsection[14. Conferma finale – dimensionamento e collegamenti, foglio per foglio]{14. Conferma finale – dimensionamento e collegamenti, foglio per foglio}
+
+Questa è la conferma richiesta. La do \textbf{solo dove posso darla}: tre fogli hanno errori che vanno corretti prima di poter dire che sono \textquotedblleft{}dimensionati e connessi bene\textquotedblright{}.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1634}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1290}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2538}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2822}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1716}{40pt}{0pt}}}
+\toprule
+\textbf{Foglio} & \textbf{Componenti (montati /\allowbreak{} DNP)} & \textbf{Dimensionamento} & \textbf{Collegamenti} & \textbf{Esito} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+\textbf{SYMPHONY} (radice) & – & – & Fogli e bus coerenti; solo etichette residue & \tg{tagdone}{CONFERMATO} \\\midrule[0.15pt]
+\textbf{POWER} & 22 /\allowbreak{} 0 & Tutti i valori verificati a datasheet (TPS2121, TPSM863257, USB-C) & Corretti & \tg{tagdone}{CONFERMATO}\newline{}con miglioria P13 (bypass su IN1) \\\midrule[0.15pt]
+\textbf{IF} & 21 /\allowbreak{} 0 & Corretto (CH340E, terminazione CAN, pull-up, ESD) & \textbf{IC501 TCAN3414 collegato a specchio} & \tg{tagcrit}{NON CONFERMATO}\newline{}P8 obbligatoria \\\midrule[0.15pt]
+\textbf{MCU} & 28 /\allowbreak{} 0 & \textbf{C1/\allowbreak{}C2 10 nF invece di 10 pF}; frequenza e C\textsubscript{L} di Y1 non indicate & \textbf{VDD12 (pin 30, 62) su 3V3}; il resto dell'assegnazione pin è corretto & \tg{tagcrit}{NON CONFERMATO}\newline{}P9, P10 obbligatorie \\\midrule[0.15pt]
+\textbf{UHF} & 78 /\allowbreak{} 12 & Corretto (rev. 1.0–1.3), con L242 da scegliere (P2) & Corretti, tranne lo shutdown dell'LNA che non spegne e un ingresso flottante su U701 & \tg{tagwarn}{CONFERMATO CON RISERVA}\newline{}P11 consigliata, P12 minore \\\midrule[0.15pt]
+\textbf{SENSORS} & 8 /\allowbreak{} 0 & \textbf{R4–R7 senza valore} & \textbf{V\_\allowbreak{}TEMP\_\allowbreak{}PA non arriva all'MCU} & \tg{tagcrit}{NON CONFERMATO}\newline{}foglio non completo, P14 \\\midrule[0.15pt]
+\textbf{MOUNTING\_\allowbreak{}HOLES} & 4 /\allowbreak{} 0 & – & Fori a GND & \tg{tagdone}{CONFERMATO} \\
+\end{longtable}}
+
+\textbf{In sintesi:} POWER, MOUNTING\_\allowbreak{}HOLES e la radice sono a posto. UHF è a posto, salvo lo shutdown dell'LNA (P11). \textbf{IF, MCU e SENSORS non sono ancora a posto}: ci sono tre errori che impedirebbero alla scheda di funzionare (CAN a specchio, VDD12 su 3.3 V, HSE con 10 nF) e il foglio sensori è incompleto. Dopo le correzioni approvate rifarò netlist, ERC e questa tabella in una nuova revisione.
+
+\subsection[15. Azioni necessarie (rev. 1.4)]{15. Azioni necessarie (rev. 1.4)}
+
+\begin{enumerate}
+\item \textbf{Approvare o rifiutare} le proposte P8–P17 (tabella \textquotedblleft{}Proposte in attesa\textquotedblright{}). P8, P9 e P10 sono critiche.
+\item \textbf{Dopo le correzioni:} rigenerare la netlist, rifare l'ERC e aggiornare il PCB da schema (§13.8). Restano valide le azioni di §11 (firmware, laboratorio, footprint di IC2).
+\item \textbf{Componenti d'acquisto:} la versione dell'MCU deve essere la RET6P (§13.4). Il resto dei codici lo gestisce Brik81.
+\item \textbf{Storico:} fare un commit git che fissi lo stato verificato in rev. 1.4 (le modifiche 1.3+ non sono ancora in git).
+\end{enumerate}
+
+{\small Fonti aggiunte in rev. 1.4: ST AN5211 \textquotedblleft{}Getting started with STM32L5 Series hardware development\textquotedblright{} e AN4978 (VDD12 non usato = non collegato, nessun condensatore); ST community, \textquotedblleft{}external SMPS VDD12 pin supply required\textquotedblright{} (risposta ST); KiCad 10 libreria MCU\_\allowbreak{}ST\_\allowbreak{}STM32L5 (pinout STM32L562RETx e RETxP); TI TCAN3414 datasheet (pinout SOIC-8); TI TPS2121 SLVSEA3F §11 e Tab. 9-1; TI TPSM863257 SLUSF51C §8.2.2.2–8.2.2.4 e Tab. 8-2; Qorvo TQP3M9036 datasheet 27/\allowbreak{}11/\allowbreak{}2018, p. 2 e 4 (shutdown ≥ 2.5 V, EVB R1/\allowbreak{}R2); LTspice \code{SIMULATION/\allowbreak{}temp\_\allowbreak{}sens\_\allowbreak{}sim\_\allowbreak{}7.\allowbreak{}asc}.}

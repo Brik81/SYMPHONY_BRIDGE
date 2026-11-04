@@ -1,0 +1,76 @@
+\clearpage
+\section[Parte H – Rev. 1.9 – Rete RX del Si4464 secondo AN643]{Parte H – Rev. 1.9 – Rete RX del Si4464 secondo AN643}
+
+Punto S-03 della verifica \code{sch\_\allowbreak{}check\_\allowbreak{}2010.\allowbreak{}pdf}. La rete fra il filtro passa-basso dopo l'LNA TQP3M9036 e gli ingressi RXP/\allowbreak{}RXN del Si4464 era un balun a traliccio dimensionato per un carico da circa 50 Ω differenziali. L'ingresso dell'LNA del Si4464 invece è ad alta impedenza. Sostituita con la rete a 4 elementi della application note Silicon Labs AN643.
+
+\subsection[21. S-03 – Rete RX del Si4464]{21. S-03 – Rete RX del Si4464 \tg{tagdone}{modificato v1.9} \tg{tagdone}{chiuso v1.14}}
+
+\subsubsection[21.1 Situazione prima della modifica]{21.1 Situazione prima della modifica}
+
+Uscita del filtro (nodo C218/\allowbreak{}L204) → L205 18 nH in serie → nodo A (C219 7.5 pF verso GND) → C222 100 pF → RXP; uscita del filtro → C220 7.5 pF in serie → nodo B (L206 22 nH verso GND) → C223 100 pF → RXN.
+
+\begin{itemize}
+\item Le reattanze sono di circa 49 Ω a 434 MHz, cioè un balun per circa 48 Ω differenziali.
+\item AN643 Tab. 1 dà per l'ingresso del Si446x a 434 MHz \textbf{R\textsubscript{LNA} = 480 Ω ∥ C\textsubscript{LNA} = 0.97 pF}.
+\item Con questo carico L205 e C219 formano un risonatore serie verso GND a circa 433 MHz, che cortocircuita l'uscita del filtro.
+\end{itemize}
+
+\subsubsection[21.2 Rete nuova (AN643 §4.2, Tab. 5, 434 MHz)]{21.2 Rete nuova (AN643 §4.2, Tab. 5, 434 MHz)}
+
+{\scriptsize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.0674}{48pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.0625}{48pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2077}{48pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1284}{48pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3540}{48pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1799}{48pt}{0pt}}}
+\toprule
+\textbf{AN643} & \textbf{Ref} & \textbf{Collegamento} & \textbf{Valore} & \textbf{Componente} & \textbf{JLCPCB (stock 23/\allowbreak{}10)} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+CR2 & C219 & uscita del filtro → RXP (serie) & 2.2 pF C0G ±0.1 pF & Murata GQM1875C2E2R2BB12D, 0603 alto Q & C2179335 (2 866 pz) \\\midrule[0.15pt]
+LR2 & L205 & uscita del filtro → RXN (serie) & 56 nH ±2 \% & Murata LQW18AN56NG00D, 0603 avvolto in filo & C98079 (19 385 pz) \\\midrule[0.15pt]
+CR1 & C220 & RXN → GND & 4.7 pF C0G ±0.1 pF & Murata GQM2195C2E4R7BB12D, 0805 alto Q & C5646702 (655 pz) \\\midrule[0.15pt]
+LR1 & L206 & RXP ↔ RXN & 62 nH ±2 \% & Murata LQW18AN62NG00D, 0603 avvolto in filo & C162649 (10 039 pz) \\
+\end{longtable}}
+
+\begin{itemize}
+\item I valori calcolati da AN643 Tab. 4 per 434 MHz sono 4.73 pF, 62.31 nH, 2.37 pF e 56.82 nH. Si usano i valori ottimizzati di Tab. 5, ricavati sulle schede di test Silicon Labs con induttori Murata LQW18A, gli stessi scelti qui.
+\item La rete a 4 elementi dà fase esattamente opposta fra RXP e RXN. AN643 la consiglia per le prestazioni migliori, mentre la variante a 3 elementi perde fino a circa 0.5 dB.
+\item Il blocco DC su RXP lo fa CR2. RXN non ha percorsi in continua, perché il filtro ha solo condensatori verso GND e C213 blocca la DC dall'LNA. AN643 indica pull-down interni da circa 15 kΩ su RXP e RXN, quindi C222 e C223 non servono più.
+\end{itemize}
+
+\subsubsection[21.3 Confronto simulato (434 MHz, induttori con Q = 40, carico 480 Ω ∥ 0.97 pF)]{21.3 Confronto simulato (434 MHz, induttori con Q = 40, carico 480 Ω ∥ 0.97 pF)}
+
+{\small\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.5035}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2640}{24pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2325}{24pt}{0pt}}}
+\toprule
+ & \textbf{Prima (traliccio)} & \textbf{Dopo (AN643)} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Z\textsubscript{in} della rete con sorgente da 50 Ω & 6.3 + j6.4 Ω & 57.5 − j4.6 Ω \\\midrule[0.15pt]
+Return loss & \tg{tagwarn}{2.2 dB} & 21.8 dB \\\midrule[0.15pt]
+Potenza su R\textsubscript{LNA} /\allowbreak{} potenza disponibile & −5.2 dB & −0.44 dB \\\midrule[0.15pt]
+|V\textsubscript{RXP}/\allowbreak{}V\textsubscript{RXN}|, fase & 6.9, −95° & 1.03, −178° \\\midrule[0.15pt]
+Catena intera dall'uscita del TQP3M9036 (C213 + filtro + rete) a 434 MHz & −6.7 dB, RL 1.8 dB & −1.3 dB, RL 9.4 dB \\\midrule[0.15pt]
+Stessa catena a 868 MHz & −14.7 dB & −25.9 dB \\
+\end{longtable}}
+
+Il segnale al Si4464 guadagna circa 5.5 dB e diventa davvero differenziale. Con il TQP3M9036 davanti, che ha circa 20 dB di guadagno (stima), l'effetto sulla sensibilità di sistema è minore, circa 0.3–1 dB. Il beneficio principale è che l'uscita dell'LNA non vede più un carico quasi completamente riflettente. Lo script del calcolo è \code{s03\_\allowbreak{}sim.\allowbreak{}py} nella cartella temporanea della sessione.
+
+\subsubsection[21.4 Note]{21.4 Note}
+
+\begin{itemize}
+\item AN643 avverte che i valori vanno ritoccati sul circuito reale per via dei parassiti di piste e componenti. Sul prototipo conviene misurare S11 dal connettore in RX, o la sensibilità a 434–437 MHz, e regolare CR2/\allowbreak{}LR2 e CR1/\allowbreak{}LR1.
+\item Per il layout: tenere la rete compatta e vicina ai pin 2/\allowbreak{}3 del Si4464, simmetrica fra RXP e RXN, con il GND di CR1 su vias vicini.
+\end{itemize}
+
+\textbf{Verifica.} Netlist rigenerata con kicad-cli:
+
+\begin{itemize}
+\item uscita del filtro (Net-(C218-Pad2)) = C218, L204, C219 pin 2, L205 pin 2;
+\item Net-(IC204-RXP) = IC204 pin 2 + C219 pin 1 + L206 pin 1;
+\item Net-(IC204-RXN) = IC204 pin 3 + L205 pin 1 + L206 pin 2 + C220 pin 2;
+\item C220 pin 1 su GND; C222 e C223 non sono più presenti.
+\end{itemize}
+
+ERC: nessuna violazione nuova. Spariscono le 2 lib\_\allowbreak{}symbol\_\allowbreak{}mismatch di C222 e C223; totale 189.
+
+\textbf{Aggiornamento 24/\allowbreak{}10.} Su richiesta di Brik81 i due condensatori sono stati portati a Murata GQM ad alto Q, gli stessi usati nel resto della catena RX (C216 GQM2195). Le prime scelte (Fenghua 0805CG) erano C0G generici. I due induttori erano già Murata LQW18A avvolti in filo. Tutti e 4 i componenti, più D401 e R412 della rev. 1.7, hanno ora anche il campo \textquotedblleft{}JLCPCB PART\textquotedblright{}. Nello stesso foglio Brik81 ha eliminato il blocco IC203 TQP7M9106, che era scollegato (riga 1.9-10). Netlist dei componenti collegati invariata. ERC: nessuna violazione nuova, totale 138 (spariscono le 51 del blocco IC203 rimosso).

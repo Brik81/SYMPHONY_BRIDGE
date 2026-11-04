@@ -1,0 +1,69 @@
+\clearpage
+\section[Parte F – Rev. 1.7 – S-02 rifatto in SMD]{Parte F – Rev. 1.7 – S-02 rifatto in SMD}
+
+La rev. 1.6 usava un supercondensatore a foro passante ed è stata respinta: sulla scheda sono ammessi solo componenti SMD. Brik81 ha scelto il Seiko CPH3225A e ha fissato l'autonomia richiesta a circa 5 h, sufficienti a coprire il salvataggio dell'ora durante un'interruzione dell'alimentazione.
+
+\subsection[19. S-02 – VBAT del DS3231M con 10 × CPH3225A]{19. S-02 – VBAT del DS3231M con 10 × CPH3225A \tg{tagdone}{modificato v1.7}}
+
+\subsubsection[19.1 Circuito]{19.1 Circuito}
+
+\textbf{3V3 → D401 BAT54WS (anodo → catodo) → R412 1 kΩ → RTC\_\allowbreak{}VBAT = U404 pin 6 + C415…C424 (+); C415…C424 (−) → GND.} D401 e R412 sono quelli della rev. 1.6 (SMD, invariati). Cambia solo l'accumulo.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.1157}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2938}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.3323}{32pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.2582}{32pt}{0pt}}}
+\toprule
+\textbf{Ref} & \textbf{Componente} & \textbf{Codice} & \textbf{Note} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+C415…C424 & Seiko CPH3225A, EDLC 11 mF, 3.3 V max, ESR 160 Ω, 3.2 × 2.5 × 0.9 mm, \textbf{SMD saldabile a rifusione} (al massimo 2 passaggi) & Mouser 628-CPH3225A. \textbf{Non presente nel catalogo JLCPCB} (ricerche \textquotedblleft{}CPH3225A\textquotedblright{}, \textquotedblleft{}CPH3225\textquotedblright{}, C6048128 senza risultati il 23/\allowbreak{}10): Global Sourcing o materiale fornito & 10 in parallelo = 110 mF \\\midrule[0.15pt]
+D401 & BAT54WS-7-F, SOD-323 & C124205 & blocca la scarica verso il 3V3 spento \\\midrule[0.15pt]
+R412 & 1 kΩ 0402 & C11702 (Basic) & carica: al massimo circa 3 mA, τ = 1 kΩ · 110 mF = 110 s, piena carica in circa 9 min \\
+\end{longtable}}
+
+\subsubsection[19.2 Autonomia]{19.2 Autonomia}
+
+t = C · (V\textsubscript{0} − 2.3 V) /\allowbreak{} I. V\textsubscript{0} ≈ 3.3 − V\textsubscript{F}(BAT54 a µA) ≈ 3.1–3.2 V, sotto il massimo di 3.3 V del CPH3225A.
+
+{\footnotesize\arrayrulecolor{rulec}\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{>{\raggedright\arraybackslash}p{\cw{0.4257}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1042}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1168}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1595}{40pt}{0pt}}>{\raggedright\arraybackslash}p{\cw{0.1938}{40pt}{0pt}}}
+\toprule
+\textbf{Caso} & \textbf{C} & \textbf{V\textsubscript{0}} & \textbf{I totale} & \textbf{Autonomia} \\
+\midrule
+\endhead
+\bottomrule\endfoot
+Tipico (25 °C) & 110 mF & 3.15 V & 2.1 µA & \textbf{circa 12 h} \\\midrule[0.15pt]
+Corrente max del DS3231M & 110 mF & 3.15 V & 3.3 µA & circa 8 h \\\midrule[0.15pt]
+Peggiore: −20 \% C, rail 3.2 V, corrente max, perdite & 88 mF & 3.0 V & 3.5 µA & \tg{tagwarn}{circa 4.9 h} \\
+\end{longtable}}
+
+Obiettivo di Brik81: circa 5 h. Rispettato in condizioni tipiche con margine, mentre nel caso peggiore si arriva al limite. Il numero di condensatori (10) è stato scelto per stare a circa 5 h anche nel caso peggiore: 8 pezzi darebbero circa 10 h tipiche e 3.9 h nel caso peggiore. La scheda Seiko non indica né la tolleranza della capacità né la corrente di perdita, quindi i −20 \% e gli 0.5 µA di perdite sono stime da verificare sul prototipo: caricare, staccare il 3V3 e misurare RTC\_\allowbreak{}VBAT dopo 5 h.
+
+\subsubsection[19.3 Note e vincoli]{19.3 Note e vincoli}
+
+\begin{itemize}
+\item \textbf{Temperatura di esercizio CPH3225A: −20…+60 °C}, più stretta del −40…+85 °C del resto della scheda. Va confrontata con il profilo termico della missione.
+\item La tensione massima è 3.3 V. Con D401 in serie la carica resta a circa 3.1–3.2 V anche con il 3V3 a +3 \%. Più bassa è la tensione di carica, più lento è l'invecchiamento (scheda Seiko).
+\item La caratteristica \textquotedblleft{}Small leak current\textquotedblright{} non è quantificata nella scheda: va misurata.
+\item \textbf{Footprint} \code{cap:CPH3225A} (libreria di progetto \code{UHF\_\allowbreak{}LIB/\allowbreak{}FOOTPRINT/\allowbreak{}passive\_\allowbreak{}v2.\allowbreak{}pretty/\allowbreak{}cap.\allowbreak{}pretty}): pad 1.4 × 1.4 mm con passo 2.2 mm. L'origine non è al centro del corpo (pad a x −0.8 e +1.4, y −0.3): controllare il file di posizionamento JLC (offset di circa 0.3 mm) oppure centrare l'origine. Il modello 3D punta a un percorso assoluto in \code{C:/\allowbreak{}Users/\allowbreak{}alex2/\allowbreak{}Downloads/\allowbreak{}…}, da spostare nella cartella \code{UHF\_\allowbreak{}LIB/\allowbreak{}3D}.
+\item Polarità: pad 1 = + (come nella scheda Seiko).
+\item Ingombro: 10 × 3.2 × 2.5 mm, alti 0.9 mm, contro Ø13.5 × 9.5 mm passante della rev. 1.6.
+\item \textbf{Firmware}: dopo un'interruzione lunga controllare il flag OSF del DS3231M e risincronizzare l'ora.
+\end{itemize}
+
+\textbf{Verifica.} Netlist rigenerata con kicad-cli:
+
+\begin{itemize}
+\item /\allowbreak{}MCU/\allowbreak{}RTC\_\allowbreak{}VBAT = U404 pin 6 + R412 pin 1 + pin 1 di C415…C424;
+\item GND = pin 2 di C415…C424 (oltre a U404 pin 5);
+\item Net-(D401-K) = D401 pin 1 + R412 pin 2;
+\item 3V3 = D401 pin 2 (anodo) + U404 pin 2.
+\end{itemize}
+
+\textbf{Nota di calcolo sul disegno} (1.7-05): nel foglio MCU, accanto a C415…C424, c'è un testo con il dimensionamento della tabella 19.2: capacità totale 10 × 11 mF = 110 mF, formula t = Ctot·(V0 − Vmin)/\allowbreak{}I e risultati (12.4 h tipico, 7.9 h a I max, 4.9 h caso peggiore, 3.9 h con soli 8 pezzi, quindi insufficienti). Inserito da Brik81 in KiCad il 23/\allowbreak{}10/\allowbreak{}2026 alle 17:34. Tra il salvataggio di Claude e quello di KiCad le posizioni dei condensatori sono state ritoccate da Brik81, e il netlist riesportato dopo il salvataggio è invariato.
+
+ERC prima e dopo la modifica: \textbf{nessuna violazione nuova}. Ne spariscono due, \textquotedblleft{}U404 pin 6 non collegato\textquotedblright{} e \textquotedblleft{}C5 pin 2 non collegato\textquotedblright{}. Resta l'avviso preesistente \textquotedblleft{}pin di alimentazione VBAT non pilotato\textquotedblright{} (U404 pin 6 è di tipo Power input), che si toglie con un PWR\_\allowbreak{}FLAG su RTC\_\allowbreak{}VBAT.
+
+\begin{notebox}
+\textbf{Da fare in KiCad.} Ricaricare il foglio MCU senza salvare sopra la versione aperta. Poi \textbf{aggiornare il PCB da schema}: sparisce il C415 passante e compaiono C415…C424 SMD (D401 e R412 c'erano già dalla 1.6, se il PCB era stato aggiornato). Piazzare i 10 condensatori vicino a U404.
+\end{notebox}

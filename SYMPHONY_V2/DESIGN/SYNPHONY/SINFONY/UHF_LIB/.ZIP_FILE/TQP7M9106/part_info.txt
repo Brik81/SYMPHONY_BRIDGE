@@ -1,0 +1,9 @@
+Manufacturer=Qorvo
+PartNumber=TQP7M9106
+PartCategory=Integrated Circuit
+PackageCategory=Quad Flat No-Lead
+PinCount=25
+Version=2.1
+Released=2019-03-11 17:39:40
+Downloaded=2026-06-11 08:53:02
+3D=Y

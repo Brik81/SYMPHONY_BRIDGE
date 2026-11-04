@@ -1,0 +1,9 @@
+Manufacturer=ECS
+PartNumber=ECS-TXO-20CSMV4-320-AY-TR
+PartCategory=Crystal or Oscillator
+PackageCategory=Other
+PinCount=4
+Version=1.2
+Released=2023-12-04 05:11:32
+Downloaded=2026-06-11 10:49:49
+3D=Y

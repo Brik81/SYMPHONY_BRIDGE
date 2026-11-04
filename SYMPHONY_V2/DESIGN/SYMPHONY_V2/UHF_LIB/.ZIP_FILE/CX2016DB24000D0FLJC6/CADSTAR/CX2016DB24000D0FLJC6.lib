@@ -1,0 +1,16 @@
+.CX2016DB24000D0FLJC6 :1 ;Crystals AEC-Q200 24MHz 8pF 2x1.6mm
+CX2016DB32000D0WZRC1
+*STM Y
+*NGS
+*PLB 1="HOT_1" 2="GND" 3="HOT_2" 4="GND(NC)"
+*MXP 4
+*DFN CX2016DB24000D0FLJC6
+~!Mouser Part Number (581-CX2016DB24000DLJ)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D)
+~!Manufacturer_Name (Kyocera AVX)
+~!Manufacturer_Part_Number (CX2016DB24000D0FLJC6)
+~!Link Datasheet (https://www.mouser.in/ProductDetail/KYOCERA-AVX/CX2016DB24000D0FLJC6?qs=U0v31636bq1VOjtztOc6zA%3D%3D)
+~!Height (0mm)
+~!3D_Model (CX2016DB24000D0FLJC6)
+CX2016DB24000D0FLJC6
+1.1!U 2.1!U 3.1!U 4.1!U 

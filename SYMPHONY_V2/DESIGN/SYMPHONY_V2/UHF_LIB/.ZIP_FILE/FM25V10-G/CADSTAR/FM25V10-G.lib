@@ -1,0 +1,16 @@
+.FM25V10-G :1 ;F-RAM,128KB,SPI,40MHz,3V,SOIC8 FM25V10-G Serial-SPI FRAM Memory, 1Mbit, 2  3.6 V 8-Pin SOIC
+SOIC127P602X173-8N
+*STM IC
+*NGS
+*PLB 1="'CS'" 2="SO" 3="'WP'" 4="VSS" 5="SI" 6="SCK" 7="'HOLD'" 8="VDD"
+*MXP 8
+*DFN FM25V10-G
+~!Mouser Part Number (877-FM25V10-G)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Infineon-Technologies/FM25V10-G?qs=pA5MXup5wxFqKGjf8NeQmw%3D%3D)
+~!Manufacturer_Name (Infineon)
+~!Manufacturer_Part_Number (FM25V10-G)
+~!Link Datasheet (http://www.cypress.com/file/41691/download)
+~!Height (1.727mm)
+~!3D_Model (FM25V10-G)
+FM25V10-G
+1.1!U 2.1!U 3.1!U 4.1!U 8.1!U 7.1!U 6.1!U 5.1!U 

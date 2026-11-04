@@ -1,0 +1,33 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model M80-6661242
+#/319164/1290185/2.50/12/2/Connector
+DEF M80-6661242 J 0 30 Y Y 1 F N
+F0 "J" 750 300 50 H V L CNN
+F1 "M80-6661242" 750 200 50 H V L CNN
+F2 "M80-66612YY" 750 100 50 H I L CNN
+F3 "https://content.harwin.com/m/6e4b090b866b085f/original/DRG-01687-Technical-Drawing-Datasheet-M80-666-pdf.pdf" 750 0 50 H I L CNN
+F4 "Datamate L-Tek: 6+6 Pos Plug DIL Right-Angle SMT Connector Latches Gold+Tin" 750 -100 50 H I L CNN "Description"
+F5 "5.85" 750 -200 50 H I L CNN "Height"
+F6 "855-M80-6661242" 750 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Harwin/M80-6661242?qs=IQR8xM2KsGiyO%2F%252ByA7kSvw%3D%3D" 750 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Harwin" 750 -500 50 H I L CNN "Manufacturer_Name"
+F9 "M80-6661242" 750 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X 1 1 900 -500 200 L 50 50 0 0 P
+X 2 2 900 -400 200 L 50 50 0 0 P
+X 3 3 900 -300 200 L 50 50 0 0 P
+X 4 4 900 -200 200 L 50 50 0 0 P
+X 5 5 900 -100 200 L 50 50 0 0 P
+X 6 6 900 0 200 L 50 50 0 0 P
+X 7 7 0 -500 200 R 50 50 0 0 P
+X 8 8 0 -400 200 R 50 50 0 0 P
+X 9 9 0 -300 200 R 50 50 0 0 P
+X 10 10 0 -200 200 R 50 50 0 0 P
+X 11 11 0 -100 200 R 50 50 0 0 P
+X 12 12 0 0 200 R 50 50 0 0 P
+P 5 0 1 6 200 100 700 100 700 -600 200 -600 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

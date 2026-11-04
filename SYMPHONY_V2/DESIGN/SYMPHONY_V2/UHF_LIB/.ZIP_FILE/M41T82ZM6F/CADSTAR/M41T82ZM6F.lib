@@ -1,0 +1,16 @@
+.M41T82ZM6F :1 ;M41T82ZM6F, Real Time Clock, Alarm, Calendar, Clock, 32B RAM, I2C, 2.38 to 5.5V, 8-Pin SOIC
+SOIC127P600X175-8N
+*STM IC
+*NGS
+*PLB 1="XI" 2="XO" 3="VBAT" 4="VSS" 5="SDA" 6="SCL" 7="FT/'RST'" 8="VCC"
+*MXP 8
+*DFN M41T82ZM6F
+~!Mouser Part Number (511-M41T82ZM6F)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/STMicroelectronics/M41T82ZM6F?qs=9fArFXnEOlK%2FxcsT9Q7OUQ%3D%3D)
+~!Manufacturer_Name (STMicroelectronics)
+~!Manufacturer_Part_Number (M41T82ZM6F)
+~!Link Datasheet (https://www.st.com/resource/en/datasheet/m41t82.pdf)
+~!Height (1.75mm)
+~!3D_Model (M41T82ZM6F)
+M41T82ZM6F
+1.1!U 2.1!U 3.1!U 4.1!U 8.1!U 7.1!U 6.1!U 5.1!U 

@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'SN74AHC1G04DBVRE4'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Texas Instruments", "SN74AHC1G04DBVRE4" (!) = "", "SOT95P280X145-5N", "SOT23 (5-Pin)", "595-SN74AHC1G04DBVRE", "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/SN74AHC1G04DBVRE4?qs=PVVDbbWpW3K%252BS%2Feykj44gw%3D%3D", "Inverter 1-Element CMOS 5-Pin SOT-23 T/R", "http://www.ti.com/general/docs/suppproductinfo.tsp?distId=26&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fsn74ahc1g04", "1.45 mm"
+END_PART
+
+END.

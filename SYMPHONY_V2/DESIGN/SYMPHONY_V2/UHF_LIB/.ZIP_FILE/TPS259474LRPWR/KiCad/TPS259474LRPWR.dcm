@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TPS259474LRPWR
+D Hot Swap Voltage Controllers 2.7-V to 23-V, 28-m?, 5.5-A eFuse with integrated reverse polarity protection
+K
+F https://www.ti.com/lit/gpn/tps25981
+$ENDCMP
+#
+#End Doc Library

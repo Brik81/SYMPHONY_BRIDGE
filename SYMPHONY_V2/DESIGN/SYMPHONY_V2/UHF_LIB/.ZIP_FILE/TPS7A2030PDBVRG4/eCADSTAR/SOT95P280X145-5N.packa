@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "TPS7A2030PDBVRG4"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2019-09-12-11:49:28)
+    (mountForm default
+        (footprintRef "SOT95P280X145-5N")
+        (spec "System")
+    )
+)

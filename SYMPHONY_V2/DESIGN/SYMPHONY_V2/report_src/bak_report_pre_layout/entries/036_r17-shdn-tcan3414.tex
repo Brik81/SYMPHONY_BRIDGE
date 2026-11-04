@@ -1,0 +1,59 @@
+\clearpage
+\section[Rev. 1.38 -- R-17: pin SHDN del TCAN3414 a GND]{Rev. 1.38 \textendash{} R-17: pin SHDN del TCAN3414 collegato a GND}
+
+\subsection{Data e revisione}
+03/11/2026, revisione 1.38.
+
+\subsection{Titolo}
+R-17: pin SHDN del TCAN3414 collegato a GND.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Foglio IF (file \code{IF.kicad\_sch}).
+\item \code{IC501} TCAN3414DR (transceiver CAN, simbolo \code{Comunication\_SALVO:TCAN3414DR}), pin 5 \textquotedblleft{}SHDN/VIO\textquotedblright{}; rete GND.
+\item Invariati: TXD pin 1 $\rightarrow$ PA12, RXD pin 4 $\rightarrow$ PA11, STB pin 8 già a GND, CANH/CANL verso J202 e J708 pin 12/10.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+{\small\arrayrulecolor{rulec}
+\begin{tabular}{@{}p{0.16\linewidth}p{0.36\linewidth}p{0.36\linewidth}@{}}
+\toprule
+\textbf{Pin} & \textbf{Prima} & \textbf{Dopo}\\
+\midrule
+IC501 pin 5 (SHDN) & non collegato, con flag no-connect (rete \code{unconnected-(IC501-SHDNVIO-Pad5)}) & collegato a GND con un filo corto verso il filo GND che già collega STB (pin 8), con giunzione\\
+\bottomrule
+\end{tabular}}
+
+Nessun componente aggiunto, nessun codice JLCPCB cambiato. Eseguito da Claude Code il 03/11/2026; copia precedente in \code{report\_src/bak\_pre138/IF.kicad\_sch}.
+
+\begin{center}
+\begin{circuitikz}[scale=1,transform shape]
+ \draw[thick,accent,fill=accent!6] (0,0) rectangle (3,2.4);
+ \node at (1.5,2.1) {\small IC501 TCAN3414DR};
+ \node[anchor=west,font=\scriptsize] at (0.05,1.4) {STB (8)};
+ \node[anchor=west,font=\scriptsize] at (0.05,0.6) {SHDN/VIO (5)};
+ \draw (0,1.4) -- (-1.2,1.4) coordinate(a);
+ \draw (0,0.6) -- (-1.2,0.6) coordinate(b);
+ \draw (a) -- (-1.8,1.4) -- (-1.8,0) node[ground]{};
+ \draw (b) to[short,*-] (-1.8,0.6);
+ \node[anchor=east,font=\scriptsize] at (-0.2,1.8) {GND};
+\end{circuitikz}
+
+{\small Collegamento dopo la modifica: STB (pin 8) e SHDN (pin 5) entrambi a GND.}
+\end{center}
+
+\subsection{Motivazione}
+Revisione indipendente del 27/10/2026, punto R-17 (suggerimento): SHDN era aperto. Datasheet TI TCAN3414 SLLSFS8A: p.\,3, tabella dei pin, SHDN alto = spegnimento a bassissimo consumo, \textquotedblleft{}integrated pull-down (TCAN3414 only)\textquotedblright{}; p.\,8, caratteristiche elettriche, corrente d'ingresso del pin di pochi \si{\micro\ampere}, quindi pull-down interno debole; p.\,9, filtro anti-glitch $T_{\mathrm{filter(SHDN)}}$ \SIrange{0,5}{2}{\micro\second}. Collegarlo a GND evita che un disturbo spenga il transceiver; stessa scelta di STB, già a GND: il CAN è sempre attivo.
+
+Approvazione di Brik81 (03/11/2026): \textquotedblleft{}R-17 si portalo a GND e andiamo al prossimo punto\textquotedblright{} e poi \textquotedblleft{}fatto R-17 ora collega\textquotedblright{}.
+
+\subsection{Impatti e criticità}
+\begin{notebox}
+Il transceiver non può più essere spento da firmware (non lo era nemmeno prima: nessun GPIO collegato). Nessun impatto sul PCB (non ancora iniziato).
+\end{notebox}
+
+\subsection{Verifiche da fare}
+Già eseguite: netlist esportata prima e dopo, unica differenza IC501 pin 5 che passa da \code{unconnected-(IC501-SHDNVIO-Pad5)} a GND; schema stampato in PDF e controllato a vista.
+\begin{itemize}
+\item Nessuna verifica specifica; in collaudo, comunicazione CAN funzionante.
+\end{itemize}
