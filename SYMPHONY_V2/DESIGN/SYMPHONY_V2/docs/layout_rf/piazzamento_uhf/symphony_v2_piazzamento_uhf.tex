@@ -131,7 +131,7 @@ Le due file partono dallo switch, a sinistra, e si chiudono sul Si4464, a destra
 \begin{itemize}[nosep]
 \item Paragrafo~\ref{sec:altezza}: quanto deve essere alta la striscia RF, visto che la fila di fori H305--H307 non è ancora fissata e la si vuole tenere più bassa possibile.
 \item Paragrafo~\ref{sec:blocchi-come}: come mettere i componenti di ogni blocco, con il disegno di pad, piste e via e le regole generali (giusto/sbagliato).
-\item Paragrafo~\ref{sec:mcu}: la rotazione migliore dell'MCU, provata a passi di \ang{35}.
+\item Paragrafo~\ref{sec:mcu}: la rotazione migliore dell'MCU, provata a passi di \ang{45}.
 \end{itemize}
 \end{nota}
 
@@ -167,7 +167,7 @@ Che cosa c'è già sulla scheda (figura~\ref{fig:scheda}):
 \begin{itemize}
 \item \textbf{J201}, il connettore d'antenna MMCX, nell'intaglio del bordo sinistro (X 111,8, Y 82,4). È il punto di partenza di tutto: non va spostato.
 \item \textbf{Otto fori di fissaggio M2} con il pad a massa. H301--H304 sono ai quattro angoli; H305, H306 e H307 formano una fila orizzontale. Nella figura sono a Y 99,4 (la striscia più bassa possibile, vedi paragrafo~\ref{sec:altezza}); nel PCB di oggi sono a Y 107,8 e la loro posizione non è ancora decisa.
-\item \textbf{U301}, l'MCU, al centro (nella figura è ruotato di \ang{135}, nel PCB di oggi di \ang{270}; vedi paragrafo~\ref{sec:mcu}). \textbf{J708}, il connettore del dock, sul lato inferiore (B.Cu). In basso J15 (USB-C), J202 (CAN) e J203 (I2C).
+\item \textbf{U301}, l'MCU, al centro (nella figura è ruotato di \ang{135}, nel PCB di oggi di \ang{0}; vedi paragrafo~\ref{sec:mcu}). \textbf{J708}, il connettore del dock, sul lato inferiore (B.Cu). In basso J15 (USB-C), J202 (CAN) e J203 (I2C).
 \end{itemize}
 
 \subsection{Perché la radio va in alto}
@@ -485,7 +485,7 @@ La striscia è alta solo 26\,mm: tra la fila TX e la fila RX non c'è spazio per
 L'MCU (U301, STM32 in LQFP64) parla con quasi tutta la scheda. Girandolo, cambia quale lato del chip guarda verso ogni cosa: con la rotazione giusta i fili escono già dalla parte dove devono andare, senza girare intorno al chip e senza incrociarsi.
 
 \subsection{Come è stata cercata}
-U301 è stato lasciato dov'è oggi nel PCB (X 135,3, Y 120,0) e girato da \ang{0} a \ang{350} a passi di \ang{35}. Per ogni rotazione sono stati misurati:
+U301 è stato lasciato dov'è oggi nel PCB (X 135,3, Y 120,0) e girato da \ang{0} a \ang{315} a passi di \ang{45}: otto posizioni. Per ogni rotazione sono stati misurati:
 \begin{itemize}
 \item la \textbf{lunghezza totale} dei collegamenti in linea d'aria (come le linee del ratsnest di KiCad);
 \item gli \textbf{incroci} tra collegamenti di gruppi diversi. Ogni incrocio vuol dire, nel routing, un cambio di strato con due via: è il numero più importante.
@@ -495,7 +495,7 @@ Sono contati solo i collegamenti verso componenti già piazzati sulla scheda: Si
 \begin{figure}[p]
 \centering
 \input{fig_mcu_rot}
-\caption{U301 nelle undici rotazioni a passi di \ang{35}, più quella di oggi (\ang{270}, cornice grigia). Ogni linea va da un pin dell'MCU al componente con cui parla, colorata per gruppo. Sopra ogni disegno: lunghezza totale dei collegamenti e numero di incroci tra gruppi diversi. Cornice verde = meno incroci; cornice arancio = collegamenti più corti.}
+\caption{U301 nelle otto rotazioni a passi di \ang{45}; quella di oggi (\ang{0}) ha la cornice grigia. Ogni linea va da un pin dell'MCU al componente con cui parla, colorata per gruppo. Sopra ogni disegno: lunghezza totale dei collegamenti e numero di incroci tra gruppi diversi. Cornice verde = meno incroci; cornice arancio = collegamenti più corti.}
 \label{fig:mcu}
 \end{figure}
 
@@ -510,13 +510,13 @@ Sono contati solo i collegamenti verso componenti già piazzati sulla scheda: Si
 
 \subsection{Il risultato}
 \begin{itemize}
-\item \textbf{Il migliore è \ang{140}}: 5 incroci e \SI{333}{mm} di collegamenti. Anche \ang{245} ha 5 incroci, ma con collegamenti più lunghi (\SI{342}{mm}).
-\item \ang{175} ha i collegamenti più corti (\SI{315}{mm}), ma 9 incroci.
-\item Oggi U301 è a \ang{270}: 8 incroci e \SI{366}{mm}.
-\item Le rotazioni tra \ang{0} e \ang{70} e intorno a \ang{350} sono le peggiori (da 32 a 56 incroci): i fili verso la radio e verso i connettori uscirebbero dal lato sbagliato.
+\item \textbf{Il migliore è \ang{135}}: 5 incroci e \SI{338}{mm} di collegamenti. Nessun'altra rotazione scende sotto gli 8 incroci.
+\item \ang{180} ha i collegamenti più corti (\SI{314}{mm}), ma 9 incroci: si risparmiano \SI{24}{mm} di pista e si pagano 4 cambi di strato in più.
+\item \ang{225} e \ang{270} danno 8 incroci (\SI{326}{mm} e \SI{366}{mm}).
+\item Oggi U301 è a \ang{0}: è la rotazione peggiore, con 56 incroci e \SI{432}{mm}. Anche \ang{45} (42 incroci) e \ang{315} (24) sono da evitare: i fili verso la radio e verso i connettori uscirebbero dal lato sbagliato del chip.
 \end{itemize}
 
-Intorno a \ang{140} il risultato è stabile: provando a passi di \ang{5}, tutte le rotazioni da \ang{125} a \ang{145} danno 5 incroci. Conviene quindi scegliere \textbf{\ang{135}} (5 incroci, \SI{338}{mm}): è un multiplo di \ang{45}, quindi i pin escono su direzioni a \ang{45} come le piste di KiCad, e il routing viene più pulito. Era la rotazione della versione precedente del PCB.
+Il risultato di \ang{135} è stabile: girando il chip di qualche grado in più o in meno (da \ang{125} a \ang{145}) gli incroci restano 5. Quindi non è un caso fortunato, e piccoli spostamenti dei componenti intorno non lo cambiano. Era anche la rotazione della versione precedente del PCB.
 
 \begin{regola}[consiglio]
 Ruotare U301 a \textbf{\ang{135}} (proprietà del footprint, tasto E, campo Orientamento). Con questa rotazione, guardando la scheda dall'alto, i pin di ogni gruppo escono da questa parte del chip:

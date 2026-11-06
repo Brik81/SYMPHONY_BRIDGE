@@ -1,4 +1,4 @@
-"""Rotazione di U301 a passi di 35 gradi, nella posizione attuale del PCB.
+"""Rotazione di U301 a passi di 45 gradi, nella posizione attuale del PCB.
 Per ogni rotazione: lunghezza totale dei collegamenti in linea d'aria (ratsnest) e numero di incroci
 tra collegamenti di gruppi diversi. Scrive fig_mcu_rot.tex e tab_mcu_rot.tex.
 Uso: python mcu_rot.py pcb.json cartella_uscita"""
@@ -7,7 +7,7 @@ import json, math, os, sys
 d = json.load(open(sys.argv[1], encoding="utf-8"))
 OUT = sys.argv[2]
 F = {f["ref"]: f for f in d["fps"]}
-STEP = 35
+STEP = 45
 
 
 def rot(x, y, r):
@@ -100,10 +100,11 @@ def panel(r, L, X, lines, title, frame):
 cells = []
 for r in angles:
     L, X, lines = res[r]
-    fr = "sbgreen" if r == best else ("sborange" if r == short else None)
-    cells.append(panel(r, L, X, lines, r"%d\textdegree" % r, fr))
-L, X, lines = res_cur
-cells.append(panel(cur, L, X, lines, r"oggi: %d\textdegree" % cur, "sbgray"))
+    fr = "sbgreen" if r == best else ("sborange" if r == short else ("sbgray" if r == cur else None))
+    cells.append(panel(r, L, X, lines, (r"%d\textdegree{} (oggi)" if r == cur else r"%d\textdegree") % r, fr))
+if cur not in angles:
+    L, X, lines = res_cur
+    cells.append(panel(cur, L, X, lines, r"oggi: %d\textdegree" % cur, "sbgray"))
 # legenda
 leg = [r"\begin{tikzpicture}[font=\sffamily\tiny]"]
 for i, (g, (col, _)) in enumerate(GROUPS.items()):
@@ -128,13 +129,18 @@ for r in angles:
         mark = r"\textcolor{sbgreen}{\textbf{meno incroci}}"
     elif r == short:
         mark = r"\textcolor{sborange}{\textbf{più corta}}"
-    t.append(r"\ang{%d} & %.0f & %d & %s\\" % (r, L, X, mark))
-L, X, _ = res_cur
-t.append(r"\rowcolor{sbgraybg}\ang{%d} (oggi) & %.0f & %d & posizione attuale nel PCB\\" % (cur, L, X))
+    if r == cur:
+        mark = (mark + "; " if mark else "") + "posizione attuale nel PCB"
+        t.append(r"\rowcolor{sbgraybg}\ang{%d} (oggi) & %.0f & %d & %s\\" % (r, L, X, mark))
+    else:
+        t.append(r"\ang{%d} & %.0f & %d & %s\\" % (r, L, X, mark))
+if cur not in angles:
+    L, X, _ = res_cur
+    t.append(r"\rowcolor{sbgraybg}\ang{%d} (oggi) & %.0f & %d & posizione attuale nel PCB\\" % (cur, L, X))
 open(os.path.join(OUT, "tab_mcu_rot.tex"), "w", encoding="utf-8").write("\n".join(t))
 
 # rifinitura a 5 gradi intorno al migliore, per il testo
 fine = sorted(((evaluate(a)[1], evaluate(a)[0], a) for a in range(best - 30, best + 31, 5)))
 print("migliore", best, res[best][:2], "| più corta", short, res[short][:2], "| attuale", cur, res_cur[:2])
 print("fine:", [(a, x, round(l)) for x, l, a in fine[:6]])
-print("45 multipli:", [(a, evaluate(a)[1], round(evaluate(a)[0])) for a in range(0, 360, 45)])
+print("tutti:", [(a, evaluate(a)[1], round(evaluate(a)[0])) for a in range(0, 360, 45)])
