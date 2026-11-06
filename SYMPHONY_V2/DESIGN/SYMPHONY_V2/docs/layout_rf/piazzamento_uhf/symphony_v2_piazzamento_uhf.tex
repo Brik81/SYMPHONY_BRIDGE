@@ -86,13 +86,33 @@
   dig/.style={line width=1pt,violet,densely dashed,-{Stealth[length=2mm]}},
   dimq/.style={sbred,thin,{Bar[width=1.6mm]}-{Bar[width=1.6mm]}},
   blk/.style={draw=sbblue,thick,fill=sblight,rounded corners=2pt,align=center,font=\sffamily\footnotesize,minimum height=9mm,inner sep=3pt},
+  % disegni dei blocchi (sezione "Come mettere i componenti")
+  cu/.style={fill=sborange!80!black},
+  tr/.style={draw=sborange!80!black,line cap=round},
+  via/.style={draw=black!70,fill=white,line width=0.4pt},
+  bod/.style={draw=black!60,line width=0.3pt},
+  lbl/.style={align=center,inner sep=1pt,font=\sffamily\tiny},
 }
+\usepackage{pifont}
+\usepackage{catchfile}
+\CatchFileDef{\tabmcurot}{tab_mcu_rot.tex}{}
+% un disegno di blocco con titolo e consigli accanto
+\newcommand{\blocco}[3]{%
+  \par\medskip\noindent\begin{minipage}{\linewidth}
+  {\sffamily\bfseries\color{sbblue}#1}\par\smallskip
+  \centering\input{#2}\par\smallskip
+  \raggedright\small #3
+  \end{minipage}\par\medskip}
+\newcommand{\esempio}[3]{%
+  \noindent\begin{minipage}[t]{\linewidth}{\sffamily\bfseries\small #1}\par\smallskip
+  \begin{minipage}[t]{0.48\linewidth}\centering\input{#2}\end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}\centering\input{#3}\end{minipage}\end{minipage}\par\medskip}
 
 \begin{document}
 
 \begin{center}
 {\sffamily\bfseries\huge\color{sbblue} Come disporre i componenti\\[2pt] del foglio UHF}\par\vspace{3mm}
-{\sffamily\large\color{sbgray} SYMPHONY V2 \textbullet{} PCB a 8 strati \textbullet{} versione 1.0 del 06/11/2026}
+{\sffamily\large\color{sbgray} SYMPHONY V2 \textbullet{} PCB a 8 strati \textbullet{} versione 1.1 del 06/11/2026}
 \end{center}
 \vspace{2mm}
 
@@ -106,6 +126,14 @@ I componenti vanno messi \textbf{in fila, nell'ordine in cui li attraversa il se
 \end{itemize}
 Le due file partono dallo switch, a sinistra, e si chiudono sul Si4464, a destra. Tra le due file va una fila di via a massa. Tutto quello che non è radio (supervisore, LED, transistor di comando) va sotto i fori, verso l'MCU.
 \end{semplice}
+
+\begin{nota}[novità della versione 1.1]
+\begin{itemize}[nosep]
+\item Paragrafo~\ref{sec:altezza}: quanto deve essere alta la striscia RF, visto che la fila di fori H305--H307 non è ancora fissata e la si vuole tenere più bassa possibile.
+\item Paragrafo~\ref{sec:blocchi-come}: come mettere i componenti di ogni blocco, con il disegno di pad, piste e via e le regole generali (giusto/sbagliato).
+\item Paragrafo~\ref{sec:mcu}: la rotazione migliore dell'MCU, provata a passi di \ang{35}.
+\end{itemize}
+\end{nota}
 
 \tableofcontents
 
@@ -138,8 +166,8 @@ Non sposta nulla nel PCB e non sostituisce il DRC. È una proposta di partenza: 
 Che cosa c'è già sulla scheda (figura~\ref{fig:scheda}):
 \begin{itemize}
 \item \textbf{J201}, il connettore d'antenna MMCX, nell'intaglio del bordo sinistro (X 111,8, Y 82,4). È il punto di partenza di tutto: non va spostato.
-\item \textbf{Otto fori di fissaggio M2} con il pad a massa. H301--H304 sono ai quattro angoli; H305, H306 e H307 formano una fila orizzontale a Y 99,4; H308 è a destra, più in basso.
-\item \textbf{U301}, l'MCU, al centro (ruotato di \ang{135}). \textbf{J708}, il connettore del dock, sul lato inferiore (B.Cu). In basso J15 (USB-C), J202 (CAN) e J203 (I2C).
+\item \textbf{Otto fori di fissaggio M2} con il pad a massa. H301--H304 sono ai quattro angoli; H305, H306 e H307 formano una fila orizzontale. Nella figura sono a Y 99,4 (la striscia più bassa possibile, vedi paragrafo~\ref{sec:altezza}); nel PCB di oggi sono a Y 107,8 e la loro posizione non è ancora decisa.
+\item \textbf{U301}, l'MCU, al centro (nella figura è ruotato di \ang{135}, nel PCB di oggi di \ang{270}; vedi paragrafo~\ref{sec:mcu}). \textbf{J708}, il connettore del dock, sul lato inferiore (B.Cu). In basso J15 (USB-C), J202 (CAN) e J203 (I2C).
 \end{itemize}
 
 \subsection{Perché la radio va in alto}
@@ -148,6 +176,31 @@ Che cosa c'è già sulla scheda (figura~\ref{fig:scheda}):
 \item La fila di fori H305--H307 divide la scheda in due. Sopra c'è una striscia libera di circa \textbf{43 $\times$ 26\,mm} (circa \SI{1100}{mm^2}), lontana dall'MCU e dai connettori. Se i fori servono anche per uno schermo metallico, questa striscia è proprio il suo vano.
 \item I componenti del foglio UHF occupano in tutto circa \SI{360}{mm^2} di courtyard (calcolato dai footprint). Con lo spazio per le piste, le via e le distanze RF servono da 2,5 a 3 volte tanto: \textbf{la striscia basta, ma senza spazio da sprecare}.
 \end{itemize}
+
+\subsection{Quanto deve essere alta la striscia}
+\label{sec:altezza}
+La fila di fori H305--H307 non è fissata e sotto c'è molta parte digitale: conviene tenere la striscia RF \textbf{più bassa possibile}. L'altezza minima dipende da due distanze che la guida chiede di almeno \SI{15}{mm}: PA--LNA e PA--TCXO. Nella disposizione proposta (figura~\ref{fig:proposta}) il PA sta nella fila alta, mentre LNA e TCXO stanno nella fila bassa: abbassando la fila bassa, le due distanze crescono.
+
+La tabella dà, per ogni altezza della striscia, dove vanno i centri dei fori e quanto valgono le due distanze. L'altezza è misurata dal bordo superiore della scheda (Y 70,7) al limite inferiore della zona RF, cioè al centro dei fori meno il raggio del pad (\SI{2.15}{mm}) e mezzo millimetro di margine.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{24mm}L{30mm}L{22mm}L{24mm}Y@{}}
+\tabhead\hd{Altezza striscia}&\hd{Fori H305--H307 a}&\hd{PA -- LNA}&\hd{PA -- TCXO}&\hd{Giudizio}\\
+\endhead
+\SI{26}{mm} & Y 99,4 & \SI{12.6}{mm} & \SI{10.8}{mm} & minimo assoluto: serve il TCXO sotto e la fence (figure 1 e 2)\\
+\SI{28}{mm} & Y 101,4 & \SI{14.2}{mm} & \SI{12.8}{mm} & ancora sotto per entrambe\\
+\textbf{\SI{29}{mm}} & \textbf{Y 102,4} & \textbf{\SI{15.0}{mm}} & \SI{13.8}{mm} & \textcolor{sbgreen}{\textbf{consigliata se il TCXO va sul lato inferiore}}\\
+\SI{30}{mm} & Y 103,4 & \SI{15.8}{mm} & \SI{14.8}{mm} & PA--TCXO quasi a posto\\
+\textbf{\SI{31}{mm}} & \textbf{Y 104,4} & \textbf{\SI{16.6}{mm}} & \textbf{\SI{15.8}{mm}} & \textcolor{sbgreen}{\textbf{consigliata con tutto sul lato superiore}}\\
+\rowcolor{sbgraybg}\SI{34.5}{mm} & Y 107,8 (oggi) & \SI{19.7}{mm} & \SI{19.3}{mm} & tutto rispettato, ma \SI{3.5}{mm} in più del necessario tolti alla parte digitale\\
+\bottomrule
+\end{xltabular}}
+{\footnotesize Distanze tra i centri dei componenti, con la fila bassa (LNA, TCXO, Si4464, filtri RX) spostata in giù quanto si alza la striscia e la fila alta (PA, FL201, switch) ferma. Valgono per la disposizione proposta, non per le posizioni provvisorie che ci sono oggi nel PCB.}
+
+\begin{regola}[in breve]
+Con \textbf{31\,mm} (fori a Y 104,4) tutte le distanze tornano senza trucchi. Con \textbf{29\,mm} (fori a Y 102,4) tornano solo se il TCXO va sul lato inferiore (paragrafo~\ref{sec:alternative}). Sotto i 29\,mm si accettano distanze più corte del consigliato. Ogni millimetro in meno di striscia è un millimetro in più per la parte digitale.
+\end{regola}
 
 \begin{attenzione}[due fori dentro la zona RF]
 H302 (X 122,3) e H304 (X 148,3) sono in alto, a Y 74,4, dentro la striscia. Con il pad occupano un cerchio di circa \SI{4.3}{mm} di diametro. La fila TX deve quindi stare \textbf{sotto Y 77}, e l'angolo in alto a destra (dove andrebbe la rete del Si4464) è parzialmente occupato.
@@ -246,6 +299,146 @@ Y201 & 139,00 & 89,70 & \ang{0} & uscita (pin 3) in alto a destra, verso XIN\\
 {\footnotesize Coordinate KiCad in mm, rotazione come nel campo \enquote{Orientamento} delle proprietà del footprint. Sono il centro del footprint: si possono scrivere direttamente nella finestra delle proprietà (tasto E). Gli altri componenti si mettono a mano dentro il rettangolo del loro blocco.}
 
 % =====================================================================
+\section{Come mettere i componenti di ogni blocco}
+\label{sec:blocchi-come}
+Le sezioni precedenti dicono \emph{dove} va ogni blocco. Qui si entra dentro il blocco: \emph{come} si mettono i suoi componenti uno accanto all'altro, con le piste e le via.
+
+\begin{semplice}
+Un blocco RF si piazza \textbf{copiando lo schema}: i componenti vanno in fila nello stesso ordine in cui li attraversa il segnale. Quelli \textbf{in serie} stanno sulla pista, in linea. Quelli \textbf{verso massa} hanno un pad appoggiato sulla pista e l'altro pad con le sue via di massa subito accanto. Più il blocco è corto e compatto, meglio funziona.
+\end{semplice}
+
+\subsection{Come leggere i disegni}
+\begin{itemize}
+\item \textbf{Arancio pieno} = rame: pad e piste. Le piste RF sono disegnate larghe \SI{0.32}{mm} (valore indicativo per \SI{50}{\ohm}, da confermare: paragrafo~\ref{sec:alternative}).
+\item \textbf{Rettangolo grigio sottile} = corpo del componente. \textbf{Cerchio con punto} = via a massa (verso In1).
+\item I componenti sono in scala tra loro (1\,mm della scheda = 6,5\,mm sul foglio) con le misure vere dei pad 0402, 0603 e 0805. I chip sono invece semplificati: sono disegnati solo i pin che servono al blocco e le loro distanze non sono quelle reali.
+\item Il segnale va sempre \textbf{da sinistra a destra}. Sulla scheda il blocco va girato secondo la disposizione della figura~\ref{fig:proposta}: per esempio la fila TX va da destra a sinistra, quindi i disegni della TX si leggono a specchio. L'ordine dei componenti non cambia.
+\end{itemize}
+
+\subsection{Le regole che valgono per tutti i blocchi}
+Ogni coppia di disegni mostra a sinistra un errore tipico e a destra il modo giusto.
+
+\esempio{1. Condensatore verso massa: il pad va sulla pista, senza un tratto di pista in mezzo}{blk_es_stub_no}{blk_es_stub_si}
+{\small Il pezzetto di pista tra la linea e il condensatore (lo \enquote{stub}) è un'induttanza in più che non c'è nello schema: sposta la frequenza del filtro. Il pad del condensatore deve toccare direttamente la pista RF.}\par\medskip
+
+\esempio{2. Via di massa: subito accanto al pad, meglio due}{blk_es_via_no}{blk_es_via_si}
+{\small Una pista che va a cercare una via lontana è di nuovo un'induttanza: il condensatore non va più a massa davvero. Due via in parallelo dimezzano l'induttanza della via.}\par\medskip
+
+\esempio{3. Disaccoppiamento: il condensatore più piccolo è il più vicino al pin}{blk_es_dec_no}{blk_es_dec_si}
+{\small I condensatori piccoli (\si{pF}) fermano le frequenze alte, che sono quelle che si propagano meglio: vanno attaccati al pin. Quelli grandi (\si{\micro F}) lavorano a bassa frequenza e possono stare più lontani. L'alimentazione arriva dal lato del condensatore grande.}\par\medskip
+
+\esempio{4. Induttanze vicine: girate di \ang{90} o distanziate}{blk_es_ind_no}{blk_es_ind_si}
+{\small Due induttanze in fila con gli assi paralleli si parlano attraverso il campo magnetico e il filtro non fa più quello che dice lo schema. Se sono vicine (meno di circa \SI{2}{mm}), conviene girare la seconda di \ang{90}; altrimenti lasciare almeno \SI{2}{mm} tra i corpi.}\par\medskip
+
+\begin{regola}[altre regole da tenere sempre a mente]
+\begin{itemize}[nosep]
+\item \textbf{Niente curve a \ang{90}} sulle piste RF: due tratti a \ang{45} o una curva.
+\item \textbf{Niente piste e niente via di segnale sotto i componenti RF}; sotto c'è solo la massa (In1 pieno).
+\item \textbf{Pad termico (EP) dei chip}: una griglia di via a massa dentro il pad, almeno 4 (3$\times$3 per il PA).
+\item \textbf{Via di massa ai lati delle piste RF} (CPWG): una fila per lato, ogni \SIrange{1.5}{2}{mm}.
+\item \textbf{Stessa rotazione per i passivi di un blocco} (\ang{0} o \ang{90}): il blocco è più ordinato e più facile da controllare.
+\end{itemize}
+\end{regola}
+
+\begin{nota}[trucchi di KiCad per chi inizia]
+\begin{itemize}[nosep]
+\item \textbf{Selezionare un blocco dallo schema}: nello schematico si selezionano i simboli del blocco; nel PCB vengono selezionati anche i footprint (selezione incrociata). Poi, nel PCB, il tasto \textbf{P} (\enquote{Impacchetta e sposta i footprint}) li porta tutti vicini al cursore.
+\item \textbf{Raggruppare}: quando un blocco è finito, selezionarlo e usare \enquote{Raggruppa} (Ctrl+G): si sposta e si ruota come un pezzo unico.
+\item \textbf{Griglia}: \SI{0.1}{mm} (o \SI{0.05}{mm}) per i passivi RF; \textbf{R} ruota di \ang{90}, \textbf{M} sposta, \textbf{E} apre le proprietà dove si scrivono X, Y e rotazione esatte.
+\item \textbf{Ratsnest}: le linee sottili che collegano i pad seguono la netlist. Se due linee si incrociano dentro un blocco, quasi sempre un componente è girato al contrario.
+\item \textbf{Misura}: Ctrl+Shift+M misura una distanza, utile per controllare le distanze del paragrafo~\ref{sec:distanze}.
+\end{itemize}
+\end{nota}
+
+\subsection{I blocchi uno per uno}
+I disegni seguono la netlist del foglio UHF: riferimenti, valori e package sono quelli dello schematico.
+
+\blocco{Antenna: J201 \textrightarrow{} C206 \textrightarrow{} switch}{blk_antenna}{%
+\begin{itemize}[nosep]
+\item Pista dritta e più corta possibile; C206 in linea, a metà strada.
+\item Il pad centrale di J201 è largo: la pista parte dal suo centro, senza allargamenti a imbuto.
+\item Le masse di J201 vanno a massa con almeno 4 via, attaccate ai pad.
+\item IC202: pad termico con le via; C211 (\SI{100}{nF} sul 5V0) attaccato al pin 1, sul lato opposto alle porte RF; il comando (pin 2) arriva da In4 lontano dalle piste RF.
+\end{itemize}}
+
+\blocco{Filtro TX: rete d'uscita \textrightarrow{} C230 \textrightarrow{} FL201 \textrightarrow{} C208 \textrightarrow{} switch}{blk_filtro_tx}{%
+\begin{itemize}[nosep]
+\item FL201 ha sei pad di massa: ognuno con la sua via, subito fuori dal pad. È la massa che fa funzionare il filtro.
+\item Ingresso (pin 8) e uscita (pin 4) sono su lati opposti: la pista entra da una parte ed esce dall'altra, senza ripassare accanto al filtro.
+\item C208 attaccato alla porta TX dello switch (pin 8).
+\end{itemize}}
+
+\blocco{Rete d'uscita del PA: pin 9--12 \textrightarrow{} L243 \textrightarrow{} C230}{blk_uscita_pa}{%
+\begin{itemize}[nosep]
+\item I quattro pin RF OUT (9--12) si uniscono con una piazzola di rame unica, direttamente sui pad.
+\item \textbf{C260} è il primo componente: va attaccato alla piazzola dei pin d'uscita.
+\item \textbf{L242} (\SI{1}{\micro H}, la più grande) porta il 3V3 all'uscita del PA. Va a \ang{90} rispetto alla pista RF e il suo lato \enquote{freddo} (3V3) ha C258 (\SI{47}{pF}) attaccato, poi C257 (\SI{1}{nF}) e C256 (\SI{10}{\micro F}); la via verso il piano 3V3 è dopo il condensatore più grande.
+\item C261 e C262 sono sullo stesso nodo: uno sopra e uno sotto la pista, allineati.
+\item Il modo più sicuro è \textbf{copiare la scheda di valutazione Qorvo} del QPA9510 (guida RF, nota L-01): i valori sono stati calcolati per quella disposizione.
+\end{itemize}}
+
+\blocco{Alimentazione del PA: 3V3 \textrightarrow{} R240 \textrightarrow{} C244 \textrightarrow{} L240 \textrightarrow{} VCC1}{blk_alim_pa1}{}
+\blocco{Alimentazione del PA: 3V3 \textrightarrow{} R241 \textrightarrow{} C248 \textrightarrow{} L241 \textrightarrow{} VCC2}{blk_alim_pa2}{%
+\begin{itemize}[nosep]
+\item L240 e L241 sono attaccate ai pin del PA (pin 1 e pin 5--7); C244 e C248 (\SI{330}{pF}) sono subito dopo, sul lato lontano dal chip.
+\item R240 e R241 (0\,\si{\ohm}) servono per misurare la corrente o aprire l'alimentazione: possono stare un po' più lontano, dove c'è posto.
+\item I condensatori del 3V3 del PA (C240, C241, C245, C246, C247, C251) vanno sul lato 3V3 di R240 e R241, dal più piccolo al più grande andando verso la via del piano 3V3.
+\item L240 e L241 sono vicine tra loro: assi a \ang{90} (regola 4).
+\item APC: C252 (\SI{10}{nF}) attaccato ai pin 15--16; R242 e R243 accanto. Il comando arriva da Q701 sugli strati interni: non è un segnale RF.
+\end{itemize}}
+
+\blocco{Attenuatore: C701 \textrightarrow{} R245 / R246 / R247+R248 \textrightarrow{} C255 \textrightarrow{} PA}{blk_attenuatore}{%
+\begin{itemize}[nosep]
+\item È un \enquote{pi greco} di resistenze: R245 verso massa, R246 in serie, R247 e R248 verso massa sullo stesso nodo (sopra e sotto la pista).
+\item Ogni resistenza verso massa ha la sua via; il blocco è corto (circa \SI{8}{mm}).
+\item C255 attaccato al pin RF IN del PA (pin 3).
+\end{itemize}}
+
+\blocco{Rete AN648: TX del Si4464 \textrightarrow{} C702 \textrightarrow{} L702 \textrightarrow{} C704 \textrightarrow{} C701}{blk_an648}{%
+\begin{itemize}[nosep]
+\item \textbf{L703} porta il 3V3 al pin TX (pin 4): va attaccata al pin, a \ang{90} rispetto alla pista. Sul suo lato 3V3 il condensatore di disaccoppiamento (nel disegno C201; controllare sullo schema quale è associato a L703).
+\item C702, L702 e C704 seguono subito, in fila: la nota applicativa AN648 di Silicon Labs ha un layout di riferimento da copiare.
+\item L702 è un 0805: è il componente più lungo del blocco, metterlo in linea con la pista.
+\end{itemize}}
+
+\blocco{Filtro RX: switch \textrightarrow{} C207 \textrightarrow{} C210 / L201 / C209 \textrightarrow{} C212 \textrightarrow{} LNA}{blk_filtro_rx}{%
+\begin{itemize}[nosep]
+\item È un passa-basso a \enquote{pi greco}: C210 e C209 verso massa, L201 in serie in mezzo.
+\item I condensatori 0805 hanno pad grandi: due via ciascuno.
+\item Tenere il blocco stretto: la pista da J201 all'ingresso dell'LNA deve restare entro circa \SI{15}{mm} (paragrafo~\ref{sec:distanze}).
+\end{itemize}}
+
+\blocco{LNA: C212 \textrightarrow{} Q201 \textrightarrow{} L202 (alimentazione) \textrightarrow{} C213}{blk_lna}{%
+\begin{itemize}[nosep]
+\item Il pad termico di Q201 è la massa dell'amplificatore: almeno 4 via dentro il pad.
+\item L202 porta il 3V3 all'uscita (pin 7): attaccata al pin, con C214 (\SI{100}{pF}) subito sul lato 3V3 e poi C215 (\SI{1}{\micro F}).
+\item R202 e R203 (comando di spegnimento, pin 6) stanno dal lato opposto all'ingresso: non sono RF.
+\item Ingresso e uscita su lati opposti di Q201: con il guadagno dell'LNA, piste vicine lo farebbero oscillare.
+\end{itemize}}
+
+\blocco{Filtro dopo l'LNA: C213 \textrightarrow{} C217 / L203 / C216 / L204 / C218 \textrightarrow{} AN643}{blk_post_lna}{%
+\begin{itemize}[nosep]
+\item Tre condensatori verso massa e due induttanze in serie, alternati.
+\item L203 e L204 sono due 0805 vicini e in fila: tra i due corpi lasciare almeno \SI{2}{mm} (c'è C216 in mezzo) oppure girarne una di \ang{90}, piegando la pista (regola 4).
+\item Il blocco corre lungo il bordo inferiore della zona RF: la fence di via sotto di lui è anche il bordo della zona.
+\end{itemize}}
+
+\blocco{Rete AN643: dal nodo RX\_MATCH ai pin RXP e RXN del Si4464}{blk_an643}{%
+\begin{itemize}[nosep]
+\item La rete divide il segnale in due rami: C219 verso RXP (pin 2), L205 verso RXN (pin 3).
+\item L206 sta \textbf{tra} RXP e RXN, il più vicino possibile ai pin; C220 verso massa sul ramo RXN.
+\item I due rami devono essere \textbf{corti e simmetrici}: stessa lunghezza, il più possibile. Sul chip vero i pin 2 e 3 distano solo \SI{0.5}{mm}: le piste si avvicinano a \enquote{V} negli ultimi millimetri.
+\item Anche qui c'è una nota applicativa di Silicon Labs (AN643) con il layout di riferimento.
+\end{itemize}}
+
+\blocco{Clock: Y201 \textrightarrow{} C204 \textrightarrow{} R201 \textrightarrow{} XIN del Si4464}{blk_tcxo}{%
+\begin{itemize}[nosep]
+\item Pista totale sotto i \SI{5}{mm}, senza via (salvo con il TCXO sul lato inferiore).
+\item TP701 è un pad di prova sulla stessa net: metterlo \textbf{sulla pista} (il pad la tocca), non alla fine di un tratto di pista.
+\item Il pin 3V3 del TCXO (pin 4) ha il suo condensatore attaccato; i pin di massa (1 e 2) ognuno con la sua via.
+\end{itemize}}
+
+% =====================================================================
 \section{Ordine di piazzamento}
 Conviene piazzare in quest'ordine: prima i pezzi che hanno vincoli, poi quelli che si adattano.
 \begin{enumerate}
@@ -287,6 +480,61 @@ La striscia è alta solo 26\,mm: tra la fila TX e la fila RX non c'è spazio per
 \end{attenzione}
 
 % =====================================================================
+\section{La rotazione migliore dell'MCU}
+\label{sec:mcu}
+L'MCU (U301, STM32 in LQFP64) parla con quasi tutta la scheda. Girandolo, cambia quale lato del chip guarda verso ogni cosa: con la rotazione giusta i fili escono già dalla parte dove devono andare, senza girare intorno al chip e senza incrociarsi.
+
+\subsection{Come è stata cercata}
+U301 è stato lasciato dov'è oggi nel PCB (X 135,3, Y 120,0) e girato da \ang{0} a \ang{350} a passi di \ang{35}. Per ogni rotazione sono stati misurati:
+\begin{itemize}
+\item la \textbf{lunghezza totale} dei collegamenti in linea d'aria (come le linee del ratsnest di KiCad);
+\item gli \textbf{incroci} tra collegamenti di gruppi diversi. Ogni incrocio vuol dire, nel routing, un cambio di strato con due via: è il numero più importante.
+\end{itemize}
+Sono contati solo i collegamenti verso componenti già piazzati sulla scheda: Si4464 (SPI1 e nIRQ), switch (comando TX/RX), PA (temperatura), dock J708 (GPIO e PPS), USB-C J15 (USART1), CAN J202 (FDCAN1), I2C1 J203. Alimentazione e massa non contano: arrivano dai piani interni.
+
+\begin{figure}[p]
+\centering
+\input{fig_mcu_rot}
+\caption{U301 nelle undici rotazioni a passi di \ang{35}, più quella di oggi (\ang{270}, cornice grigia). Ogni linea va da un pin dell'MCU al componente con cui parla, colorata per gruppo. Sopra ogni disegno: lunghezza totale dei collegamenti e numero di incroci tra gruppi diversi. Cornice verde = meno incroci; cornice arancio = collegamenti più corti.}
+\label{fig:mcu}
+\end{figure}
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{26mm}L{30mm}L{20mm}Y@{}}
+\tabhead\hd{Rotazione}&\hd{Lunghezza totale (mm)}&\hd{Incroci}&\hd{Nota}\\
+\endhead
+\tabmcurot
+\bottomrule
+\end{xltabular}}
+
+\subsection{Il risultato}
+\begin{itemize}
+\item \textbf{Il migliore è \ang{140}}: 5 incroci e \SI{333}{mm} di collegamenti. Anche \ang{245} ha 5 incroci, ma con collegamenti più lunghi (\SI{342}{mm}).
+\item \ang{175} ha i collegamenti più corti (\SI{315}{mm}), ma 9 incroci.
+\item Oggi U301 è a \ang{270}: 8 incroci e \SI{366}{mm}.
+\item Le rotazioni tra \ang{0} e \ang{70} e intorno a \ang{350} sono le peggiori (da 32 a 56 incroci): i fili verso la radio e verso i connettori uscirebbero dal lato sbagliato.
+\end{itemize}
+
+Intorno a \ang{140} il risultato è stabile: provando a passi di \ang{5}, tutte le rotazioni da \ang{125} a \ang{145} danno 5 incroci. Conviene quindi scegliere \textbf{\ang{135}} (5 incroci, \SI{338}{mm}): è un multiplo di \ang{45}, quindi i pin escono su direzioni a \ang{45} come le piste di KiCad, e il routing viene più pulito. Era la rotazione della versione precedente del PCB.
+
+\begin{regola}[consiglio]
+Ruotare U301 a \textbf{\ang{135}} (proprietà del footprint, tasto E, campo Orientamento). Con questa rotazione, guardando la scheda dall'alto, i pin di ogni gruppo escono da questa parte del chip:
+\begin{itemize}[nosep]
+\item \textbf{in alto a destra}: SPI1 e nIRQ verso il Si4464, il reset della radio (IC205) e la temperatura del PA. Sono i fili verso la zona RF: scendono subito su In4 (nota sugli 8 strati, paragrafo~\ref{sec:blocchi-come} e figura~\ref{fig:proposta});
+\item \textbf{in alto}: la FRAM (SPI2). U401 va tra l'MCU e la fila di fori, non dentro la zona RF; lì accanto anche l'RTC (I2C2, in alto a destra) e il watchdog (WDI, in alto a sinistra);
+\item \textbf{in alto a sinistra e a sinistra}: USART1 e FDCAN1 verso J15 e il transceiver CAN, e i pin SWD della programmazione;
+\item \textbf{in basso}: i GPIO del dock J708, che è proprio sotto l'MCU sul lato inferiore;
+\item \textbf{in basso a destra}: il quarzo HSE (pin 5 e 6) e NRST. Y1 va messo lì, attaccato ai pin;
+\item \textbf{in basso a sinistra}: I2C1 e BOOT0.
+\end{itemize}
+\end{regola}
+
+\begin{nota}[limiti del calcolo]
+Il calcolo usa la posizione di oggi di U301 e dei componenti già piazzati (con il Si4464 dove si trova oggi nel PCB). Se l'MCU si sposta o se la striscia RF cambia altezza, conviene rifarlo: lo script \texttt{mcu\_rot.py} nella cartella del documento rigenera figura e tabella dal file del PCB. Il quarzo, la FRAM, l'RTC e il connettore di programmazione non sono ancora piazzati e non sono contati: le loro posizioni consigliate sono quelle del riquadro sopra. Anche il transceiver CAN (IC501) e il convertitore USB (U402) sono ancora fuori scheda: i loro fili sono stati puntati sui connettori J202 e J15, dove quei chip finiranno vicino.
+\end{nota}
+
+% =====================================================================
 \section{Alternative e punti da decidere}
 \label{sec:alternative}
 \subsection{TCXO sul lato inferiore}
@@ -296,7 +544,7 @@ La scheda è già montata sui due lati (J708 è su B.Cu). Si possono mettere Y20
 Se i fori H305, H306, H307 (e H302, H304) servono per uno \textbf{schermo metallico} sopra la radio, la disposizione proposta ci sta già dentro. In questo caso conviene aggiungere una fila di via di massa lungo il perimetro della striscia, per appoggiare le pareti dello schermo. Se invece sono solo distanziali, la radio può allargarsi un po' sotto la fila di fori, a destra (sotto H307), per dare più spazio al filtro dopo l'LNA.
 
 \subsection{Il gruppo già piazzato fuori scheda}
-Nel PCB c'è un gruppo di componenti RF già disposto, fuori dal contorno (intorno a X 125--170, Y 27--51). In quel gruppo lo switch è a destra e il Si4464 a sinistra: con J201 sul bordo sinistro andrebbe girato tutto, e i rapporti tra TX, RX e pin non tornerebbero. Conviene ripartire dalla disposizione di questo documento. I componenti del PA (IC2, L240--L243, C240--C263, R240--R248) sono ancora nel mucchio lasciato da \enquote{Aggiorna PCB}.
+Nel PCB di oggi IC202, FL201, IC2 e IC204 sono già sulla scheda, con C206--C210, C212, C230 e L201. Restano fuori dal contorno due gruppi: la catena RX dopo il filtro (Q201, L202--L206, C213--C220, R202, R203, intorno a X 242--255, Y 16--31) e i passivi del PA con il blocco comandi (L240--L243, C240--C263, R240--R248, IC205, intorno a X 139--154, Y 6--25). Si piazzano blocco per blocco con il paragrafo~\ref{sec:blocchi-come}.
 
 \subsection{Da verificare in KiCad}
 \begin{itemize}

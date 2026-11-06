@@ -1,0 +1,45 @@
+\begin{tikzpicture}[x=6.50mm,y=6.50mm,font=\sffamily\tiny]
+\node[lbl,anchor=east,text=sbgray] at (-0.150,0.000) {TX del Si4464 (pin 4)};
+\draw[tr,line width=2.080mm] (0.000,0.000) -- (1.400,0.000);
+\draw[tr,line width=2.080mm] (1.200,0.000) -- (2.550,0.000);
+\fill[cu] (1.400,-0.425) rectangle (2.350,0.425);
+\fill[cu] (1.400,1.175) rectangle (2.350,2.025);
+\draw[bod] (1.475,0.000) rectangle (2.275,1.600);
+\node[lbl,anchor=west,text=black] at (2.470,0.800) {\textbf{L703} 220n};
+\draw[tr,line width=1.950mm] (1.875,1.600) -- (1.875,2.925);
+\fill[cu] (2.475,2.650) rectangle (3.075,3.200);
+\fill[cu] (2.475,3.650) rectangle (3.075,4.200);
+\draw[bod] (2.525,2.925) rectangle (3.025,3.925);
+\draw[via] (2.445,4.580) circle (0.3); \fill[black!70] (2.445,4.580) circle (0.13);
+\draw[via] (3.105,4.580) circle (0.3); \fill[black!70] (3.105,4.580) circle (0.13);
+\node[lbl,anchor=west,text=black] at (3.175,3.425) {\textbf{C201} 100n};
+\draw[tr,line width=1.950mm] (1.875,2.925) -- (4.975,2.925);
+\draw[via] (5.275,2.925) circle (0.3); \fill[black!70] (5.275,2.925) circle (0.13);
+\node[lbl,anchor=west,text=sbred] at (5.675,2.925) {via al piano 3V3 (In5)};
+\draw[tr,line width=2.080mm] (1.875,0.000) -- (5.050,0.000);
+\fill[cu] (5.050,-0.300) rectangle (5.600,0.300);
+\fill[cu] (6.050,-0.300) rectangle (6.600,0.300);
+\draw[bod] (4.825,-0.250) rectangle (6.325,0.250);
+\node[lbl,anchor=south,text=black] at (5.825,0.450) {\textbf{C702}\\9.1p};
+\draw[tr,line width=2.080mm] (6.600,0.000) -- (7.300,0.000);
+\fill[cu] (7.300,-0.700) rectangle (8.350,0.700);
+\fill[cu] (9.200,-0.700) rectangle (10.250,0.700);
+\draw[bod] (6.825,-0.625) rectangle (9.775,0.625);
+\node[lbl,anchor=south,text=black] at (8.775,0.850) {\textbf{L702}\\33n};
+\draw[tr,line width=2.080mm] (10.250,0.000) -- (10.950,0.000);
+\fill[cu] (10.950,-0.275) rectangle (11.550,0.275);
+\fill[cu] (10.950,-1.275) rectangle (11.550,-0.725);
+\draw[bod] (11.000,-1.000) rectangle (11.500,0.000);
+\draw[via] (10.920,-1.655) circle (0.3); \fill[black!70] (10.920,-1.655) circle (0.13);
+\draw[via] (11.580,-1.655) circle (0.3); \fill[black!70] (11.580,-1.655) circle (0.13);
+\node[lbl,anchor=west,text=black] at (11.670,-0.700) {\textbf{C704} 15p};
+\draw[tr,line width=2.080mm] (10.750,0.000) -- (13.200,0.000);
+\draw[tr,line width=2.080mm] (13.200,0.000) -- (13.900,0.000);
+\fill[cu] (13.900,-0.475) rectangle (14.750,0.475);
+\fill[cu] (15.500,-0.475) rectangle (16.350,0.475);
+\draw[bod] (13.525,-0.400) rectangle (15.925,0.400);
+\node[lbl,anchor=south,text=black] at (15.125,0.625) {\textbf{C701}\\100p};
+\draw[tr,line width=2.080mm] (16.350,0.000) -- (17.050,0.000);
+\node[lbl,anchor=west,text=sbgray] at (17.200,0.000) {all'attenuatore};
+
+\end{tikzpicture}

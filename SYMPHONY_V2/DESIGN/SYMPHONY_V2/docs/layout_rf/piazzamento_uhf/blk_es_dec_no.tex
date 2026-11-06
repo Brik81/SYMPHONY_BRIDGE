@@ -1,0 +1,25 @@
+\begin{tikzpicture}[x=6.50mm,y=6.50mm,font=\sffamily\tiny]
+\useasboundingbox (-1.8,-4.3) rectangle (9.5,1.4);
+\draw[bod,fill=black!5] (-1.4,-0.9) rectangle (0,0.9);
+\node[lbl,anchor=north,text=black] at (-0.700,-0.950) {pin 3V3};
+\fill[cu] (-0.400,-0.150) rectangle (0.000,0.150);
+\draw[tr,line width=1.950mm] (0.000,0.000) -- (7.600,0.000);
+\fill[cu] (0.500,-0.275) rectangle (1.100,0.275);
+\fill[cu] (0.500,-1.275) rectangle (1.100,-0.725);
+\draw[bod] (0.550,-1.200) rectangle (1.050,0.200);
+\draw[via] (0.800,-1.655) circle (0.3); \fill[black!70] (0.800,-1.655) circle (0.13);
+\node[lbl,anchor=south,text=black] at (0.800,0.400) {1u};
+\fill[cu] (2.700,-0.275) rectangle (3.300,0.275);
+\fill[cu] (2.700,-1.275) rectangle (3.300,-0.725);
+\draw[bod] (2.750,-1.200) rectangle (3.250,0.200);
+\draw[via] (3.000,-1.655) circle (0.3); \fill[black!70] (3.000,-1.655) circle (0.13);
+\node[lbl,anchor=south,text=black] at (3.000,0.400) {10n};
+\fill[cu] (4.900,-0.275) rectangle (5.500,0.275);
+\fill[cu] (4.900,-1.275) rectangle (5.500,-0.725);
+\draw[bod] (4.950,-1.200) rectangle (5.450,0.200);
+\draw[via] (5.200,-1.655) circle (0.3); \fill[black!70] (5.200,-1.655) circle (0.13);
+\node[lbl,anchor=south,text=black] at (5.200,0.400) {100p};
+\node[lbl,anchor=west,text=sbred] at (7.700,0.000) {verso il 3V3};
+\node[font=\sffamily\scriptsize\bfseries,text=sbred,anchor=north west] at (-1.8,1.4) {\ding{55} sbagliato};
+
+\end{tikzpicture}

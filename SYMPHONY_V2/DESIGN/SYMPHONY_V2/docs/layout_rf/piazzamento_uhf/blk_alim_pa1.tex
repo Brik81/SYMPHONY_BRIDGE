@@ -1,0 +1,25 @@
+\begin{tikzpicture}[x=6.50mm,y=6.50mm,font=\sffamily\tiny]
+\node[lbl,anchor=east,text=sbgray] at (-0.150,0.000) {3V3};
+\draw[tr,line width=2.080mm] (0.000,0.000) -- (1.200,0.000);
+% binario di alimentazione
+\fill[cu] (1.200,-0.300) rectangle (1.750,0.300);
+\fill[cu] (2.200,-0.300) rectangle (2.750,0.300);
+\draw[bod] (0.975,-0.250) rectangle (2.475,0.250);
+\node[lbl,anchor=south,text=black] at (1.975,0.450) {\textbf{R240}\\0};
+\draw[tr,line width=2.080mm] (2.750,0.000) -- (3.450,0.000);
+\fill[cu] (3.450,-0.275) rectangle (4.050,0.275);
+\fill[cu] (3.450,-1.275) rectangle (4.050,-0.725);
+\draw[bod] (3.500,-1.000) rectangle (4.000,0.000);
+\draw[via] (3.420,-1.655) circle (0.3); \fill[black!70] (3.420,-1.655) circle (0.13);
+\draw[via] (4.080,-1.655) circle (0.3); \fill[black!70] (4.080,-1.655) circle (0.13);
+\node[lbl,anchor=west,text=black] at (4.170,-0.700) {\textbf{C244} 330p};
+\draw[tr,line width=2.080mm] (3.250,0.000) -- (5.700,0.000);
+\draw[tr,line width=2.080mm] (5.700,0.000) -- (6.400,0.000);
+\fill[cu] (6.400,-0.475) rectangle (7.250,0.475);
+\fill[cu] (8.000,-0.475) rectangle (8.850,0.475);
+\draw[bod] (6.025,-0.400) rectangle (8.425,0.400);
+\node[lbl,anchor=south,text=black] at (7.625,0.625) {\textbf{L240}\\12n};
+\draw[tr,line width=2.080mm] (8.850,0.000) -- (9.550,0.000);
+\node[lbl,anchor=west,text=sbgray] at (9.700,0.000) {VCC1 del PA (pin 1)};
+
+\end{tikzpicture}
