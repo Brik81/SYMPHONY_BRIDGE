@@ -176,7 +176,6 @@
 		)
 		(capping no)
 		(filling no)
-		(zone_defaults)
 		(aux_axis_origin 107.7784 145.8438)
 		(grid_origin 107.7784 145.8438)
 		(pcbplotparams
@@ -6815,6 +6814,12 @@
 		(path "/3191773e-8460-4c92-a3cd-b1b33a95610d/b995cd61-17a1-4e2c-90b2-5cf66ac08efe")
 		(sheetname "/MCU/")
 		(sheetfile "MCU.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "3" "4" "5" "2" "1")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -22446,6 +22451,12 @@
 		(path "/a627b165-d062-4ccd-939a-26c8aef80d27/33bdeb96-7532-407e-bde2-bd26bf31efcb")
 		(sheetname "/SENSORS/")
 		(sheetfile "CONNECTORS.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "4" "3" "5" "2" "1")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -29992,6 +30003,12 @@
 		(path "/a627b165-d062-4ccd-939a-26c8aef80d27/c5a4fe10-c184-4ce9-92f6-795ec7de3450")
 		(sheetname "/SENSORS/")
 		(sheetfile "CONNECTORS.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "4" "3" "5" "2" "1")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -31470,6 +31487,12 @@
 		(path "/1aac9f32-4aec-43a2-9653-65900df71af5/95b3866e-4505-4acf-a57b-b95e4c174243")
 		(sheetname "/UHF/")
 		(sheetfile "UHF.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "4" "5" "2" "3" "1")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -35634,6 +35657,12 @@
 		(path "/1aac9f32-4aec-43a2-9653-65900df71af5/e3983d19-6ec7-4a63-9ae5-bb8023ff731d")
 		(sheetname "/UHF/")
 		(sheetfile "UHF.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "8" "7" "1" "6" "2" "5" "3" "4")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
