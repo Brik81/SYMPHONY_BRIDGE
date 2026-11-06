@@ -1,0 +1,124 @@
+\begin{minipage}[b]{0.48\linewidth}\centering \begin{tikzpicture}[x=7.0mm,y=-7.0mm,font=\sffamily\tiny,baseline=(t.base)]
+\draw[black,thick,fill=black!6] (-2.200,-0.975) -- (2.200,-0.975) -- (2.200,0.975) -- (-2.200,0.975) -- cycle;
+\fill[black!40] (-2.425,-1.675) rectangle (-1.975,-0.275);
+\node[anchor=east,text=black] at (-2.625,-0.975) {1 VDD 5V0};
+\fill[violet] (-2.425,-1.025) rectangle (-1.975,0.375);
+\node[anchor=east,text=violet] at (-2.625,-0.325) {2 CTRL (PC2)};
+\fill[sborange] (-2.425,-0.375) rectangle (-1.975,1.025);
+\node[anchor=east,text=sborange] at (-2.625,0.325) {3 RFC (antenna)};
+\fill[black!40] (-2.425,0.275) rectangle (-1.975,1.675);
+\fill[sbblue] (1.975,0.275) rectangle (2.425,1.675);
+\node[anchor=west,text=sbblue] at (2.625,0.975) {5 RF1 = RX};
+\fill[black!40] (1.975,-0.375) rectangle (2.425,1.025);
+\fill[black!40] (1.975,-1.025) rectangle (2.425,0.375);
+\fill[sbred] (1.975,-1.675) rectangle (2.425,-0.275);
+\node[anchor=west,text=sbred] at (2.625,-0.975) {8 RF2 = TX};
+\draw[black,thick] (-2.200,-0.975) circle (0.25);
+\node[anchor=north,font=\sffamily\scriptsize\bfseries,align=center] (t) at (0,5.05) {IC202 HMC349A (switch) \textendash{} rotazione 0\textdegree};
+\end{tikzpicture}\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\linewidth}\centering \begin{tikzpicture}[x=6.0mm,y=-6.0mm,font=\sffamily\tiny,baseline=(t.base)]
+\draw[black,thick,fill=black!6] (2.000,2.000) -- (-2.000,2.000) -- (-2.000,-2.000) -- (2.000,-2.000) -- cycle;
+\fill[violet] (1.850,0.600) rectangle (2.150,1.400);
+\node[anchor=west,text=violet] at (2.350,1.000) {1 SDN};
+\fill[sbblue] (1.850,0.100) rectangle (2.150,0.900);
+\node[anchor=west,text=sbblue] at (2.350,0.500) {2 RXP};
+\fill[sbblue] (1.850,-0.400) rectangle (2.150,0.400);
+\node[anchor=west,text=sbblue] at (2.350,0.000) {3 RXN};
+\fill[sbred] (1.850,-0.900) rectangle (2.150,-0.100);
+\node[anchor=west,text=sbred] at (2.350,-0.500) {4 TX};
+\fill[black!40] (1.850,-1.400) rectangle (2.150,-0.600);
+\fill[black!40] (0.850,-2.400) rectangle (1.150,-1.600);
+\node[anchor=south,rotate=90,anchor=west,text=black] at (1.000,-2.600) {6 3V3};
+\fill[black!40] (0.350,-2.400) rectangle (0.650,-1.600);
+\fill[black!40] (-0.150,-2.400) rectangle (0.150,-1.600);
+\node[anchor=south,rotate=90,anchor=west,text=black] at (0.000,-2.600) {8 3V3};
+\fill[black!40] (-0.650,-2.400) rectangle (-0.350,-1.600);
+\fill[black!40] (-1.150,-2.400) rectangle (-0.850,-1.600);
+\fill[violet] (-2.150,-1.400) rectangle (-1.850,-0.600);
+\node[anchor=east,text=violet] at (-2.350,-1.000) {11 nIRQ};
+\fill[violet] (-2.150,-0.900) rectangle (-1.850,-0.100);
+\node[anchor=east,text=violet] at (-2.350,-0.500) {12 SCK};
+\fill[violet] (-2.150,-0.400) rectangle (-1.850,0.400);
+\node[anchor=east,text=violet] at (-2.350,-0.000) {13 MISO};
+\fill[violet] (-2.150,0.100) rectangle (-1.850,0.900);
+\node[anchor=east,text=violet] at (-2.350,0.500) {14 MOSI};
+\fill[violet] (-2.150,0.600) rectangle (-1.850,1.400);
+\node[anchor=east,text=violet] at (-2.350,1.000) {15 NSEL};
+\fill[black!40] (-1.150,1.600) rectangle (-0.850,2.400);
+\fill[olive] (-0.650,1.600) rectangle (-0.350,2.400);
+\node[anchor=north,rotate=90,anchor=east,text=olive] at (-0.500,2.600) {17 XIN};
+\fill[black!40] (-0.150,1.600) rectangle (0.150,2.400);
+\fill[black!40] (0.350,1.600) rectangle (0.650,2.400);
+\fill[black!40] (0.850,1.600) rectangle (1.150,2.400);
+\draw[black,thick] (2.000,1.000) circle (0.25);
+\node[anchor=north,font=\sffamily\scriptsize\bfseries,align=center] (t) at (0,4.53) {IC204 Si4464 \textendash{} rotazione 180\textdegree};
+\end{tikzpicture}\end{minipage}
+\par\vspace{6mm}
+\begin{minipage}[b]{0.48\linewidth}\centering \begin{tikzpicture}[x=7.0mm,y=-7.0mm,font=\sffamily\tiny,baseline=(t.base)]
+\draw[black,thick,fill=black!6] (1.450,1.450) -- (-1.450,1.450) -- (-1.450,-1.450) -- (1.450,-1.450) -- cycle;
+\fill[black!40] (1.325,0.325) rectangle (1.575,1.175);
+\node[anchor=west,text=black] at (1.775,0.750) {1 VCC1};
+\fill[black!40] (1.325,-0.175) rectangle (1.575,0.675);
+\fill[sbred] (1.325,-0.675) rectangle (1.575,0.175);
+\node[anchor=west,text=sbred] at (1.775,-0.250) {3 RF IN};
+\fill[black!40] (1.325,-1.175) rectangle (1.575,-0.325);
+\fill[black!40] (0.625,-1.875) rectangle (0.875,-1.025);
+\node[anchor=south,rotate=90,anchor=west,text=black] at (0.750,-2.075) {5 VCC2};
+\fill[black!40] (0.125,-1.875) rectangle (0.375,-1.025);
+\node[anchor=south,rotate=90,anchor=west,text=black] at (0.250,-2.075) {6 VCC2};
+\fill[black!40] (-0.375,-1.875) rectangle (-0.125,-1.025);
+\node[anchor=south,rotate=90,anchor=west,text=black] at (-0.250,-2.075) {7 VCC2};
+\fill[black!40] (-0.875,-1.875) rectangle (-0.625,-1.025);
+\fill[sbred] (-1.575,-1.175) rectangle (-1.325,-0.325);
+\node[anchor=east,text=sbred] at (-1.775,-0.750) {9 RF OUT};
+\fill[sbred] (-1.575,-0.675) rectangle (-1.325,0.175);
+\node[anchor=east,text=sbred] at (-1.775,-0.250) {10 RF OUT};
+\fill[sbred] (-1.575,-0.175) rectangle (-1.325,0.675);
+\node[anchor=east,text=sbred] at (-1.775,0.250) {11 RF OUT};
+\fill[sbred] (-1.575,0.325) rectangle (-1.325,1.175);
+\node[anchor=east,text=sbred] at (-1.775,0.750) {12 RF OUT};
+\fill[black!40] (-0.875,1.025) rectangle (-0.625,1.875);
+\fill[black!40] (-0.375,1.025) rectangle (-0.125,1.875);
+\node[anchor=north,rotate=90,anchor=east,text=black] at (-0.250,2.075) {14 3V3};
+\fill[violet] (0.125,1.025) rectangle (0.375,1.875);
+\node[anchor=north,rotate=90,anchor=east,text=violet] at (0.250,2.075) {15 APC};
+\fill[violet] (0.625,1.025) rectangle (0.875,1.875);
+\node[anchor=north,rotate=90,anchor=east,text=violet] at (0.750,2.075) {16 APC};
+\draw[black,thick] (1.450,0.750) circle (0.25);
+\node[anchor=north,font=\sffamily\scriptsize\bfseries,align=center] (t) at (0,4.03) {IC2 QPA9510 (PA) \textendash{} rotazione 180\textdegree};
+\end{tikzpicture}\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\linewidth}\centering \begin{tikzpicture}[x=9.0mm,y=-9.0mm,font=\sffamily\tiny,baseline=(t.base)]
+\draw[black,thick,fill=black!6] (-1.000,-0.750) -- (1.000,-0.750) -- (1.000,0.750) -- (-1.000,0.750) -- cycle;
+\fill[black!40] (-1.150,-1.125) rectangle (-0.850,-0.375);
+\fill[sbblue] (-1.150,-0.625) rectangle (-0.850,0.125);
+\node[anchor=east,text=sbblue] at (-1.350,-0.250) {2 RF IN};
+\fill[black!40] (-1.150,-0.125) rectangle (-0.850,0.625);
+\fill[black!40] (-1.150,0.375) rectangle (-0.850,1.125);
+\fill[black!40] (0.850,0.375) rectangle (1.150,1.125);
+\fill[violet] (0.850,-0.125) rectangle (1.150,0.625);
+\node[anchor=west,text=violet] at (1.350,0.250) {6 SD};
+\fill[sbblue] (0.850,-0.625) rectangle (1.150,0.125);
+\node[anchor=west,text=sbblue] at (1.350,-0.250) {7 RF OUT};
+\fill[black!40] (0.850,-1.125) rectangle (1.150,-0.375);
+\draw[black,thick] (-1.000,-0.750) circle (0.25);
+\node[anchor=north,font=\sffamily\scriptsize\bfseries,align=center] (t) at (0,3.52) {Q201 TQP3M9036 (LNA) \textendash{} rotazione 0\textdegree};
+\end{tikzpicture}\end{minipage}
+\par\vspace{6mm}
+\begin{minipage}[b]{0.48\linewidth}\centering \begin{tikzpicture}[x=9.0mm,y=-9.0mm,font=\sffamily\tiny,baseline=(t.base)]
+\draw[black,thick,fill=black!6] (1.200,0.900) -- (-1.200,0.900) -- (-1.200,-0.900) -- (1.200,-0.900) -- cycle;
+\fill[black!40] (0.475,-1.400) rectangle (0.825,-0.400);
+\fill[black!40] (-0.175,-1.400) rectangle (0.175,-0.400);
+\fill[black!40] (-0.825,-1.400) rectangle (-0.475,-0.400);
+\fill[sbred] (-1.375,-0.500) rectangle (-1.025,0.500);
+\node[anchor=east,text=sbred] at (-1.575,-0.000) {4 OUT (allo switch)};
+\fill[black!40] (-0.825,0.400) rectangle (-0.475,1.400);
+\fill[black!40] (-0.175,0.400) rectangle (0.175,1.400);
+\fill[black!40] (0.475,0.400) rectangle (0.825,1.400);
+\fill[sbred] (1.025,-0.500) rectangle (1.375,0.500);
+\node[anchor=west,text=sbred] at (1.575,0.000) {8 IN (dal PA)};
+\draw[black,thick] (0.650,-0.900) circle (0.25);
+\node[anchor=north,font=\sffamily\scriptsize\bfseries,align=center] (t) at (0,3.75) {FL201 LFCG-490+ \textendash{} rotazione 180\textdegree};
+\end{tikzpicture}\end{minipage}
+\hfill

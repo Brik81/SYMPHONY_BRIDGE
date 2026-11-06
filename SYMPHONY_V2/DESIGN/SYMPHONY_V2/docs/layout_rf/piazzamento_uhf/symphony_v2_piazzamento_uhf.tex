@@ -1,0 +1,309 @@
+% =====================================================================
+%  SYMPHONY V2 - Come disporre i componenti del foglio UHF sul PCB
+%  Figure in scala generate da gen.py a partire da SYMPHONY.kicad_pcb
+% =====================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{libertinus}
+\usepackage{microtype}
+\usepackage[a4paper,margin=20mm,headheight=15pt]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage[autostyle]{csquotes}
+\usepackage{enumitem}
+\usepackage{array,booktabs,xltabular}
+\usepackage{siunitx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.markings,patterns}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{hyperref}
+
+\definecolor{sbblue}{HTML}{1F4E79}
+\definecolor{sbblue2}{HTML}{2E75B6}
+\definecolor{sblight}{HTML}{EAF1F8}
+\definecolor{sbrow}{HTML}{F3F6FA}
+\definecolor{sbred}{HTML}{B03A2E}
+\definecolor{sbredbg}{HTML}{FBEDEB}
+\definecolor{sbgreen}{HTML}{2E7D4F}
+\definecolor{sbgreenbg}{HTML}{EAF5EE}
+\definecolor{sbgray}{HTML}{5F6B76}
+\definecolor{sbgraybg}{HTML}{F2F4F6}
+\definecolor{sborange}{HTML}{C0730A}
+\definecolor{sborangebg}{HTML}{FDF3E4}
+\colorlet{rxblue}{sbblue2}
+
+\hypersetup{colorlinks=true,linkcolor=sbblue,urlcolor=sbblue2,
+  pdftitle={SYMPHONY V2 - Piazzamento del foglio UHF},pdfauthor={Team SYMPHONY}}
+\sisetup{output-decimal-marker={,},range-phrase={\,\textendash\,},range-units=single}
+
+\titleformat{\section}{\normalfont\sffamily\Large\bfseries\color{sbblue}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\sffamily\large\bfseries\color{sbblue2}}{\thesubsection}{0.8em}{}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{sbgray}SYMPHONY V2 \textbullet{} Piazzamento del foglio UHF}
+\fancyhead[R]{\sffamily\small\color{sbgray}PCB a 8 strati}
+\fancyfoot[C]{\sffamily\small\color{sbblue}\thepage}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt plus 1pt}
+\setlist{itemsep=2pt,topsep=3pt}
+\captionsetup{font={small,sf},labelfont={bf,color=sbblue},labelsep=period}
+\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.2}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\tabhead}{\rowcolor{sbblue}}
+\newcommand{\hd}[1]{\textcolor{white}{\sffamily\bfseries\footnotesize #1}}
+
+\newtcolorbox{semplice}[1][]{enhanced,breakable,colback=sblight,colframe=sbblue,boxrule=0.6pt,arc=1.5pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbblue,title={In parole semplici\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{attenzione}[1][]{enhanced,breakable,colback=sbredbg,colframe=sbred,boxrule=0.9pt,arc=1.5pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbred,title={Attenzione\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{regola}[1][]{enhanced,breakable,colback=sbgreenbg,colframe=sbgreen,boxrule=0.9pt,arc=1.5pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbgreen,title={Regola\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{nota}[1][]{enhanced,breakable,colback=sbgraybg,colframe=sbgray,boxrule=0.6pt,arc=1.5pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbgray,title={Nota\ifx&#1&\else{} \textendash{} #1\fi}}
+
+\tikzset{
+  bb/.style={rounded corners=0.6pt,line width=0.6pt},
+  neu/.style={bb,draw=sbgray,fill=sbgraybg},
+  swb/.style={bb,draw=sborange,fill=sborangebg},
+  txb/.style={bb,draw=sbred,fill=sbredbg},
+  pab/.style={bb,draw=sbred,fill=sbred!22},
+  pas/.style={bb,draw=sbred!70,fill=sbredbg,densely dashed},
+  ctb/.style={bb,draw=violet!70,fill=violet!8},
+  sib/.style={bb,draw=sbgreen,fill=sbgreenbg},
+  ckb/.style={bb,draw=olive,fill=olive!12},
+  rxb/.style={bb,draw=rxblue,fill=sblight},
+  sig/.style={line width=1.3pt,-{Stealth[length=2.2mm]}},
+  txa/.style={sig,sbred},
+  rxa/.style={sig,rxblue},
+  cka/.style={sig,olive,line width=1pt},
+  ant/.style={line width=1.5pt,sborange,{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}},
+  fence/.style={line width=0.8pt,black!75,dash pattern=on 0.8pt off 1.6pt,line cap=round},
+  dig/.style={line width=1pt,violet,densely dashed,-{Stealth[length=2mm]}},
+  dimq/.style={sbred,thin,{Bar[width=1.6mm]}-{Bar[width=1.6mm]}},
+  blk/.style={draw=sbblue,thick,fill=sblight,rounded corners=2pt,align=center,font=\sffamily\footnotesize,minimum height=9mm,inner sep=3pt},
+}
+
+\begin{document}
+
+\begin{center}
+{\sffamily\bfseries\huge\color{sbblue} Come disporre i componenti\\[2pt] del foglio UHF}\par\vspace{3mm}
+{\sffamily\large\color{sbgray} SYMPHONY V2 \textbullet{} PCB a 8 strati \textbullet{} versione 1.0 del 06/11/2026}
+\end{center}
+\vspace{2mm}
+
+\begin{semplice}
+La parte radio deve stare tutta nella striscia in alto della scheda, tra il bordo superiore e la fila di fori H305--H306--H307. Il connettore d'antenna J201 è già al posto giusto, sul bordo sinistro.
+
+I componenti vanno messi \textbf{in fila, nell'ordine in cui li attraversa il segnale}, come le stazioni di una linea della metropolitana:
+\begin{itemize}
+\item \textbf{sopra} la trasmissione (TX): Si4464 $\to$ attenuatore $\to$ PA $\to$ filtro $\to$ switch $\to$ antenna;
+\item \textbf{sotto} la ricezione (RX): antenna $\to$ switch $\to$ filtro $\to$ LNA $\to$ filtro $\to$ Si4464.
+\end{itemize}
+Le due file partono dallo switch, a sinistra, e si chiudono sul Si4464, a destra. Tra le due file va una fila di via a massa. Tutto quello che non è radio (supervisore, LED, transistor di comando) va sotto i fori, verso l'MCU.
+\end{semplice}
+
+\tableofcontents
+
+% =====================================================================
+\section{Da dove viene questo documento}
+\begin{itemize}
+\item \textbf{Forma della scheda, fori e componenti già piazzati}: letti dal file \texttt{SYMPHONY.kicad\_pcb} del 06/11/2026.
+\item \textbf{Dimensioni dei componenti}: il \emph{courtyard} di ogni footprint, cioè l'ingombro con il margine di sicurezza.
+\item \textbf{Posizione dei pin}: quella dei footprint della libreria del progetto. Gli orientamenti proposti sono stati calcolati su questi pin.
+\item \textbf{Collegamenti}: la netlist dello schematico (foglio UHF).
+\item \textbf{Regole RF}: la guida \texttt{symphony\_v2\_layout\_rf.pdf} nella cartella superiore, che spiega il \emph{perché} di ogni regola. Questo documento dice \emph{dove} mettere le cose.
+\end{itemize}
+
+Tutte le figure con la scritta \enquote{in scala} usano le coordinate vere di KiCad: le misure prese sul disegno sono quelle della scheda.
+
+\begin{nota}[cosa questo documento non fa]
+Non sposta nulla nel PCB e non sostituisce il DRC. È una proposta di partenza: le posizioni dei blocchi sono calcolate perché ci stiano i componenti, ma l'ultima parola la danno il routing e il controllo delle regole in KiCad.
+\end{nota}
+
+% =====================================================================
+\section{La scheda e lo spazio per la radio}
+
+\begin{figure}[H]
+\centering
+\input{fig_scheda}
+\caption{La scheda vista dall'alto, in scala (1\,mm della scheda = 2\,mm sul foglio). In azzurro la zona RF proposta, in grigio la zona per i comandi. Le coordinate sono quelle di KiCad.}
+\label{fig:scheda}
+\end{figure}
+
+Che cosa c'è già sulla scheda (figura~\ref{fig:scheda}):
+\begin{itemize}
+\item \textbf{J201}, il connettore d'antenna MMCX, nell'intaglio del bordo sinistro (X 111,8, Y 82,4). È il punto di partenza di tutto: non va spostato.
+\item \textbf{Otto fori di fissaggio M2} con il pad a massa. H301--H304 sono ai quattro angoli; H305, H306 e H307 formano una fila orizzontale a Y 99,4; H308 è a destra, più in basso.
+\item \textbf{U301}, l'MCU, al centro (ruotato di \ang{135}). \textbf{J708}, il connettore del dock, sul lato inferiore (B.Cu). In basso J15 (USB-C), J202 (CAN) e J203 (I2C).
+\end{itemize}
+
+\subsection{Perché la radio va in alto}
+\begin{itemize}
+\item J201 è in alto a sinistra: la radio deve partire da lì, con piste RF corte.
+\item La fila di fori H305--H307 divide la scheda in due. Sopra c'è una striscia libera di circa \textbf{43 $\times$ 26\,mm} (circa \SI{1100}{mm^2}), lontana dall'MCU e dai connettori. Se i fori servono anche per uno schermo metallico, questa striscia è proprio il suo vano.
+\item I componenti del foglio UHF occupano in tutto circa \SI{360}{mm^2} di courtyard (calcolato dai footprint). Con lo spazio per le piste, le via e le distanze RF servono da 2,5 a 3 volte tanto: \textbf{la striscia basta, ma senza spazio da sprecare}.
+\end{itemize}
+
+\begin{attenzione}[due fori dentro la zona RF]
+H302 (X 122,3) e H304 (X 148,3) sono in alto, a Y 74,4, dentro la striscia. Con il pad occupano un cerchio di circa \SI{4.3}{mm} di diametro. La fila TX deve quindi stare \textbf{sotto Y 77}, e l'angolo in alto a destra (dove andrebbe la rete del Si4464) è parzialmente occupato.
+\end{attenzione}
+
+% =====================================================================
+\section{I blocchi da piazzare}
+Il foglio UHF ha 83 componenti. Conviene pensarli a gruppi (blocchi): ogni blocco fa una cosa sola e si piazza come un pezzo unico. La tabella dice quali sono, a cosa servono e quanto spazio occupano.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{25mm}L{52mm}Y L{14mm}@{}}
+\tabhead\hd{Blocco}&\hd{Componenti}&\hd{A cosa serve}&\hd{Area}\\
+\endhead
+Antenna & J201, C206 & connettore e condensatore di blocco della continua & 52\\
+Switch & IC202, C211 & sceglie se l'antenna va alla TX o alla RX & 24\\
+Filtro TX & C208, FL201 & toglie le armoniche dopo il PA & 16\\
+Rete d'uscita PA & C230, L243, C260, C261, C262 & adatta l'uscita del PA a \SI{50}{\ohm} & 14\\
+PA & IC2 & amplificatore di potenza (fino a \SI{1}{\watt}) & 18\\
+Alimentazione PA & L242, L240, L241, R240, R241, C240, C241, C244--C248, C251, C256--C258, C263 & porta il 3V3 al PA e lo filtra & 55\\
+APC & R242, R243, C252 & accende il PA (da Q701) & 6\\
+Attenuatore & C255, R245--R248 & abbassa di \SI{10.8}{dB} il segnale tra Si4464 e PA & 17\\
+Rete AN648 & C701, C704, L702, C702, L703 & adatta l'uscita TX del Si4464 & 18\\
+Si4464 & IC204, C201--C203 & la radio, con i condensatori di disaccoppiamento & 33\\
+TCXO & Y201, C204, R201, TP701 & clock a \SI{32}{\mega\hertz} della radio & 11\\
+Filtro RX & C207, C210, L201, C209, C212 & passa-basso prima dell'LNA & 28\\
+LNA & Q201, L202, C213--C215, R202, R203 & amplifica il segnale ricevuto & 22\\
+Filtro dopo l'LNA & C217, L203, C216, L204, C218 & secondo filtro della ricezione & 27\\
+Rete AN643 & C219, L205, L206, C220 & porta la RX agli ingressi differenziali del Si4464 & 20\\
+\rowcolor{sbgraybg}Comandi (fuori zona RF) & IC205, R204, R205, R208, R209, D203, U701, Q701, R702, R703, TP702, TP703 & supervisore, LED, comando TX/RX: solo segnali lenti & 55\\
+\bottomrule
+\end{xltabular}}
+{\footnotesize \enquote{Area} = somma dei courtyard dei componenti del blocco, in \si{mm^2}. Le righe sono nell'ordine del segnale.}
+
+% =====================================================================
+\section{La disposizione proposta}
+
+\begin{figure}[H]
+\centering
+\input{fig_proposta}
+\caption{Disposizione proposta della zona RF, in scala (1\,mm della scheda = 3,25\,mm sul foglio). I sei componenti principali sono disegnati con il loro ingombro reale e con i pad nella rotazione proposta; il cerchietto nero indica il pin 1. Gli altri componenti sono raggruppati nei rettangoli dei loro blocchi.}
+\label{fig:proposta}
+\end{figure}
+
+\subsection*{Come leggere la figura~\ref{fig:proposta}}
+\begin{itemize}
+\item \textbf{Frecce rosse}: percorso della trasmissione. Parte dal pin TX del Si4464 (a destra), sale nella rete AN648, va a sinistra nell'attenuatore, entra nel PA, esce a sinistra, passa la rete d'uscita e FL201 e arriva alla porta RF2 dello switch.
+\item \textbf{Frecce blu}: percorso della ricezione. Dalla porta RF1 dello switch scende nel filtro RX, entra nell'LNA, passa sotto TCXO e Si4464 nel filtro dopo l'LNA, risale nella rete AN643 ed entra nei pin RXP/RXN del Si4464 da destra.
+\item \textbf{Freccia arancio}: antenna, da J201 alla porta comune (RFC) dello switch.
+\item \textbf{Freccia verde oliva}: clock, dal TCXO al pin XIN del Si4464.
+\item \textbf{Linee puntinate nere}: file di via a massa (\enquote{fence}). Una separa la fila TX dalla fila RX, due chiudono il PA ai lati, una corta separa le due reti accanto ai pin RF del Si4464.
+\item \textbf{Freccia viola tratteggiata}: dove i segnali digitali del Si4464 (SPI, nIRQ, SDN) scendono negli strati interni per andare all'MCU.
+\item \textbf{Pad colorati}: rosso = TX, blu = RX, arancio = antenna, oliva = clock, grigio = alimentazione e massa.
+\item \textbf{Quote rosse}: le due distanze che non raggiungono il valore consigliato dalla guida (paragrafo~\ref{sec:distanze}).
+\end{itemize}
+
+\subsection{Perché in questo modo}
+\begin{enumerate}
+\item \textbf{Lo switch accanto all'antenna.} IC202 a rotazione \ang{0} ha la porta RFC (pin 3) a sinistra, allineata con il pin di J201: la pista d'antenna è dritta e lunga circa \SI{5}{mm}. Con questa rotazione la porta TX (pin 8) esce in alto a destra e la porta RX (pin 5) in basso a destra. È questo che decide \enquote{TX sopra, RX sotto}.
+\item \textbf{Il Si4464 all'altra estremità, girato di \ang{180}.} Così i suoi pin RF (1--5) guardano a destra, verso il bordo. Dall'alto: TX (pin 4), poi RXN (pin 3) e RXP (pin 2). La TX esce verso l'alto e la RX arriva dal basso: \textbf{le due catene non si incrociano mai}. I pin digitali (SPI, nIRQ) restano a sinistra, verso l'interno.
+\item \textbf{Il PA a metà della fila TX, girato di \ang{180}.} Ingresso a destra (dal Si4464), uscita a sinistra (verso il filtro). L'ingresso e l'uscita stanno su lati opposti: con \SI{42}{dB} di guadagno, se le due piste si affiancassero il PA potrebbe oscillare.
+\item \textbf{L'LNA vicino allo switch.} Il segnale ricevuto è debolissimo: prima arriva all'LNA, meno rumore raccoglie. La pista da J201 all'ingresso dell'LNA è di circa \SI{15}{mm}.
+\item \textbf{La fila RX passa sotto Si4464 e TCXO}, lungo il bordo inferiore della zona, e risale all'angolo in basso a destra. Così resta lontana dal PA.
+\item \textbf{L'alimentazione del PA sopra il PA}, tra i due fori H302 e H304: è la zona più lontana dalla ricezione.
+\end{enumerate}
+
+\begin{nota}[cosa cambia con 8 strati]
+La guida RF era stata scritta per 4 strati. Con 4 strati i fili digitali del Si4464 potevano attraversare la zona RF solo sotto il tratto TX a basso livello. Con lo stackup attuale (In1 GND, In2 segnali, In3 GND, In4 segnali) le linee SPI, nIRQ e SDN possono scendere con una via su \textbf{In4} e passare sotto la fila RX: sopra di loro ci sono due piani di massa interi (In1 e In3) che le schermano. Le via vanno messe lontano dalle piste RF, circondate da via di massa.
+\end{nota}
+
+% =====================================================================
+\section{Come girare i chip}
+La figura~\ref{fig:pinout} mostra i cinque componenti RF con la rotazione proposta, visti dall'alto come in KiCad. Il cerchio indica il pin 1. Il rettangolo grigio è il corpo del componente.
+
+\begin{figure}[H]
+\centering
+\input{fig_pinout_wrap}
+\caption{I componenti RF nella rotazione proposta. Rosso = pin della TX, blu = pin della RX, arancio = antenna, verde oliva = clock, viola = comandi e segnali digitali, grigio = alimentazione e massa. Il numero prima del nome è il numero del pin.}
+\label{fig:pinout}
+\end{figure}
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{17mm}L{22mm}L{22mm}L{15mm}Y@{}}
+\tabhead\hd{Rif.}&\hd{X proposta}&\hd{Y proposta}&\hd{Rot.}&\hd{Che cosa guarda dove}\\
+\endhead
+J201 & 111,80 (già lì) & 82,42 (già lì) & \ang{0} & pin RF verso destra\\
+IC202 & 121,45 & 82,09 & \ang{0} & RFC a sinistra (J201), TX in alto a destra, RX in basso a destra\\
+FL201 & 130,25 & 78,90 & \ang{180} & ingresso a destra (dal PA), uscita a sinistra (allo switch)\\
+IC2 & 139,35 & 78,90 & \ang{180} & RF IN a destra, RF OUT a sinistra, VCC2 in alto, APC in basso\\
+Q201 & 130,70 & 88,10 & \ang{0} & RF IN a sinistra, RF OUT e SD a destra\\
+IC204 & 144,00 & 87,30 & \ang{180} & pin RF a destra (TX in alto, RX in basso), SPI a sinistra, XIN in basso\\
+Y201 & 139,00 & 89,70 & \ang{0} & uscita (pin 3) in alto a destra, verso XIN\\
+\bottomrule
+\end{xltabular}}
+{\footnotesize Coordinate KiCad in mm, rotazione come nel campo \enquote{Orientamento} delle proprietà del footprint. Sono il centro del footprint: si possono scrivere direttamente nella finestra delle proprietà (tasto E). Gli altri componenti si mettono a mano dentro il rettangolo del loro blocco.}
+
+% =====================================================================
+\section{Ordine di piazzamento}
+Conviene piazzare in quest'ordine: prima i pezzi che hanno vincoli, poi quelli che si adattano.
+\begin{enumerate}
+\item \textbf{Massa e contorno.} Disegnare una keepout o una zona di riferimento sulla striscia RF; controllare che In1.Cu sia pieno (GND) sotto tutta la zona.
+\item \textbf{IC202 e C206} accanto a J201 (tabella sopra). C206 in serie sulla pista d'antenna, il più corto possibile.
+\item \textbf{IC2 (PA) con la sua rete d'uscita e la sua alimentazione.} Copiare la disposizione della scheda di valutazione Qorvo come blocco unico (guida RF, nota L-01), ruotata come in figura.
+\item \textbf{FL201 e C208} tra PA e switch, in linea, con la massa di FL201 cucita da via sotto il componente.
+\item \textbf{IC204 (Si4464)} a destra, girato di \ang{180}, poi C201--C203 sui pin del 3V3 (lato alto del chip).
+\item \textbf{Rete AN648} sull'angolo in alto a destra del Si4464; \textbf{rete AN643} sull'angolo in basso a destra.
+\item \textbf{Attenuatore} tra AN648 e PA.
+\item \textbf{Y201 con C204 e R201} sotto il Si4464, vicino a XIN: pista totale da Y201 a XIN entro circa \SI{5}{mm}.
+\item \textbf{Filtro RX e Q201} sotto lo switch; \textbf{filtro dopo l'LNA} lungo il bordo inferiore della zona.
+\item \textbf{Fence di via}: tra le due file, ai lati del PA, sotto FL201 e lungo il contorno della zona (passo \SIrange{2}{3}{mm}).
+\item \textbf{Blocco comandi} sotto la fila di fori: IC205 e le sue resistenze, D203, Q701 con R702/R703, U701, test point.
+\end{enumerate}
+
+% =====================================================================
+\section{Distanze: cosa si rispetta e cosa no}
+\label{sec:distanze}
+I valori consigliati vengono dalla guida RF e dal log (paragrafo 24.3). Quelli ottenuti sono misurati sulla figura~\ref{fig:proposta} tra i centri dei componenti.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{48mm}L{22mm}L{22mm}Y@{}}
+\tabhead\hd{Distanza}&\hd{Consigliata}&\hd{Ottenuta}&\hd{Giudizio}\\
+\endhead
+pista da J201 all'ingresso dell'LNA & $\le$ \SI{15}{mm} & circa \SI{15.5}{mm} & \textbf{al limite}: tenere C207 e il filtro RX stretti verso lo switch\\
+PA -- LNA & $\ge$ \SI{15}{mm} & \SI{12.6}{mm} & \textcolor{sbred}{\textbf{sotto}}. Compensare con la fence di via tra le file e con il piano GND intero sotto (In1). Il log indica \SIrange{10}{15}{mm}: il minimo è rispettato\\
+PA -- TCXO (Y201) & $\ge$ \SI{15}{mm} & \SI{10.8}{mm} & \textcolor{sbred}{\textbf{sotto}}. Vedi l'alternativa con il TCXO sul lato inferiore (paragrafo~\ref{sec:alternative})\\
+pista C204--R201--XIN & $\le$ \SI{5}{mm} & circa \SI{4}{mm} & rispettata\\
+ingresso e uscita del PA & lati opposti & lati opposti & rispettata (rotazione \ang{180})\\
+ingresso e uscita di FL201 & direzioni opposte & direzioni opposte & rispettata\\
+fila TX dai fori H302/H304 & fuori dal pad & Y $\ge$ 77 & rispettata\\
+\bottomrule
+\end{xltabular}}
+
+\begin{attenzione}[perché due distanze non tornano]
+La striscia è alta solo 26\,mm: tra la fila TX e la fila RX non c'è spazio per 15\,mm pieni. È un limite della forma della scheda, non della disposizione. Le contromisure sono la fence di via, il piano di massa intero su In1 e In3 e, per il TCXO, lo spostamento sul lato inferiore.
+\end{attenzione}
+
+% =====================================================================
+\section{Alternative e punti da decidere}
+\label{sec:alternative}
+\subsection{TCXO sul lato inferiore}
+La scheda è già montata sui due lati (J708 è su B.Cu). Si possono mettere Y201, C204 e R201 \textbf{sul lato inferiore, sotto il Si4464}, collegati a XIN con una via. Tra il PA (lato superiore) e il TCXO ci sarebbero allora tutti gli 8 strati, con 4 piani pieni: l'accoppiamento diventa trascurabile e la distanza di 15\,mm non serve più. Il prezzo è una via sul clock e qualche componente in più da montare sotto.
+
+\subsection{Che cosa sono H305--H307?}
+Se i fori H305, H306, H307 (e H302, H304) servono per uno \textbf{schermo metallico} sopra la radio, la disposizione proposta ci sta già dentro. In questo caso conviene aggiungere una fila di via di massa lungo il perimetro della striscia, per appoggiare le pareti dello schermo. Se invece sono solo distanziali, la radio può allargarsi un po' sotto la fila di fori, a destra (sotto H307), per dare più spazio al filtro dopo l'LNA.
+
+\subsection{Il gruppo già piazzato fuori scheda}
+Nel PCB c'è un gruppo di componenti RF già disposto, fuori dal contorno (intorno a X 125--170, Y 27--51). In quel gruppo lo switch è a destra e il Si4464 a sinistra: con J201 sul bordo sinistro andrebbe girato tutto, e i rapporti tra TX, RX e pin non tornerebbero. Conviene ripartire dalla disposizione di questo documento. I componenti del PA (IC2, L240--L243, C240--C263, R240--R248) sono ancora nel mucchio lasciato da \enquote{Aggiorna PCB}.
+
+\subsection{Da verificare in KiCad}
+\begin{itemize}
+\item Dimensione reale del blocco del PA copiato dalla scheda di valutazione Qorvo: è il blocco più incerto.
+\item Che la rete AN648 stia nell'angolo in alto a destra senza toccare il pad di H304.
+\item Larghezza delle piste a \SI{50}{\ohm}: netclass \texttt{RF\_50R\_CPWG} a \SI{0.20}{mm}, contro i \SI{0.32}{mm} indicati nel commento del file delle regole: da confermare con il calcolatore di impedenza JLCPCB per lo stackup a 8 strati.
+\item DRC completo dopo il piazzamento.
+\end{itemize}
+
+\end{document}
