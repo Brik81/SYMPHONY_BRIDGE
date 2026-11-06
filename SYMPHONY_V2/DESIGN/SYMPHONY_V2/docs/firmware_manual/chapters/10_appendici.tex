@@ -1,7 +1,7 @@
 \chapter{Componenti e datasheet}
 \label{app:componenti}
 
-Le pagine sono quelle del PDF del datasheet usato per questo manuale. Le sigle tra parentesi quadre nel testo (DS-xxx) rimandano a questa tabella.
+Questa tabella dice da quale documento viene ogni dato citato con la sigla DS-xxx. Colonne: \textbf{Rif.} = sigla del componente sulla scheda; \textbf{Parte} = codice del componente; \textbf{Datasheet} = produttore, revisione del documento e sigla usata nel manuale; \textbf{Pagine chiave} = dove si trovano le informazioni usate. Le pagine sono quelle del PDF (il numero che mostra il lettore PDF), non quelle stampate in fondo alla pagina.
 
 {\small
 \rowcolors{2}{white}{sbrow}
@@ -38,14 +38,14 @@ Q701 & FDN308P (clone TECH PUBLIC) & \textendash & solo funzione di interruttore
 \label{app:daverificare}
 
 \section{Incongruenze tra schematico, log e datasheet}
-Le incongruenze sono segnalate e non corrette: le decisioni spettano al team.
+Un'incongruenza è un punto in cui due fonti dicono cose diverse. Qui sono segnalate e non corrette: le decisioni spettano al team. Le sigle I-1, I-2\ldots{} servono solo a richiamarle dal resto del manuale.
 
 {\small
 \rowcolors{2}{white}{sbrow}
 \begin{xltabular}{\linewidth}{@{}L{8mm}L{58mm}Y@{}}
 \tabhead\hd{\#}&\hd{Incongruenza}&\hd{Dettaglio e proposta}\\
 \endhead
-I-1 & PC13, PC14, PC15 collegati al dock nello schematico attuale & Netlist del 04/11/2026 15:22: PC13 = \net{GPIOSX\_2} (J708.13), PC14 = \net{GPIO\_PPS} (J708.17), PC15 = \net{GPIOSX\_0} (J708.14). Nella netlist della rev.\ 1.45 erano scollegati; il log (R-12, S-09, P15) dice che non arrivano all'MCU. Modifica non registrata nel log. Definire funzione e direzione.\\
+I-1 & PC13, PC14, PC15 collegati al dock & PC13 = \net{GPIOSX\_2} (J708.13), PC14 = \net{GPIO\_PPS} (J708.17), PC15 = \net{GPIOSX\_0} (J708.14). Collegamento voluto, confermato dal team il 06/11/2026. Il log (R-12, S-09, P15) dice ancora che questi segnali non arrivano all'MCU: va aggiornato. Restano da definire funzione, direzione e livelli (V-5, V-6).\\
 I-2 & Ritardo del supervisore & F-05 e la nota sullo schematico UHF dicono \SI{200}{\milli\second}; il datasheet dà \SI{120}{}/\SI{200}{}/\SI{300}{\milli\second} (p.\,8). Il firmware deve usare \SI{300}{\milli\second}.\\
 I-3 & Testo di F-14 & F-14 chiede \enquote{PA spento/APC a zero} prima di commutare PC2, ma l'APC è comandata da PC2. Si può solo togliere il pilotaggio (Si4464 fuori da TX). Confermare l'interpretazione.\\
 I-4 & Tempo di accensione/spegnimento del QPA9510 & La revisione del 04/11 (P04) riporta \SI{1.7}{\micro\second}; nel testo estratto del datasheet (p.\,3) la riga \enquote{Turn ON/OFF Time} riporta 175 e la riga successiva 1.7 (probabilmente la corrente in A alla potenza massima). Il valore va letto sul PDF. Non cambia la regola dei \SI{10}{\micro\second}.\\
@@ -57,6 +57,8 @@ I-9 & Etichetta \enquote{5v\_TX\_EN} su PC4 & La tabella della rev.\ 1.17 del lo
 \end{xltabular}}
 
 \section{Dati da verificare}
+Sono i dati marcati \DV{} nel testo. La colonna di destra dice dove trovare la risposta: un documento da leggere, una misura da fare o una decisione da prendere.
+
 {\small
 \rowcolors{2}{white}{sbrow}
 \begin{xltabular}{\linewidth}{@{}L{8mm}L{58mm}Y@{}}

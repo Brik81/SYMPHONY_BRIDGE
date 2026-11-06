@@ -4,11 +4,18 @@
 \section{Come leggere le tabelle}
 Le tabelle sono ricavate pin per pin dalla netlist dello schematico \fonte{SCH}. Le funzioni alternate sono quelle delle tabelle 22 e 23 del datasheet STM32L562 \fonte{DS-STM32L562 pp.\,127--129, 135}; i canali ADC vengono dalla tabella 21 \fonte{DS-STM32L562 pp.\,98--104}.
 
+La tabella~\ref{tab:pin} ha una riga per ogni pin dell'MCU collegato a qualcosa. Le colonne, da sinistra:
 \begin{itemize}
-\item \textbf{Dir}: direzione vista dall'MCU. I = ingresso, O = uscita, IO = bidirezionale, OD = open-drain, A = analogico.
-\item \textbf{Pull int.}: resistenza interna consigliata (PU = pull-up, PD = pull-down, \textendash{} = nessuna).
-\item \textbf{Reset}: stato del pin durante il reset e prima dell'inizializzazione. \textbf{Sicuro}: livello da impostare in caso di errore o di arresto controllato.
-\item \textbf{Att.}: livello attivo della funzione.
+\item \textbf{Pin}: numero del piedino sul contenitore LQFP64 (da 1 a 64).
+\item \textbf{Porta}: nome del GPIO nell'STM32 (PC2 = porta C, bit 2). È il nome da usare in CubeMX e nel codice.
+\item \textbf{Net}: nome del filo nello schematico (vedi le convenzioni nel capitolo~\ref{ch:intro}).
+\item \textbf{Funzione / periferica (AF)}: come va configurato il pin. \enquote{GPIO} = ingresso o uscita semplice. \enquote{SPI1\_SCK (AF5)} = funzione alternata numero 5, cioè il clock della SPI1. \enquote{ADC12\_IN16} = canale 16 dell'ADC, condiviso tra ADC1 e ADC2.
+\item \textbf{Dir}: direzione vista dall'MCU. I = ingresso, O = uscita, IO = nei due versi, OD = open-drain, A = analogico.
+\item \textbf{Pull int.}: resistenza interna da attivare nel GPIO. PU = pull-up, PD = pull-down, \textendash{} = nessuna (di solito perché c'è già una resistenza esterna o perché il pin è pilotato sempre). Un punto interrogativo arancio vuol dire \enquote{da decidere}.
+\item \textbf{Reset $\to$ sicuro}: a sinistra della freccia lo stato del pin subito dopo il reset, prima che il firmware lo tocchi (quasi sempre Hi-Z). Tra parentesi la resistenza esterna che, in quel momento, decide il livello: per esempio \enquote{Hi-Z (R702 $\to$ H)} vuol dire che il pin è libero e R702 lo tira alto. A destra della freccia lo stato in cui il firmware deve mettere il pin appena possibile, che è anche lo stato da tenere in caso di errore. In \textbf{grassetto} quelli da impostare per primi.
+\item \textbf{Att.}: livello che \enquote{attiva} la funzione. L = attivo basso (per esempio CS: basso = dispositivo selezionato). \(\updownarrow\) = conta il cambio di livello, non il livello (il watchdog).
+\item \textbf{Collegato a}: componente e pin dall'altra parte del filo. \enquote{J708.13} = connettore J708, pin 13. Le resistenze e i condensatori sul percorso sono indicati con il loro valore.
+\item \textbf{Note}: cosa deve sapere il firmware. I rimandi \enquote{§} sono ai paragrafi di questo manuale; F-xx sono le note firmware del log.
 \end{itemize}
 
 \begin{nota}[stato dei GPIO al reset]
@@ -31,7 +38,7 @@ Dopo il reset i pin sono in alta impedenza \fonte{LOG rev.\ 1.41}. Fanno eccezio
 \endfoot
 \bottomrule
 \endlastfoot
-2 & PC13 & \net{GPIOSX\_2} & GPIO (uso da definire) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textendash & J708 pin 13 (dock) & Pin a bassa corrente: max \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} \fonte{DS p.\,126}. \textcolor{sborange}{?} = \DV. Collegato dopo la rev.\ 1.45, vedi §\ref{sec:pc13}.\\
+2 & PC13 & \net{GPIOSX\_2} & GPIO (uso da definire) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textendash & J708 pin 13 (dock) & Pin a bassa corrente: max \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} \fonte{DS-STM32L562 p.\,126}. Uso ancora da definire: vedi §\ref{sec:pc13}.\\
 3 & PC14 & \net{GPIO\_PPS} & GPIO / EXTI14 (PPS dal dock) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textcolor{sborange}{?} & J708 pin 17 (dock) & Come sopra. Polarità e livelli del PPS: \DV.\\
 4 & PC15 & \net{GPIOSX\_0} & GPIO (uso da definire) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textendash & J708 pin 14 (dock) & Come PC13.\\
 5 & PH0 & \net{HSE\_IN} & RCC OSC\_IN & A & \textendash & \textendash & \textendash & Y1 \SI{24}{\mega\hertz}, C2 \SI{10}{\pico\farad} & HSE\_VALUE = 24000000 (F-06).\\
@@ -81,7 +88,9 @@ Dopo il reset i pin sono in alta impedenza \fonte{LOG rev.\ 1.41}. Fanno eccezio
 
 \section{Pin liberi}
 \label{sec:pin-liberi}
-Diciotto GPIO non sono collegati (simbolo di non collegato sullo schematico) \fonte{SCH}. Configurarli in modo \textbf{analogico}: è lo stato a consumo minimo e non lascia ingressi digitali flottanti.
+Diciotto GPIO non sono collegati (simbolo di non collegato sullo schematico) \fonte{SCH}. Configurarli in modo \textbf{analogico}: è lo stato a consumo minimo e non lascia ingressi digitali flottanti (un ingresso digitale scollegato può oscillare e consumare corrente).
+
+La colonna \enquote{Funzioni utili} dice a che cosa potrebbe servire il pin se in futuro venisse collegato, per esempio un canale ADC in più. Oggi nessuno di questi pin è collegato a niente. PA15 e PB4 dopo il reset hanno un pull-up interno perché nascono come pin JTAG: vanno messi in analogico dal firmware.
 
 \begin{xltabular}{\linewidth}{@{}C{10mm}L{14mm}L{50mm}Y@{}}
 \tabhead\hd{Pin}&\hd{Porta}&\hd{Funzioni utili (riserva)}&\hd{Configurazione consigliata}\\
@@ -128,7 +137,15 @@ Con R413 non montata (configurazione di volo) il watchdog è sempre attivo. Un b
 
 \section{PC13, PC14 e PC15 verso il dock}
 \label{sec:pc13}
-\begin{verifica}[incongruenza tra schematico e log]
-Nella netlist attuale (schematico salvato il 04/11/2026 alle 15:22) PC13, PC14 e PC15 sono collegati a J708 pin 13 (\net{GPIOSX\_2}), 17 (\net{GPIO\_PPS}) e 14 (\net{GPIOSX\_0}). Nella netlist della rev.\ 1.45 erano non collegati, e il log (R-12, S-09; revisione del 04/11, P15) dice che PPS e GPIOSX \enquote{non arrivano all'MCU}. La modifica non è registrata nel log. Funzione, direzione e livelli di questi segnali vanno chiariti con il team: \DV.
+PC13, PC14 e PC15 sono collegati al connettore del dock J708:
+\begin{itemize}
+\item PC13 $\to$ J708 pin 13, net \net{GPIOSX\_2};
+\item PC14 $\to$ J708 pin 17, net \net{GPIO\_PPS} (PPS = un impulso al secondo, di solito usato per sincronizzare l'ora);
+\item PC15 $\to$ J708 pin 14, net \net{GPIOSX\_0}.
+\end{itemize}
+Il collegamento è voluto: lo ha deciso il team dopo la rev.\ 1.45 ed è stato confermato nel ripristino del progetto del 06/11/2026 \fonte{SCH}.
+
+\begin{verifica}[uso dei tre segnali]
+Il collegamento non è ancora registrato nel log: nelle versioni precedenti (R-12, S-09; revisione del 04/11, P15) PPS e GPIOSX \enquote{non arrivano all'MCU}. Mancano ancora funzione, direzione (ingresso o uscita) e livelli di ciascun segnale. Vanno definiti con il team e con la specifica del dock: \DV.
 \end{verifica}
-Fino a una decisione, configurare i tre pin come ingressi senza pull (o in modo analogico). Se in futuro diventano uscite, ricordare i limiti di questi pin: al massimo \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} con \SI{30}{\pico\farad} di carico, mai come sorgente di corrente \fonte{DS-STM32L562 p.\,126, nota 1}. PC14 e PC15 sono anche i pin dell'oscillatore LSE: sulla scheda non c'è un quarzo a \SI{32}{\kilo\hertz}, quindi l'RTC interno dell'MCU può usare solo l'LSI.
+Fino a una decisione, configurare i tre pin come ingressi senza pull (o in modo analogico): in questo modo non disturbano il dock qualunque cosa ci sia dall'altra parte. Se in futuro diventano uscite, ricordare i limiti di questi pin: al massimo \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} con \SI{30}{\pico\farad} di carico, mai come sorgente di corrente \fonte{DS-STM32L562 p.\,126, nota 1}. PC14 e PC15 sono anche i pin dell'oscillatore LSE: sulla scheda non c'è un quarzo a \SI{32}{\kilo\hertz}, quindi l'RTC interno dell'MCU può usare solo l'LSI.

@@ -24,6 +24,7 @@ Chip select & Software (GPIO). Una transazione = nSEL basso, comando, argomenti,
 Protocollo & Dopo ogni comando leggere CTS con \code{READ\_CMD\_BUFF} finché vale \code{0xFF}; tempo tipico \SI{20}{\micro\second} \fonte{DS-Si4464 p.\,17}. I registri \enquote{Fast Response} (comandi \code{0x50}, \code{0x51}, \code{0x53}, \code{0x57}) si leggono senza CTS \fonte{DS-Si4464 p.\,19}.\\
 \bottomrule
 \end{xltabular}
+Nella tabella: CPOL e CPHA sono i due bit che definiscono il modo SPI (polarità e fase del clock). SDI e SDO sono i pin dati visti dal Si4464 (SDI = ingresso del Si4464 = MOSI dell'MCU; SDO = uscita del Si4464 = MISO dell'MCU). $t_\text{SS}$ = tempo minimo tra la discesa di nSEL e il primo fronte di clock; $t_\text{SH}$ = tempo minimo tra l'ultimo fronte di clock e la salita di nSEL; $t_\text{SW}$ = tempo minimo con nSEL alto tra due comandi. Con il CS gestito via software questi tempi sono quasi sempre rispettati da soli; in caso di dubbio si controllano con l'oscilloscopio.
 
 \section{SPI2 \textendash{} FRAM FM25V10}
 \begin{xltabular}{\linewidth}{@{}L{38mm}Y@{}}
@@ -95,6 +96,8 @@ Temperatura buck & PC1 (pin 9) & ADC12\_IN2 & R\_RTD1 PT1000, R8, IC5 TLV9051, R
 \bottomrule
 \end{xltabular}
 \fonte{LOG F-08, S-06; DS-STM32L562 pp.\,98, 104}
+
+Nella tabella: \textbf{Canale} \enquote{ADC12\_IN16} = canale 16, disponibile sia su ADC1 sia su ADC2 (qui si usa ADC1). \textbf{Catena} = i componenti che portano la temperatura al pin: la PT1000 (R\_RTD), la resistenza che con lei forma il partitore, l'operazionale e le tre resistenze che ne fissano il guadagno.
 
 \subsection{Circuito}
 Ogni PT1000 forma un partitore con una resistenza da \SI{3.16}{\kilo\ohm} verso 3V3. L'operazionale amplifica la differenza rispetto a un riferimento ricavato dallo stesso 3V3. Le resistenze sono allo \SI{0.1}{\percent} \fonte{LOG rev.\ 1.18}.
@@ -172,5 +175,7 @@ PPS dal dock & PC14 & EXTI14 & Solo se il segnale verrà usato (§\ref{sec:pc13}
 FDCAN1, USART1, I2C, SPI & \textendash & interrupt di periferica & Liberi.\\
 \bottomrule
 \end{xltabular}
+
+Nella tabella: \textbf{Linea} = linea EXTI, cioè il numero di interrupt esterno (la linea N è legata al bit N della porta: PC0 $\to$ EXTI0). \enquote{Interrupt di periferica} = l'interrupt lo genera la periferica stessa (fine trasmissione, dato ricevuto\ldots), non un pin. ISR = la routine che gestisce l'interrupt.
 
 Segnali che \textbf{non} arrivano all'MCU: INT/SQW del DS3231M (solo pull-up R411) e uscita 32\,kHz del DS3231M \fonte{LOG S-09, R-12; REV-1104 P15}; GPIO0\ldots GPIO3 e TXRAMP del Si4464 \fonte{SCH}; ST del TPS2121 e PG del buck.

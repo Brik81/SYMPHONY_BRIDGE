@@ -3,6 +3,10 @@
 
 Questo è il capitolo più importante. La catena RF non ha protezioni hardware contro alcuni errori di sequenza: \textbf{la protezione del commutatore e del PA è affidata al firmware} \fonte{LOG P-02, R-04}.
 
+\begin{semplice}
+Il pin PC2 dell'MCU sceglie tra trasmissione e ricezione. Basso = trasmetto: lo switch collega l'antenna al PA, il PA si accende e l'LNA si spegne. Alto = ricevo: tutto il contrario. La regola d'oro è una sola: \textbf{PC2 si cambia solo quando il Si4464 non sta trasmettendo}, e dopo aver aspettato almeno \SI{10}{\micro\second}. Se PC2 cambia mentre esce potenza, lo switch riceve più potenza di quanta ne sopporti e si può rompere.
+\end{semplice}
+
 \section{Architettura TX e RX}
 \label{sec:rf-arch}
 
@@ -26,28 +30,29 @@ PC2 (net \net{/MCU/UHF.EN\_TX\_ANT\_SW}) pilota contemporaneamente tre cose \fon
 
 \begin{figure}[htbp]
 \centering
-\begin{circuitikz}[scale=0.82,transform shape,font=\small]
- % PC2
- \draw (0,0) node[left]{PC2 (U301 pin 10)} to[short,o-*] (1.5,0) coordinate(n);
- \draw (n) -- (1.5,-0.0) node[below right,font=\scriptsize]{TP702};
- % verso switch
- \draw (n) |- (3,2.5) node[right]{CTRL HMC349A (IC202): H = RF1/RX, L = RF2/TX};
- % verso Q701
- \draw (n) to[R,l=R703 \SI{0}{\ohm},-*] (4.5,0) coordinate(g);
- \draw (g) to[R,l_=R702 \SI{100}{\kilo\ohm}] (4.5,2) node[above]{3V3};
- \draw (g) -- (5.4,0) node[pmos,anchor=G,xscale=1] (q) {};
- \node[right,font=\scriptsize] at ($(q.center)+(0.3,0.0)$) {Q701};
- \draw (q.S) -- ++(0,0.5) node[above]{3V3};
- \draw (q.D) to[R,l=R242 \SI{33}{\ohm},-*] ++(0,-2) coordinate(apc);
- \draw (apc) to[R,l=R243 \SI{220}{\ohm}] ++(0,-2) node[ground]{};
- \draw (apc) -- ++(1.8,0) coordinate(c1) to[C,l=C252 \SI{10}{\nano\farad}] ++(0,-2) node[ground]{};
- \draw (c1) -- ++(1.4,0) node[right]{APC1/APC2 del PA (IC2)};
- % verso U701
- \draw (n) |- (3,-3.2) node[not port,anchor=in 1,scale=0.9] (inv) {};
- \node[below,font=\scriptsize] at (inv.south) {U701 (74AUP2G14)};
- \draw (inv.out) to[R,l=R202 \SI{0}{\ohm}] ++(2.2,0) node[right]{Shut Down LNA (Q201): H = spento};
+\begin{circuitikz}[scale=0.85,transform shape,font=\small]
+ % ingresso
+ \draw (0,0) node[left,align=right]{\textbf{PC2}\\\scriptsize MCU, pin 10} to[short,o-*] (1.5,0) coordinate(J);
+ \node[below,font=\scriptsize] at (0.75,0) {TP702};
+ % ramo 1: switch
+ \draw (J) -- (13.5,0) node[right,align=left]{CTRL dello switch IC202\\\scriptsize sceglie il ramo TX o RX};
+ % ramo 2: Q701 e APC
+ \draw (J) -- (1.5,5) to[R,l=R703 \SI{0}{\ohm},-*] (3.6,5) coordinate(g);
+ \draw (g) to[R,l=R702 \SI{100}{\kilo\ohm}] (3.6,7.4) node[above]{3V3};
+ \draw (g) -- (4.6,5) node[pmos,anchor=G] (q) {};
+ \node[right,font=\scriptsize] at ($(q.center)+(0.25,0.35)$) {Q701};
+ \draw (q.S) -- (q.S|-0,7.4) node[above]{3V3};
+ \draw (q.D) -- (q.D|-0,3.6) to[R,l=R242 \SI{33}{\ohm},-*] (9,3.6) coordinate(apc);
+ \draw (apc) to[R,l_=R243 \SI{220}{\ohm}] (9,1.4) node[ground]{};
+ \draw (apc) -- (11.4,3.6) to[C,l=C252 \SI{10}{\nano\farad},*-] (11.4,1.4) node[ground]{};
+ \draw (11.4,3.6) to[short,-o] (13.5,3.6) node[right,align=left]{APC1, APC2 del PA IC2\\\scriptsize con tensione = PA acceso};
+ % ramo 3: invertitore e LNA
+ \draw (J) |- (4.6,-2.6) node[not port,anchor=in 1] (inv) {};
+ \node[below,font=\scriptsize,align=center] at ($(inv.south)+(0,-0.1)$) {U701\\74AUP2G14};
+ \draw (inv.out) to[R,l=R202 \SI{0}{\ohm},-o] (13.5,-2.6) node[right,align=left]{Shut Down dell'LNA Q201\\\scriptsize alto = LNA spento};
+ \node[below,font=\scriptsize] at (7.5,-2.6) {EN\_RX\_LNA};
 \end{circuitikz}
-\caption{Il comando PC2 e i tre carichi. Schema semplificato dalla netlist.}
+\caption{Il pin PC2 e i suoi tre carichi (schema semplificato dalla netlist). PC2 \textbf{basso}: Q701 conduce, il PA riceve tensione sull'APC, lo switch va sul ramo TX, l'invertitore spegne l'LNA. PC2 \textbf{alto} o non pilotato (R702 lo tira su): tutto il contrario, cioè ricezione.}
 \label{fig:pc2}
 \end{figure}
 
@@ -77,6 +82,20 @@ TX & L & RF2 (TX) & ON & \SIrange{2.7}{2.87}{\volt} & acceso & spento & TX\\
 \bottomrule
 \end{xltabular}}
 \fonte{SCH; LOG §41, F-02, F-14; REV-1104 §2.2; APC: LOG rev.\ 1.45}
+
+\begin{nota}[come leggere la tabella~\ref{tab:verita}]
+\begin{itemize}
+\item \textbf{Stato}: la situazione della radio vista dal firmware. \enquote{TX armato} = PC2 è già basso ma il Si4464 non trasmette ancora: è il passaggio intermedio obbligato prima di trasmettere.
+\item \textbf{PC2}: H = alto, L = basso. \enquote{Hi-Z $\to$ H (R702)} = durante il reset il pin non è pilotato e la resistenza R702 lo porta alto: la scheda parte da sola in ricezione.
+\item \textbf{Switch}: porta collegata all'antenna. RF1 = ramo di ricezione, RF2 = ramo di trasmissione.
+\item \textbf{Q701}: il transistor che alimenta il PA. ON = conduce, OFF = aperto.
+\item \textbf{APC}: tensione sul pin di accensione del PA. \SI{0}{\volt} = PA a riposo; \SIrange{2.7}{2.87}{\volt} = PA acceso.
+\item \textbf{PA}: \enquote{standby} = spento, consumo quasi nullo. \enquote{acceso, senza pilotaggio} = acceso ma senza segnale in ingresso: consuma la corrente di riposo (circa \SI{200}{\milli\ampere}) ma non trasmette.
+\item \textbf{LNA}: acceso o spento. Dipende solo da PC2.
+\item \textbf{Si4464}: stato interno della radio. READY = pronta, non trasmette e non riceve. SLEEP = basso consumo. TX = trasmette. RX = riceve. Shutdown = spenta dal pin SDN.
+\item \textbf{VIETATO} (riga rossa): cambiare PC2 mentre il Si4464 è in TX, o subito dopo, rompe lo switch (regola F-14). I trattini vogliono dire che lo stato degli altri blocchi non conta: la situazione è da evitare comunque.
+\end{itemize}
+\end{nota}
 
 \begin{nota}[consumi da ricordare]
 \begin{itemize}
@@ -109,6 +128,16 @@ radio attiva & L & L & radio attiva; D203 non indica più lo stato della radio\\
 \end{xltabular}}
 \fonte{tempi: DS-TPS3825 pp.\,6--8; DS-Si4464 p.\,21}
 
+\begin{nota}[come leggere la tabella~\ref{tab:sdn}]
+\begin{itemize}
+\item \textbf{Modo A} e \textbf{modo B} sono due modi di montare la scheda. Si passa da uno all'altro spostando una resistenza da \SI{0}{\ohm} (R204 o R205). Di serie è montato il modo A. DNP = resistenza non montata.
+\item \textbf{SDN Si4464}: H = radio spenta (perde la configurazione), L = radio accesa.
+\item \textbf{$t_d$}: ritardo del supervisore IC205. Dopo che PC4 torna alto, o dopo che il 3V3 torna sopra la soglia, IC205 aspetta $t_d$ prima di accendere la radio. Può essere \SI{120}{\milli\second} come \SI{300}{\milli\second}: il firmware deve contare sul caso peggiore, \SI{300}{\milli\second}.
+\item \textbf{Soglia} \SI{2.88}{}/\SI{2.93}{}/\SI{3.00}{\volt}: valori minimo / tipico / massimo. Se il 3V3 scende sotto questa tensione, IC205 spegne la radio da solo.
+\item \textbf{D203}: LED rosso. Nel modo A è acceso quando la radio è accesa.
+\end{itemize}
+\end{nota}
+
 \begin{regola}[F-05: reset del Si4464]
 \begin{itemize}
 \item Il firmware deve sapere com'è montata la scheda: costante di compilazione \code{MODO\_A} / \code{MODO\_B} \fonte{LOG F-05}.
@@ -135,6 +164,8 @@ LNA: accensione / spegnimento & \SI{1}{\micro\second} / \SI{0.5}{\micro\second} 
 Invertitore U701 & $t_\text{pd}\leq$ \SI{4.3}{\nano\second} & \fonte{DS-SN74AUP2G14 p.\,1}\\
 \bottomrule
 \end{xltabular}
+Nella tabella: $t_\text{ON}$ e $t_\text{OFF}$ sono i tempi di accensione e spegnimento; $\tau$ è la costante di tempo di un circuito RC (dopo $\tau$ la tensione ha fatto il 63\,\% della variazione, dopo $3\tau$ il 95\,\%); $R_{242}\parallel R_{243}$ è il parallelo delle due resistenze; $t_\text{pd}$ è il ritardo di propagazione della porta logica. \enquote{Calcolo} vuol dire che il valore è ricavato dai componenti e non preso da un datasheet.
+
 L'APC si scarica più lentamente di quanto lo switch commuti: se PC2 sale mentre il PA è ancora pilotato, per alcuni microsecondi il PA spinge circa \SI{+31}{\dBm} su una porta ormai terminata, oltre il massimo assoluto di \SI{26.5}{\dBm} \fonte{LOG P-02}.
 
 \subsection{Sequenza RX\texorpdfstring{$\to$}{->}TX}
@@ -183,12 +214,12 @@ La nota F-14 chiede di avere \enquote{PA spento/APC a zero} prima di commutare P
  \begin{pgfonlayer}{background}
   \vertlines[sbgray!60,densely dashed]{3,9,19}
  \end{pgfonlayer}
- \node[anchor=south,font=\sffamily\scriptsize] at (3,0.6) {PC2 $\downarrow$};
- \node[anchor=south,font=\sffamily\scriptsize] at (9,0.6) {START\_TX};
- \node[anchor=south,font=\sffamily\scriptsize] at (19,0.6) {PACKET\_SENT};
+ \node[anchor=south,font=\sffamily\scriptsize] at (3,1.3) {PC2 $\downarrow$};
+ \node[anchor=south,font=\sffamily\scriptsize] at (9,1.3) {START\_TX};
+ \node[anchor=south,font=\sffamily\scriptsize] at (19,1.3) {PACKET\_SENT};
  \draw[{Stealth}-{Stealth},sbred,thick] (3,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$} (9,-10.8);
 \end{tikztimingtable}
-\caption{Sequenza RX$\to$TX. Non in scala. U = transitorio (switch \SI{160}{\nano\second}, APC $\tau$ \SI{0.29}{\micro\second}, LNA OFF \SI{0.5}{\micro\second}).}
+\caption{Passaggio da ricezione a trasmissione (non in scala). Ogni riga è un segnale e il tempo scorre da sinistra a destra. Le linee tratteggiate segnano gli eventi scritti in alto: PC2$\downarrow$ = il firmware porta PC2 basso; START\_TX = comando di trasmissione; PACKET\_SENT = interrupt di fine pacchetto. Le zone grigie sono i tempi di assestamento (switch \SI{160}{\nano\second}, APC \SI{0.29}{\micro\second}, spegnimento LNA \SI{0.5}{\micro\second}).}
 \label{fig:rx2tx}
 \end{figure}
 
@@ -208,13 +239,13 @@ La nota F-14 chiede di avere \enquote{PA spento/APC a zero} prima di commutare P
  \begin{pgfonlayer}{background}
   \vertlines[sbgray!60,densely dashed]{4,11,14}
  \end{pgfonlayer}
- \node[anchor=south,font=\sffamily\scriptsize] at (4,0.6) {PACKET\_SENT};
- \node[anchor=south,font=\sffamily\scriptsize] at (11,0.6) {PC2 $\uparrow$};
- \node[anchor=south,font=\sffamily\scriptsize] at (14,0.6) {START\_RX};
+ \node[anchor=south,font=\sffamily\scriptsize] at (4,1.3) {PACKET\_SENT};
+ \node[anchor=south,font=\sffamily\scriptsize] at (11,1.3) {PC2 $\uparrow$};
+ \node[anchor=south,font=\sffamily\scriptsize] at (14,1.3) {START\_RX};
  \draw[{Stealth}-{Stealth},sbred,thick] (4,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$ (F-14)} (11,-10.8);
  \draw[{Stealth}-{Stealth},sbgreen,thick] (11,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$} (14,-10.8);
 \end{tikztimingtable}
-\caption{Sequenza TX$\to$RX. Non in scala. La discesa dell'APC ($\tau\leq\SI{2.2}{\micro\second}$) avviene quando il PA non è più pilotato.}
+\caption{Passaggio da trasmissione a ricezione (non in scala). Si legge come la figura~\ref{fig:rx2tx}. PC2$\uparrow$ = il firmware porta PC2 alto, START\_RX = comando di ricezione. La freccia rossa è l'attesa obbligatoria della regola F-14: PC2 sale solo quando il Si4464 ha smesso di trasmettere. Lo spegnimento lento dell'APC (fino a \SI{2.2}{\micro\second}) non è un problema perché il PA non riceve più segnale.}
 \label{fig:tx2rx}
 \end{figure}
 
@@ -238,7 +269,7 @@ La nota F-14 chiede di avere \enquote{PA spento/APC a zero} prima di commutare P
  \draw[ar] (end) |- node[lb,pos=0.25,right]{$\geq\SI{10}{\micro\second}$, PC2 = H,\\verifica F-10} ($(rdy.east)+(0,-3mm)$);
 \end{tikzpicture}
 \end{center}
-PC2 cambia solo nelle transizioni READY$\leftrightarrow$TX ARMATO e FINE TX$\to$READY, mai negli stati TX.
+Ogni riquadro è uno stato del firmware; sotto il nome c'è il livello di PC2 e lo stato del Si4464 in quello stato. Le frecce sono i passaggi possibili e sopra ciascuna c'è cosa deve fare il firmware per passare. Il riquadro rosso (TX) è l'unico in cui esce potenza. PC2 cambia solo nei passaggi READY$\leftrightarrow$TX ARMATO e FINE TX$\to$READY, mai mentre si è in TX.
 
 \section{Limiti di potenza}
 \label{sec:limiti}
@@ -266,6 +297,17 @@ LNA in TX (perdita dello switch) & \SI{+22}{\dBm} & $\approx$\SI{-14.5}{\dBm} & 
 Ingresso RX del Si4464 & \SI{+10}{\dBm} abs.\ max & dipende dal segnale in antenna & \fonte{DS-Si4464 p.\,13}\\
 \bottomrule
 \end{xltabular}}
+
+\begin{nota}[come leggere la tabella~\ref{tab:limiti}]
+\begin{itemize}
+\item \textbf{Punto}: il punto della catena in cui si guarda la potenza o la tensione, nell'ordine in cui la attraversa il segnale.
+\item \textbf{Limite}: il valore da non superare. \enquote{abs.\ max} = massimo assoluto, oltre il quale il componente si può rompere. Le temperature tra parentesi sono le condizioni in cui il datasheet garantisce il limite.
+\item \textbf{Valore atteso}: quanto ci si aspetta di avere con il firmware corretto. Il secondo valore, \enquote{con Si4464 a +20 dBm}, è il caso vietato da F-01: serve a mostrare quanto poco margine resterebbe.
+\item \textbf{Hot switching}: potenza ammessa sullo switch \emph{mentre} commuta. \textbf{Porta terminata}: potenza ammessa sulla porta che in quel momento non è collegata all'antenna.
+\item \textbf{P1dB}: potenza d'uscita alla quale il PA comincia a saturare. Oltre questo punto alzare l'ingresso non fa crescere l'uscita, ma aumenta le armoniche.
+\item Unità: \si{\dBm} = potenza riferita a \SI{1}{\milli\watt} (\SI{30}{\dBm} = \SI{1}{\watt}); \si{dB} = rapporto tra due potenze (guadagno o perdita).
+\end{itemize}
+\end{nota}
 
 Calcolo della tensione APC a vuoto: $V_\text{APC} = V_\text{3V3}\cdot R_{243}/(R_{242}+R_{243}) = 3{,}3\cdot 220/253 = \SI{2.870}{\volt}$; con $V_\text{3V3} = \SI{3.405}{\volt}$ si ottiene \SI{2.961}{\volt}. La resistenza di Thevenin è \SI{28.7}{\ohm}: con la corrente APC di \SI{4.6}{\milli\ampere} \fonte{DS-QPA9510 p.\,3} la tensione scende di circa \SI{0.13}{\volt}. Il firmware non può regolare l'APC: è fissa. La potenza si regola solo con PA\_PWR\_LVL.
 
@@ -348,6 +390,8 @@ XO\_FREQ & \num{32000000} = \code{0x01E84800} & 4 byte, MSB per primo (conversio
 \bottomrule
 \end{xltabular}
 
+Nella tabella, \enquote{comando} è il primo byte che si manda via SPI al Si4464. Le \enquote{proprietà} (XO\_FREQ, GLOBAL\_XO\_TUNE, PA\_PWR\_LVL) sono impostazioni interne: si scrivono con il comando \code{SET\_PROPERTY}, indicando il gruppo e l'indice della proprietà. CTS = il Si4464 è pronto a ricevere un nuovo comando.
+
 \subsection{Procedura di inizializzazione della radio}
 \begin{enumerate}
 \item PC2 alto (RX, PA spento) e NSEL (PA8) alto.
@@ -400,6 +444,8 @@ M-05 & Armoniche H2 e H3 al connettore d'antenna, TX alla potenza massima & entr
 M-06 & Potenza all'MMCX e corrente del PA a pilotaggio fisso & attesa \SIrange{29}{30}{\dBm}; se più bassa, accordare C260/C262 e ripetere M-05 & PA\_PWR\_LVL fisso\\
 \bottomrule
 \end{xltabular}}
+
+Nella tabella: \textbf{ID} = codice della misura nel log; \textbf{Criterio} = quando la misura è superata e cosa fare se non lo è; \textbf{Cosa serve dal firmware} = la funzione che il firmware di collaudo deve offrire per poter fare la misura. Pout = potenza d'uscita. S22 = adattamento d'uscita del PA, misurato con un analizzatore di reti. VAPC = tensione sull'APC. H2 e H3 = seconda e terza armonica (\SI{870}{\mega\hertz} e \SI{1305}{\mega\hertz}). DNP = resistenza non montata.
 
 \begin{nota}[set-up consigliato]
 MMCX $\to$ attenuatore di potenza da \SI{50}{\ohm} dimensionato per almeno \SI{2}{\watt} continui $\to$ misuratore di potenza o analizzatore di spettro. Sonde dell'oscilloscopio: TP702 (PC2), TP703 (EN\_RX\_LNA), TP701 (XIN del Si4464) per verificare le sequenze dei paragrafi~\ref{sec:sequenze}. Le misure M-01, M-03 e M-06 vanno ripetute con il firmware definitivo.

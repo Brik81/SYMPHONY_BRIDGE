@@ -20,14 +20,32 @@ L'hardware descritto è l'\textbf{Engineering Model} (EM). I LED servono come ri
 
 \subsection*{Convenzioni}
 \begin{itemize}
-\item I nomi delle net sono scritti così: \net{/MCU/UHF.EN\_TX\_ANT\_SW}. Sono i nomi esatti della netlist.
-\item I riferimenti dei componenti (U301, IC204, R243\ldots) sono quelli dello schematico e della BOM.
-\item \textbf{H} = livello alto (\SI{3.3}{\volt}), \textbf{L} = livello basso (\SI{0}{\volt}), \textbf{Hi-Z} = alta impedenza.
-\item Le fonti sono tra parentesi quadre, per esempio \fonte{DS-Si4464 p.\,17} o \fonte{LOG F-14}. Le sigle delle fonti sono spiegate a pagina~\pageref{app:componenti} e nella storia del documento.
-\item \DV{} indica un dato non verificato sulla fonte. Tutti questi punti sono raccolti nell'appendice~\ref{app:daverificare}.
+\item \textbf{Nomi delle net.} Sono scritti così: \net{/MCU/UHF.EN\_TX\_ANT\_SW}. Sono i nomi esatti della netlist. La prima parte (\net{/MCU/}) è il foglio dello schematico in cui nasce il segnale; le net senza barra (\net{3V3}, \net{RF\_MR\_N}) sono globali, cioè hanno lo stesso nome su tutti i fogli.
+\item \textbf{Sigle dei componenti.} U301, IC204, R243\ldots{} sono quelle stampate sullo schematico, sulla BOM (la distinta dei componenti) e sulla serigrafia della scheda.
+\item \textbf{Livelli logici.} \textbf{H} = livello alto (\SI{3.3}{\volt}). \textbf{L} = livello basso (\SI{0}{\volt}). \textbf{Hi-Z} = alta impedenza: il pin non spinge né alto né basso, come se fosse staccato, e il livello lo decide una resistenza esterna (se c'è).
+\item \textbf{Frecce nelle tabelle.} \enquote{A $\to$ B} vuol dire \enquote{prima A, poi B}. Per esempio \enquote{Hi-Z $\to$ H} = il pin è in alta impedenza dopo il reset e il firmware lo deve portare alto.
+\item \textbf{Fonti.} Sono tra parentesi quadre, in grigio, per esempio \fonte{DS-Si4464 p.\,17}. Le sigle:
+ \begin{itemize}
+ \item \textbf{DS-xxx} = datasheet del componente xxx, \enquote{p.} = pagina del PDF (elenco nell'appendice~\ref{app:componenti});
+ \item \textbf{SCH} = schematico KiCad del progetto;
+ \item \textbf{LOG} = log delle modifiche hardware; \enquote{rev.\ 1.45} = revisione del log, \enquote{§41} = paragrafo 41 del log;
+ \item \textbf{REV-1103}, \textbf{REV-1104} = revisioni indipendenti dello schematico del 03/11 e del 04/11/2026.
+ \end{itemize}
+\item \textbf{Codici del log.} Nel log ogni punto ha un codice; qui si usano così:
+ \begin{itemize}
+ \item \textbf{F-01\ldots F-16} = note per il firmware, cioè cose che il firmware \emph{deve} fare (elenco completo nella tabella~\ref{tab:notefw});
+ \item \textbf{M-01\ldots M-06} = misure da fare sul prototipo (tabella~\ref{tab:collaudo});
+ \item \textbf{R-xx}, \textbf{S-xx}, \textbf{P-xx}, \textbf{D1}, numeri come \enquote{1.15-01} = punti del log o delle revisioni da cui viene un'informazione. Servono solo per ritrovare la fonte: non serve conoscerli per scrivere il firmware;
+ \item \textbf{I-x} e \textbf{V-x} = incongruenze e dati da verificare raccolti da questo manuale (appendice~\ref{app:daverificare}).
+ \end{itemize}
+\item \DV{} indica un dato che non è stato possibile controllare sulla fonte. Tutti questi punti sono raccolti nell'appendice~\ref{app:daverificare}.
+\item \textbf{Modo A / modo B}: i due modi in cui si può montare il reset della radio (paragrafo~\ref{sec:sdn}). Di serie la scheda è in modo A.
 \end{itemize}
 
-\subsection*{I quattro tipi di riquadro}
+\subsection*{I cinque tipi di riquadro}
+\begin{semplice}[esempio]
+Spiegazione a parole, senza dettagli tecnici, di quello che segue.
+\end{semplice}
 \begin{attenzione}[esempio]
 Rischio di danno all'hardware o di malfunzionamento in volo. Va rispettato sempre.
 \end{attenzione}
@@ -42,29 +60,49 @@ Dato non confermato o incongruenza trovata tra le fonti.
 \end{verifica}
 
 \section{Glossario}
+Le sigle sono in ordine alfabetico. Tra parentesi c'è la sigla del componente sulla scheda.
+
 \begin{xltabular}{\linewidth}{@{}L{26mm}Y@{}}
 \tabhead\hd{Termine}&\hd{Significato}\\
 \endhead
-APC & \emph{Automatic Power Control}: ingresso di controllo del PA QPA9510 (pin APC1/APC2). A \SI{0}{\volt} il PA è in standby, a circa \SI{2.8}{\volt} lavora alla potenza massima.\\
-AF & \emph{Alternate Function}: funzione di periferica assegnata a un pin GPIO dell'STM32 (registro \code{GPIOx\_AFRL/AFRH}).\\
-CTS & \emph{Clear To Send} del Si4464: byte \code{0xFF} che indica che il comando precedente è stato eseguito.\\
-DNP & \emph{Do Not Populate}: componente disegnato ma non montato.\\
-EM / FM & Engineering Model / Flight Model.\\
-FRAM & Memoria ferroelettrica non volatile FM25V10 (U401), \SI{1}{Mbit}.\\
+abs.\ max & \emph{Absolute maximum}: valore che non va mai superato, nemmeno per un istante, pena il danno del componente.\\
+ADC &Convertitore analogico-digitale dell'MCU. Qui legge le due temperature e la tensione del 3V3.\\
+AF & \emph{Alternate Function}: un pin dell'STM32 può essere un GPIO o una periferica (SPI, UART\ldots). Il numero AF (AF0\ldots AF15) dice quale periferica, e si scrive nei registri \code{GPIOx\_AFRL/AFRH}.\\
+APC & \emph{Automatic Power Control}: pin di controllo del PA QPA9510 (APC1/APC2). A \SI{0}{\volt} il PA è a riposo, a circa \SI{2.8}{\volt} lavora alla potenza massima. Su questa scheda l'APC è solo acceso/spento, non regolabile.\\
+BOM & \emph{Bill Of Materials}: elenco dei componenti da montare.\\
+CS, NSEL & \emph{Chip Select}: pin che seleziona un dispositivo SPI. Basso = dispositivo selezionato. NSEL è il nome del CS sul Si4464.\\
+CTS & \emph{Clear To Send} del Si4464: byte \code{0xFF} che dice \enquote{ho finito il comando precedente, puoi mandarne un altro}.\\
+dBm & Potenza riferita a \SI{1}{\milli\watt}: \SI{0}{\dBm} = \SI{1}{\milli\watt}, \SI{10}{\dBm} = \SI{10}{\milli\watt}, \SI{30}{\dBm} = \SI{1}{\watt}. Ogni \SI{3}{dB} in più la potenza raddoppia.\\
+DNP & \emph{Do Not Populate}: componente disegnato sullo schematico ma non montato.\\
+EM / FM & \emph{Engineering Model} (prototipo da banco, con LED) / \emph{Flight Model} (scheda di volo).\\
+EXTI & Controllore degli interrupt esterni dell'STM32: genera un interrupt quando un pin cambia livello.\\
+FRAM & Memoria non volatile FM25V10 (U401), \SI{1}{Mbit}. Come una EEPROM, ma si scrive subito e quasi senza usura.\\
+GPIO & Pin usato come semplice ingresso o uscita digitale.\\
 HSE & Oscillatore esterno ad alta velocità dell'MCU (quarzo Y1, \SI{24}{\mega\hertz}).\\
-Hot switching & Commutazione del deviatore RF con la potenza RF presente.\\
-LNA & Amplificatore a basso rumore di ricezione TQP3M9036 (Q201).\\
-LPF & Filtro passa-basso FL201 (Mini-Circuits LFCG-490+) dopo il PA.\\
+Hi-Z & Alta impedenza: pin né alto né basso, come scollegato.\\
+Hot switching & Commutare lo switch RF mentre c'è potenza RF che lo attraversa. Lo stressa: va evitato.\\
+I2C & Bus seriale a due fili (SCL clock, SDA dati) con resistenze di pull-up.\\
+LNA & \emph{Low Noise Amplifier}: amplificatore di ricezione TQP3M9036 (Q201).\\
+LPF & Filtro passa-basso FL201 (Mini-Circuits LFCG-490+) dopo il PA: toglie le armoniche.\\
 MMCX & Connettore d'antenna J201.\\
-MR & \emph{Manual Reset}: ingresso \(\overline{\mathrm{MR}}\) del supervisore TPS3825 (IC205).\\
-nIRQ & Uscita di interrupt del Si4464, attiva bassa.\\
-PA & Amplificatore di potenza QPA9510 (IC2).\\
-PA\_PWR\_LVL & Proprietà del Si4464 che regola la potenza d'uscita interna (128 passi).\\
-POR & \emph{Power-On Reset}.\\
-SDN & Pin di shutdown del Si4464: alto = radio spenta, registri persi.\\
-Switch & Deviatore RF SPDT HMC349A (IC202) tra antenna, ramo TX e ramo RX.\\
-TCXO & Oscillatore al quarzo compensato in temperatura Y201, \SI{32}{\mega\hertz}, clock del Si4464.\\
-WDI / WDO & Ingresso di refresh / uscita di reset del watchdog STWD100 (U403).\\
-WDS & \emph{Wireless Development Suite} di Silicon Labs: genera la configurazione del Si4464 (\code{radio\_config.h}).\\
+MR & \emph{Manual Reset}: ingresso \(\overline{\mathrm{MR}}\) del supervisore TPS3825 (IC205). La barra sopra il nome vuol dire \enquote{attivo basso}.\\
+nIRQ & Uscita di interrupt del Si4464, attiva bassa (la \enquote{n} iniziale vuol dire attivo basso).\\
+Open-drain (OD) & Uscita che può solo tirare la linea verso massa; il livello alto lo dà una resistenza di pull-up.\\
+PA & \emph{Power Amplifier}: amplificatore di potenza QPA9510 (IC2).\\
+PA\_PWR\_LVL & Impostazione del Si4464 che regola la sua potenza d'uscita (128 passi). Il PA amplifica quello che esce dal Si4464.\\
+POR & \emph{Power-On Reset}: reset automatico all'accensione.\\
+PT1000 & Sensore di temperatura a resistenza: \SI{1000}{\ohm} a \SI{0}{\celsius}, cresce di circa \SI{3.9}{\ohm} per grado.\\
+Pull-up / pull-down & Resistenza che porta una linea alta (verso 3V3) o bassa (verso massa) quando nessuno la pilota.\\
+Push-pull & Uscita che spinge attivamente sia alto sia basso.\\
+RTC & \emph{Real Time Clock}: orologio DS3231M (U404).\\
+SDN & Pin di shutdown del Si4464: alto = radio spenta e configurazione persa.\\
+SPI & Bus seriale sincrono a 4 fili: SCK clock, MOSI dati verso il dispositivo, MISO dati verso l'MCU, CS selezione.\\
+SWD & \emph{Serial Wire Debug}: interfaccia del debugger (programmazione e breakpoint).\\
+Switch & Commutatore RF HMC349A (IC202): collega l'antenna al ramo TX o al ramo RX.\\
+TCXO & Oscillatore al quarzo compensato in temperatura Y201, \SI{32}{\mega\hertz}: è il clock del Si4464.\\
+VREFINT & Tensione di riferimento interna dell'STM32. Leggendola con l'ADC si ricava la tensione del 3V3.\\
+Watchdog & Circuito che resetta l'MCU se il firmware smette di dare segni di vita. Qui è esterno: STWD100 (U403).\\
+WDI / WDO & Ingresso degli impulsi / uscita di reset del watchdog STWD100 (U403).\\
+WDS & \emph{Wireless Development Suite} di Silicon Labs: programma che genera la configurazione del Si4464 (\code{radio\_config.h}).\\
 \bottomrule
 \end{xltabular}

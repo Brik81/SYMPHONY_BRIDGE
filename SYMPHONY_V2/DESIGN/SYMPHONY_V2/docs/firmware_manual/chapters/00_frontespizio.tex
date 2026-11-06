@@ -30,7 +30,7 @@
   \node[anchor=south west,font=\sffamily\small,text=sbgray,text width=165mm,align=left]
      at ([xshift=25mm,yshift=22mm]current page.south west) {%
      \begin{tabular}{@{}ll@{}}
-     \textbf{Versione del documento} & 1.0 del 04/11/2026\\
+     \textbf{Versione del documento} & 1.1 del 06/11/2026\\
      \textbf{Riferimento hardware} & schematico KiCad 10, revisione \textbf{1.45} del log hardware (04/11/2026)\\
      \textbf{Netlist} & esportata con \code{kicad-cli 10.0} dallo schematico salvato il 04/11/2026 15:22\\
      \textbf{Stato} & Engineering Model \textendash{} con LED di debug montati\\
@@ -49,6 +49,7 @@
 \begin{xltabular}{\linewidth}{@{}L{18mm}L{24mm}L{34mm}Y@{}}
 \tabhead\hd{Versione}&\hd{Data}&\hd{Hardware}&\hd{Descrizione}\\
 1.0 & 04/11/2026 & rev.\ 1.45 del log & Prima emissione. Ricavata dalla netlist dello schematico, dal log hardware (entry 000\ldots043), dalle revisioni indipendenti del 03/11 e del 04/11/2026 e dai datasheet dei componenti.\\
+1.1 & 06/11/2026 & rev.\ 1.45 del log + PC13--PC15 al dock & Correzioni chieste dal firmwarista. Schema a blocchi rifatto in tre figure, con i nomi delle periferiche (FDCAN1, SPI1\ldots) al posto dei pin. Sequenza di accensione e circuito di PC2 ridisegnati senza sovrapposizioni; etichette dei diagrammi temporali spostate. Ogni tabella ha una nota che spiega colonne e sigle. Riquadri \enquote{In parole semplici}, glossario ampliato. PC13--PC15 al dock confermati come voluti.\\
 \bottomrule
 \end{xltabular}\endgroup
 

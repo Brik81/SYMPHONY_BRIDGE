@@ -1,12 +1,18 @@
 \chapter{Alimentazioni e accensione}
 \label{ch:power}
 
+\begin{semplice}
+La scheda prende i \SI{5}{\volt} dal dock del satellite oppure dalla USB-C; se ci sono tutti e due vince il dock. Dai \SI{5}{\volt} un convertitore ricava i \SI{3.3}{\volt} (il \enquote{3V3}) che alimentano quasi tutto. Il convertitore però si accende solo se il dock gli dà il permesso con il segnale EN\_DOCK: con la sola USB-C la scheda resta spenta.
+\end{semplice}
+
 \section{Rail di alimentazione}
+Un \enquote{rail} è una linea di alimentazione. Nella tabella: \textbf{Rail} = nome della net; \textbf{Generato da} = il componente o il connettore che la fornisce; \textbf{Valore} = tensione nominale ed eventuale intervallo garantito; \textbf{Carichi principali} = cosa alimenta.
+
 \begin{xltabular}{\linewidth}{@{}L{24mm}L{30mm}L{30mm}Y@{}}
 \tabhead\hd{Rail}&\hd{Generato da}&\hd{Valore}&\hd{Carichi principali}\\
 \endhead
 \net{5V} & dock J708 pin 1 e 3 & \SI{5}{\volt} nominali & ingresso IN1 di IC4 (priorità)\\
-\net{/POWER/VBUS} & USB-C J15 & \SI{5}{\volt} (USB 2.0, Rd = \SI{5.1}{\kilo\ohm} su CC1/CC2) & ingresso IN2 di IC4\\
+\net{/POWER/VBUS} & USB-C J15 & \SI{5}{\volt}. Le resistenze da \SI{5.1}{\kilo\ohm} sui pin CC1/CC2 dicono al PC che la scheda è un dispositivo USB 2.0 & ingresso IN2 di IC4\\
 \net{5V0} & IC4 TPS2121 (OUT) & uguale all'ingresso scelto & IC3 (buck), VDD di IC202 (switch RF)\\
 \net{3V3} & IC3 TPSM863257 & \SI{3.30}{\volt} nominali, \SIrange{3.25}{3.405}{\volt} \fonte{REV-1104 §2.1} & tutta la logica, Si4464, TCXO, PA, LNA, sensori\\
 \net{RTC\_VBAT} & 3V3 via D401 (BAT54WS) e R412 \SI{1}{\kilo\ohm} & $\approx$\SI{3.15}{\volt} \fonte{SCH nota MCU} & VBAT di U404, 10 supercondensatori CPH3225A (\SI{110}{\milli\farad})\\
@@ -50,35 +56,39 @@ VREFINT\_CAL si legge all'indirizzo \code{0x0BFA05AA}; è misurato in fabbrica a
 \label{sec:powerup}
 La figura~\ref{fig:powerup} riassume cosa succede dal momento in cui il dock alza EN\_DOCK. I tempi sono tipici; i valori minimi e massimi sono nella tabella~\ref{tab:powerup}.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
-\resizebox{\linewidth}{!}{\begin{tikzpicture}[x=1mm,y=1mm,font=\sffamily\scriptsize]
-  % assi
-  \def\rows{7}
-  \foreach \i/\name in {0/5V0 e EN\_DOCK,1/3V3,2/NRST MCU,3/SDN Si4464 (modo A),4/RST DS3231M (PB9),5/WDI PC6 (firmware),6/WDO STWD100}{
-     \node[anchor=east] at (0,-\i*9) {\name};
-     \draw[sbgray!40] (2,-\i*9-3) -- (148,-\i*9-3);}
-  % 5V0
-  \draw[thick,sbred] (2,-3) -- (8,-3) -- (8,3) -- (148,3);
-  % 3V3 soft start
-  \draw[thick,sbred] (2,-12) -- (10,-12) -- (14,-6) -- (148,-6);
-  \draw[densely dotted] (10,-12) -- (10,-70); \node[below] at (10,-70) {$t_0$};
-  % NRST
-  \draw[thick,sbblue] (2,-21) -- (16,-21) -- (16,-15) -- (148,-15);
-  % SDN alto fino a td
-  \draw[thick,sborange] (2,-30) -- (12,-30) -- (12,-24) -- (60,-24) -- (60,-30) -- (148,-30);
-  \draw[{Stealth}-{Stealth}] (12,-27) -- node[fill=white,inner sep=1pt]{$t_d$ = \SIrange{120}{300}{\milli\second}} (60,-27);
-  % RST DS3231M
-  \draw[thick,sbgreen] (2,-39) -- (66,-39) -- (66,-33) -- (148,-33);
-  \node[right] at (67,-36) {$t_\text{REC}\approx\SI{250}{\milli\second}$};
-  % WDI
-  \draw[thick,sbblue] (2,-48) -- (30,-48) -- (30,-42) -- (70,-42) -- (70,-48) -- (110,-48) -- (110,-42) -- (148,-42);
-  \draw[{Stealth}-{Stealth}] (10,-45) -- node[fill=white,inner sep=1pt]{$<\SI{1.12}{\second}$} (30,-45);
-  % WDO
-  \draw[thick,sbgreen] (2,-57) -- (14,-57) -- (14,-51) -- (148,-51);
-  \node[right] at (40,-54) {nessun reset se WDI commuta};
-\end{tikzpicture}}
-\caption{Sequenza di accensione (schema qualitativo, non in scala).}
+\begin{tikzpicture}[x=0.72mm,y=1mm,font=\sffamily\scriptsize,
+   sig/.style={thick},dim/.style={{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]},sbgray}]
+% righe: base (livello basso) a y = -13*i, livello alto a +5
+\foreach \i/\name/\sub in {0/EN\_DOCK/dal dock,1/3V3/uscita del buck,2/NRST/reset MCU,3/WDI/impulsi del firmware,4/SDN/alto = radio spenta (modo A),5/RST DS3231M/avviso dell'RTC,6/WDO/reset dal watchdog}{
+   \node[anchor=east,align=right] at (-2,-13*\i+2.5) {\textbf{\name}\\[-1pt]{\color{sbgray}\sub}};
+   \draw[sbgray!30] (0,-13*\i) -- (150,-13*\i);}
+% linee verticali degli eventi
+\foreach \x/\t in {8/{A},14/{B},30/{C},72/{D}}{
+   \draw[sbgray!70,densely dashed] (\x,8) -- (\x,-82);
+   \node[circle,draw=sbgray,inner sep=0.8pt,fill=white] at (\x,10) {\t};}
+% EN_DOCK
+\draw[sig,sbgreen] (0,0) -- (8,0) -- (8,5) -- (150,5);
+% 3V3
+\draw[sig,sbred] (0,-13) -- (10,-13) -- (14,-8) -- (150,-8);
+\draw[dim] (8,-15.5) -- (14,-15.5); \node[anchor=west,fill=white,inner sep=1pt] at (15,-15.5) {soft-start \SI{1.6}{\milli\second}};
+% NRST
+\draw[sig,sbblue] (0,-26) -- (14,-26) -- (14,-21) -- (150,-21);
+% WDI
+\draw[sig,sbblue] (0,-39) -- (30,-39) -- (30,-34) -- (60,-34) -- (60,-39) -- (90,-39) -- (90,-34) -- (120,-34) -- (120,-39) -- (150,-39);
+\draw[dim] (14,-41.5) -- (30,-41.5); \node[anchor=west,fill=white,inner sep=1pt] at (31,-41.5) {primo fronte entro \SI{1.12}{\second}};
+% SDN
+\draw[sig,sborange] (0,-52) -- (14,-52) -- (14,-47) -- (72,-47) -- (72,-52) -- (150,-52);
+\draw[dim] (14,-54.5) -- (72,-54.5); \node[anchor=west,fill=white,inner sep=1pt] at (73,-54.5) {$t_d$ = \SIrange{120}{300}{\milli\second}};
+% RST DS3231M
+\draw[sig,sbgreen] (0,-65) -- (78,-65) -- (78,-60) -- (150,-60);
+\draw[dim] (14,-67.5) -- (78,-67.5); \node[anchor=west,fill=white,inner sep=1pt] at (79,-67.5) {$t_\text{REC}$ fino a \SI{300}{\milli\second}};
+% WDO
+\draw[sig,sbgreen] (0,-78) -- (14,-78) -- (14,-73) -- (150,-73);
+\node[anchor=north,inner sep=1pt] at (118,-73.4) {resta alto: il firmware manda gli impulsi};
+\end{tikzpicture}
+\caption{Sequenza di accensione (schema non in scala). A: il dock alza EN\_DOCK. B: il 3V3 è pronto e l'MCU parte. C: primo impulso del firmware al watchdog. D: il supervisore libera la radio. Dopo C il firmware deve cambiare il livello di WDI almeno una volta al secondo. Linea bassa = livello logico 0, linea alta = livello logico 1.}
 \label{fig:powerup}
 \end{figure}
 
@@ -99,6 +109,8 @@ La figura~\ref{fig:powerup} riassume cosa succede dal momento in cui il dock alz
 9 & Il 5V0 arriva al VDD dello switch prima dei comandi a 3V3 & sequenza rispettata dall'hardware & \fonte{DS-HMC349A p.\,8; REV-1104 §2.2}\\
 \bottomrule
 \end{xltabular}
+
+Nella tabella~\ref{tab:powerup} gli eventi sono in ordine di tempo. I valori \enquote{min/tip/max} sono minimo, tipico e massimo garantiti dal datasheet: il firmware deve sempre usare il valore peggiore (il massimo per le attese, il minimo per le scadenze). POR = reset automatico all'accensione; BOR = reset per tensione troppo bassa.
 
 \begin{nota}[stato sicuro durante il boot]
 Durante il reset e il boot dell'MCU i GPIO sono in alta impedenza. Il pull-up R702 tiene alto il gate di Q701 e la net di PC2: switch su RX, APC a zero (PA spento), LNA acceso. La radio è sotto il controllo di IC205 (modo A) \fonte{LOG rev.\ 1.41; REV-1104 §3}. Lo stato di default è quindi sicuro anche senza firmware.

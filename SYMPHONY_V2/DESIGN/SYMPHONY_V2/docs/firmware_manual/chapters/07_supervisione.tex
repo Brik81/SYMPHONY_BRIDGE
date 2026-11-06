@@ -13,7 +13,14 @@
 \end{xltabular}
 \fonte{LOG rev.\ 1.41; SCH}
 
+Nella tabella: la barra sopra il nome (\(\overline{\mathrm{WDO}}\), \(\overline{\mathrm{EN}}\)) vuol dire \enquote{attivo basso}. \(\overline{\mathrm{EN}}\) basso = watchdog acceso. Open-drain = l'uscita può solo tirare NRST verso massa; il livello alto lo dà R2. DNP = resistenza non montata: senza R413 il pin EN resta basso grazie al pull-down interno del chip, quindi il watchdog è acceso.
+
+\begin{semplice}
+Il watchdog è un timer esterno di circa \SI{1.6}{\second}. Ogni volta che il firmware cambia il livello di PC6, il timer riparte da zero. Se il firmware si blocca e PC6 non cambia più, il timer arriva in fondo e resetta l'MCU. In volo è sempre acceso; al banco si spegne montando R413.
+\end{semplice}
+
 \subsection{Tempi (versione NY)}
+I valori sono quelli della versione montata (codice STWD100NYWY3F). $t_{WD}$ = tempo massimo senza impulsi prima del reset; $t_{PW}$ = durata dell'impulso di reset su NRST. Il firmware deve rispettare il valore \textbf{minimo} di $t_{WD}$ (\SI{1.12}{\second}).
 \begin{xltabular}{\linewidth}{@{}L{46mm}C{18mm}C{18mm}C{18mm}Y@{}}
 \tabhead\hd{Parametro}&\hd{min}&\hd{tip}&\hd{max}&\hd{Fonte}\\
 Timeout $t_{WD}$ & \SI{1.12}{\second} & \SI{1.6}{\second} & \SI{2.24}{\second} & \fonte{LOG rev.\ 1.41 (DS Rev 10, tab.\,4)}\\
@@ -69,6 +76,8 @@ I2C2 (PB10/PB11, pull-up \SI{10}{\kilo\ohm}), indirizzo \code{0x68}. \(\overline
 \bottomrule
 \end{xltabular}
 
+Nella tabella: \textbf{Registro} = indirizzo del registro (h = esadecimale); \textbf{Bit} = nome del bit e, tra parentesi, la sua posizione (7 = bit più significativo); \textbf{Valore al POR} = come si trova il registro la prima volta che il chip viene alimentato. EOSC = spegne l'oscillatore; BBSQW = onda quadra anche in batteria; CONV = forza una misura di temperatura; INTCN = il pin INT/SQW fa da interrupt invece che da onda quadra; A1IE/A2IE = abilitano gli allarmi 1 e 2; OSF = l'oscillatore si è fermato, quindi l'ora non è affidabile; EN32KHZ = abilita l'uscita a \SI{32}{\kilo\hertz}; BSY = misura di temperatura in corso; A1F/A2F = allarmi scattati. BCD = ogni cifra decimale in 4 bit (per esempio 59 = \code{0x59}).
+
 \begin{regola}[F-09 e F-16: DS3231M]
 All'avvio scrivere EN32KHZ = 0 (registro \code{0Fh}, bit 3): il pin 32\,kHz non è usato e l'uscita abilitata consuma la carica di backup (circa \SI{0.85}{\micro\ampere} contro \SI{0.75}{\micro\ampere} a \SI{3}{\volt}) \fonte{LOG F-16}. Dopo un'interruzione lunga controllare il flag OSF e risincronizzare l'ora \fonte{LOG F-09}.
 \end{regola}
@@ -78,6 +87,7 @@ F-09 (rev.\ 1.29) e F-16 (rev.\ 1.45) contengono la stessa regola su EN32KHZ. F-
 \end{nota}
 
 \subsection{Pin RST (PB9)}
+\label{sec:rtc-rst}
 \(\overline{\mathrm{RST}}\) è un'uscita open-drain con pull-up interno da \SI{50}{\kilo\ohm} e anche un ingresso per pulsante con antirimbalzo \fonte{DS-DS3231M p.\,7}. Va basso quando VCC scende sotto $V_\text{PF}$ e resta basso per $t_\text{REC}$ (\SI{250}{\milli\second} tip., \SI{300}{\milli\second} max) dopo il ritorno di VCC \fonte{DS-DS3231M pp.\,3, 10}. Lo stato di RST non influisce su I2C e RTC \fonte{DS-DS3231M p.\,4}.
 \begin{itemize}
 \item Configurare PB9 come \textbf{ingresso senza pull}. Si può usare come indicatore di power-fail.
