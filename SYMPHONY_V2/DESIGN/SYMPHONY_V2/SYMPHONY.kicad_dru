@@ -1,0 +1,185 @@
+(version 1)
+# =====================================================================
+#  Regole DRC custom KiCad  -  ECSS-Q-ST-70-12C Rev.1 (30 Apr 2025)  +  JLCPCB senza sovrapprezzo
+#  Scheda: 4 layer, 1.6 mm, stackup JLC04161H-3313A, rame est. 1 oz / int. 0.5 oz, FR4
+#  Ipotesi: tensioni <= 30 V di picco (13.8.2b), isolamento "standard" (non "reliable" 13.9),
+#           normal pitch, conformal coating sui layer esterni (13.8.4a).
+#  Valori = "as-designed" (Tabella 13-7) e, se piu' restrittivo, minimo JLCPCB.
+#  Testato sintatticamente su KiCad 7; compatibile con KiCad 8/9.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# 1) ISOLAMENTO X,Y TRA CONDUTTORI
+# ---------------------------------------------------------------------
+# Esterni, con coating, normal pitch, Th<=70um: 200 um as-designed (Tab 13-7, 2 di 4)
+# SENZA coating: 250 um (0-10 V) / 350 um (10-30 V) -> vedi regola "NO COATING" in fondo
+(rule "ECSS esterni clearance 0.20"
+    (layer outer)
+    (constraint clearance (min 0.2mm)))
+
+# Interni, rame base 17 um (0.5 oz), normal pitch: 130 um as-designed (Tab 13-7, 3 di 4)
+# (con 1 oz interno = 17<Th<=60 -> 150 um)
+(rule "ECSS interni clearance 0.13"
+    (layer inner)
+    (constraint clearance (min 0.13mm)))
+
+# ---------------------------------------------------------------------
+# 2) LARGHEZZA MINIMA PISTE
+# ---------------------------------------------------------------------
+# Esterni: 160 um as-manufactured (Tab 7-4) / 0.8 (toll. -20 %, Tab 7-3) = 200 um
+(rule "ECSS esterni larghezza min 0.20"
+    (layer outer)
+    (condition "A.Type == 'Track'")
+    (constraint track_width (min 0.2mm)))
+
+# Interni 0.5 oz: 104 um as-manufactured (Tab 7-5) + 30 um toll. max (Tab 7-3) ~ 130 um
+(rule "ECSS interni larghezza min 0.13"
+    (layer inner)
+    (condition "A.Type == 'Track'")
+    (constraint track_width (min 0.13mm)))
+
+# ---------------------------------------------------------------------
+# 3) VIA  (la piu' piccola che e' ECSS-compliant E senza sovrapprezzo JLC)
+# ---------------------------------------------------------------------
+# Aspect ratio <= 7 (7.3.5a): 1.58 mm / 0.25 mm = 6.3  -> foro 0.25 OK  (0.20 -> 7.9 NON OK)
+# JLC: foro 0.20/0.25 senza sovrapprezzo solo con diametro >= 0.45 mm
+# ECSS 7.5.3f: pad esterno via >= foro + 0.6 mm -> 0.85 mm  (7.5.3g: +0.5 = 0.75 come Review Item)
+# ECSS 7.5.3h: pad interno >= foro + 0.3 mm -> 0.55 mm
+(rule "Via foro min 0.25 (aspect ratio ECSS)"
+    (condition "A.Type == 'Via'")
+    (constraint hole_size (min 0.25mm)))
+
+# KiCad applica un solo diametro via -> regola unica sull'esterno (0.85 / 0.25, anello 0.30).
+# Con i padstack di KiCad 9 (Front/Inner/Back) puoi fare pad interni 0.55 mm: l'anello interno minimo
+# ECSS e' 0.15 mm. Se usi il "may" 7.5.3g (pad 0.75, Review Item) porta questo valore a 0.25.
+(rule "Via anello >= 0.30 (pad 0.85 / foro 0.25)"
+    (condition "A.Type == 'Via'")
+    (constraint annular_width (min 0.3mm)))
+
+# Niente blind/buried/microvia (non previsti nello stackup JLC standard)
+(rule "Solo via passanti"
+    (condition "A.Via_Type == 'Blind/buried' || A.Via_Type == 'Micro'")
+    (constraint disallow via))
+
+# ---------------------------------------------------------------------
+# 4) PAD PTH (componenti THT)
+# ---------------------------------------------------------------------
+# ECSS 7.5.3d: pad lato saldatura >= foro + 0.8 mm  -> anello 0.40 mm
+# ECSS 7.5.3h: pad interno >= foro + 0.3 mm         -> anello 0.15 mm
+# (JLC: anello PTH >= 0.15, consigliato 0.20 -> ECSS piu' restrittivo)
+# (verificato da KiCad 8+; su KiCad 7 il check anello e' solo per le via -> controlla i footprint)
+(rule "PTH anello >= 0.40"
+    (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'")
+    (constraint annular_width (min 0.4mm)))
+
+# JLC: NPTH minimo 0.50 mm
+(rule "NPTH min 0.50 (JLC)"
+    (condition "A.Type == 'Pad' && A.Pad_Type == 'NPTH, mechanical'")
+    (constraint hole_size (min 0.5mm)))
+
+# ---------------------------------------------------------------------
+# 5) DISTANZE DAI FORI
+# ---------------------------------------------------------------------
+# Parete-parete fori su NET DIVERSE: 450 um as-designed, single bond (Tab 13-7, 4 di 4)
+(rule "Foro-foro net diverse 0.45 (ECSS)"
+    (condition "A.Net != B.Net")
+    (constraint hole_to_hole (min 0.45mm)))
+
+# Stessa net (es. stitching GND): ECSS ammette meno (13.8.2j) -> minimo JLC via-via 0.20
+(rule "Foro-foro stessa net 0.20 (JLC)"
+    (condition "A.Net == B.Net")
+    (constraint hole_to_hole (min 0.2mm)))
+
+# Conduttore -> parete foro: ECSS = clearance interna + 50 um anello = 0.18
+# JLC: via-rame interno 0.20, PTH-rame interno 0.30 -> vince JLC
+(rule "Rame-foro via 0.20 (JLC)"
+    (condition "A.Type == 'Via'")
+    (constraint hole_clearance (min 0.2mm)))
+
+(rule "Rame-foro PTH 0.30 (JLC)"
+    (condition "A.Type == 'Pad' && A.isPlated()")
+    (constraint hole_clearance (min 0.3mm)))
+
+# ---------------------------------------------------------------------
+# 6) BORDO SCHEDA
+# ---------------------------------------------------------------------
+# ECSS 13.8.2h: come conduttore-parete foro (>= 0.18) ; JLC >= 0.20 fresato, 0.40 V-cut
+# 0.30 mm per coprire la tolleranza di contornatura
+(rule "Rame-bordo 0.30"
+    (constraint edge_clearance (min 0.3mm)))
+
+# Eccezione: lancio RF su connettore SMA edge-mount (la pista arriva al bordo)
+(rule "RF edge launch"
+    (condition "A.NetClass == 'RF_50R_CPWG' || A.NetClass == 'RF_50R_MS'")
+    (constraint edge_clearance (min 0.2mm)))
+
+# ---------------------------------------------------------------------
+# 7) NET CLASS RF  (stackup JLC04161H-3313A, L1 riferito a L2 = GND)
+# ---------------------------------------------------------------------
+# CPWG 50 ohm: w = 0.32 mm, gap = 0.25 mm (verificare su calcolatore JLC prima dell'ordine)
+(rule "RF CPWG gap 0.25"
+    (condition "A.NetClass == 'RF_50R_CPWG' && B.Net != A.Net")
+    (constraint clearance (min 0.25mm)))
+
+# Microstrip 50 ohm: w = 0.35 mm, rame vicino >= 3h ~ 0.65 mm (non deve diventare CPW)
+(rule "RF microstrip keep-out 0.65"
+    (layer outer)
+    (condition "A.NetClass == 'RF_50R_MS' && B.Net != A.Net")
+    (constraint clearance (min 0.65mm)))
+
+# RF solo su layer esterni (L2 = piano GND di riferimento, ECSS 7.1.2f)
+(rule "RF vietata su layer interni"
+    (layer inner)
+    (condition "A.NetClass == 'RF_50R_CPWG' || A.NetClass == 'RF_50R_MS'")
+    (constraint disallow track))
+
+# ---------------------------------------------------------------------
+# 8) NET CLASS HV_50V  (30 V < Vpicco <= 50 V, es. bus pannelli / 28 V)
+# ---------------------------------------------------------------------
+# Esterni con coating 200 um (Tab 13-7 2/4) ; SENZA coating NON permesso (7.4.3g / 13.8.4c)
+# Interni 0.5 oz: 180 um (Tab 13-7 3/4)
+(rule "HV_50V interni 0.18"
+    (layer inner)
+    (condition "A.NetClass == 'HV_50V' && B.Net != A.Net")
+    (constraint clearance (min 0.18mm)))
+
+(rule "HV_50V esterni 0.20 (SOLO con coating)"
+    (layer outer)
+    (condition "A.NetClass == 'HV_50V' && B.Net != A.Net")
+    (constraint clearance (min 0.2mm)))
+
+# ---------------------------------------------------------------------
+# 9) SERIGRAFIA (JLC)
+# ---------------------------------------------------------------------
+(rule "Silk testo"
+    (layer "F.SilkS")
+    (constraint text_height (min 1mm))
+    (constraint text_thickness (min 0.15mm)))
+(rule "Silk testo B"
+    (layer "B.SilkS")
+    (constraint text_height (min 1mm))
+    (constraint text_thickness (min 0.15mm)))
+(rule "Silk-pad 0.15"
+    (constraint silk_clearance (min 0.15mm)))
+
+# ---------------------------------------------------------------------
+# 10) OPZIONALE - SCHEDA SENZA CONFORMAL COATING  (togli il "#" per attivare)
+# ---------------------------------------------------------------------
+# Esterni 0-10 V: 250 um ; 10-30 V: 350 um (Tab 13-7 2/4). Assegna le net 10-30 V alla classe "V30".
+#(rule "NO COATING esterni 0.25"
+#    (layer outer)
+#    (constraint clearance (min 0.25mm)))
+#(rule "NO COATING V30 esterni 0.35"
+#    (layer outer)
+#    (condition "A.NetClass == 'V30' && B.Net != A.Net")
+#    (constraint clearance (min 0.35mm)))
+
+# ---------------------------------------------------------------------
+# 11) OPZIONALE - FINE PITCH fan-out (QFN/BGA) - Review Item ECSS 7.4.3g / 7.4.5
+# ---------------------------------------------------------------------
+# Esterni: 120 um as-man. -> 150 um as-designed ; max 20 mm dal pad, <= 30 V, coating obbligatorio
+#(rule "Fine pitch U1"
+#    (layer outer)
+#    (condition "A.intersectsCourtyard('U1')")
+#    (constraint clearance (min 0.15mm))
+#    (constraint track_width (min 0.15mm)))
