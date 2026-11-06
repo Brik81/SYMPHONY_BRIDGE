@@ -1,0 +1,82 @@
+\chapter{Componenti e datasheet}
+\label{app:componenti}
+
+Le pagine sono quelle del PDF del datasheet usato per questo manuale. Le sigle tra parentesi quadre nel testo (DS-xxx) rimandano a questa tabella.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{17mm}L{33mm}L{36mm}Y@{}}
+\tabhead\hd{Rif.}&\hd{Parte}&\hd{Datasheet (sigla)}&\hd{Pagine chiave}\\
+\endfirsthead
+\tabhead\hd{Rif.}&\hd{Parte}&\hd{Datasheet (sigla)}&\hd{Pagine chiave}\\
+\endhead
+\multicolumn{4}{r}{\footnotesize\itshape continua nella pagina seguente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+U301 & STM32L562RET6P & ST DS12736 Rev 5 (DS-STM32L562) & p.\,33 TrustZone; p.\,65 VREFINT; p.\,87 pinout LQFP64 \enquote{P}; pp.\,94--126 tab.\,21 pin; p.\,126 note su PC13--15 e pin JTAG; pp.\,127--129 AF0--AF7; p.\,135 AF8--AF15; p.\,276 SPI\\
+IC204 & Si4464-B1B-FMR & Silicon Labs Si4464/63/61/60 Rev 1.4 (DS-Si4464) & p.\,9 banda TX; p.\,13 abs.\ max; p.\,17 SPI; p.\,19 FRR; pp.\,20--21 stati, POR, SDN; p.\,35 PA\_PWR\_LVL; p.\,38 TCXO; pp.\,46--47 pin\\
+Y201 & ECS-TXO-20CSMV4-320-AY & ECS (DS-ECS) & pp.\,1--2 codici di stabilità e temperatura\\
+IC2 & QPA9510 & Qorvo, 23/06/2025 (DS-QPA9510); EVB 410--470\,MHz Test Summary 30/06/2025 (EVB Qorvo) & DS p.\,2 abs.\ max e tabella APC; p.\,3 caratteristiche; EVB pp.\,2--3 BOM, pp.\,6--7 guadagno e P1dB\\
+IC202 & HMC349AMS8GE & ADI Rev.\ F (DS-HMC349A) & p.\,3 tempi; p.\,4 abs.\ max di potenza; p.\,8 tabella di verità e sequenza di accensione\\
+Q201 & TQP3M9036 & Qorvo (DS-TQP3M9036) & p.\,2 shutdown, tempi, abs.\ max; p.\,7 dati a \SI{3.3}{\volt}\\
+U701 & 74AUP2G14 & TI SN74AUP2G14 (DS-SN74AUP2G14) & p.\,1 $t_\text{pd}$\\
+IC205 & TPS3825-33 & TI SLVS165 (DS-TPS3825) & pp.\,4--8 pin, soglie, $t_d$, MR\\
+U403 & STWD100NYWY3F & ST DocID14134 Rev 8 locale, Rev 10 citata nel log (DS-STWD100) & Rev 8 p.\,14 trigger sui due fronti; Rev 10 tab.\,4 pp.\,12--13 (dal log)\\
+U404 & DS3231M & Maxim (DS-DS3231M) & p.\,3 $t_\text{REC}$; p.\,7 pin; pp.\,11--15 registri; p.\,16 indirizzo\\
+U401 & FM25V10 & Cypress 001-84499 Rev *D (DS-FM25V10) & pp.\,4--6 SPI e opcode; p.\,11 sleep e ID; p.\,17 $f_\text{SCK}$; p.\,19 $t_\text{PU}$\\
+IC501 & TCAN3414 & TI (DS-TCAN3414) & p.\,1 velocità; p.\,3 pin; p.\,9 timeout di dominante\\
+U402 & CH340E & WCH (DS-CH340E) & p.\,1 baud rate\\
+IC4 & TPS2121 & TI SLVSEA3F (DS-TPS2121) & §7.5 VREF; §9 priorità\\
+IC3 & TPSM863257 & TI (DS-TPSM863257) & p.\,7 soft-start\\
+IC1, IC5 & TLV9051 & TI (DS-TLV9051) & offset (dal log R-18)\\
+FL201 & LFCG-490+ & Mini-Circuits (DS-LFCG490) & perdita e potenza (dalla revisione del 04/11)\\
+Q701 & FDN308P (clone TECH PUBLIC) & \textendash & solo funzione di interruttore (LOG P18)\\
+\end{xltabular}}
+
+\chapter{Da verificare e incongruenze}
+\label{app:daverificare}
+
+\section{Incongruenze tra schematico, log e datasheet}
+Le incongruenze sono segnalate e non corrette: le decisioni spettano al team.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{8mm}L{58mm}Y@{}}
+\tabhead\hd{\#}&\hd{Incongruenza}&\hd{Dettaglio e proposta}\\
+\endhead
+I-1 & PC13, PC14, PC15 collegati al dock nello schematico attuale & Netlist del 04/11/2026 15:22: PC13 = \net{GPIOSX\_2} (J708.13), PC14 = \net{GPIO\_PPS} (J708.17), PC15 = \net{GPIOSX\_0} (J708.14). Nella netlist della rev.\ 1.45 erano scollegati; il log (R-12, S-09, P15) dice che non arrivano all'MCU. Modifica non registrata nel log. Definire funzione e direzione.\\
+I-2 & Ritardo del supervisore & F-05 e la nota sullo schematico UHF dicono \SI{200}{\milli\second}; il datasheet dà \SI{120}{}/\SI{200}{}/\SI{300}{\milli\second} (p.\,8). Il firmware deve usare \SI{300}{\milli\second}.\\
+I-3 & Testo di F-14 & F-14 chiede \enquote{PA spento/APC a zero} prima di commutare PC2, ma l'APC è comandata da PC2. Si può solo togliere il pilotaggio (Si4464 fuori da TX). Confermare l'interpretazione.\\
+I-4 & Tempo di accensione/spegnimento del QPA9510 & La revisione del 04/11 (P04) riporta \SI{1.7}{\micro\second}; nel testo estratto del datasheet (p.\,3) la riga \enquote{Turn ON/OFF Time} riporta 175 e la riga successiva 1.7 (probabilmente la corrente in A alla potenza massima). Il valore va letto sul PDF. Non cambia la regola dei \SI{10}{\micro\second}.\\
+I-5 & F-09 e F-16 duplicate & Le due note contengono la stessa regola su EN32KHZ. Si possono unire.\\
+I-6 & Nota \enquote{filtro passa banda} sul foglio UHF & Il filtro RX è un passa-basso. Decisione del log: ignorare la nota (P11).\\
+I-7 & LED D203 nel modo B & La nota sullo schematico dice \enquote{D203 acceso = radio attiva}; nel modo B non è più vero (LOG §46).\\
+I-8 & Versione del datasheet STWD100 & Il log cita la Rev 10 (tab.\,4, pp.\,12--13); il file locale è la Rev 8. I valori di $t_{WD}$ e $t_{PW}$ sono presi dal log.\\
+I-9 & Etichetta \enquote{5v\_TX\_EN} su PC4 & La tabella della rev.\ 1.17 del log indica PC4 come \enquote{5v\_TX\_EN}; oggi PC4 è \net{RF\_MR\_N}. Testo storico superato.\\
+\end{xltabular}}
+
+\section{Dati da verificare}
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{8mm}L{58mm}Y@{}}
+\tabhead\hd{\#}&\hd{Dato}&\hd{Dove verificarlo}\\
+\endhead
+V-1 & Codici dei comandi e delle proprietà del Si4464 (POWER\_UP, PART\_INFO, GET\_INT\_STATUS, START\_TX/RX, CHANGE\_STATE, READ\_CMD\_BUFF, PA\_PWR\_LVL, GLOBAL\_XO\_TUNE) e valori di default & API Silicon Labs per la revisione B1 (AN625) e file generati da WDS. Valori presi dalla documentazione API della revisione C2A.\\
+V-2 & Default di PA\_PWR\_LVL = \code{0x7F} (massima potenza) & Idem. Se confermato, F-01 va applicata prima di ogni TX.\\
+V-3 & Tempo di POR del Si4464 dopo SDN basso & AN625 / datasheet; oggi si usa il polling di CTS con timeout.\\
+V-4 & Valore di PA\_PWR\_LVL per \SI{\leq31}{\dBm} all'antenna & Misura M-01 sul prototipo.\\
+V-5 & Livelli, polarità e uso di PPS, GPIOSX\_0, GPIOSX\_2 & Specifica del dock e decisione del team (I-1).\\
+V-6 & Pull interni di PC13--PC15 & Dipende da V-5.\\
+V-7 & Modo dei GPIO dopo il reset (analogico) & Reference manual RM0438, registro GPIOx\_MODER.\\
+V-8 & VREF+ collegato internamente a VDDA nel package LQFP64 & Datasheet DS12736 (tabella dei pin) o RM0438.\\
+V-9 & Soglia di power-fail $V_\text{PF}$ del DS3231M & DS-DS3231M p.\,3 (tabella non leggibile nel testo estratto).\\
+V-10 & Frequenza I2C2 a \SI{400}{\kilo\hertz} con pull-up da \SI{10}{\kilo\ohm} & Misura del tempo di salita sul prototipo.\\
+V-11 & Tolleranza iniziale del TCXO a \SI{25}{\celsius} & DS-ECS p.\,1.\\
+V-12 & Tempo di accensione del QPA9510 (I-4) & DS-QPA9510 p.\,3 sul PDF.\\
+V-13 & Campo di temperatura del TCXO (\SI{-30}{\celsius}) rispetto al requisito di missione & Decisione del team (LOG R-07, REV-1104 P07).\\
+V-14 & Comando per la portante continua (CW) di collaudo & WDS / API Si4464.\\
+\end{xltabular}}
+
+\section{Misure di collaudo ancora da fare}
+M-01 (potenza e valore F-01), M-02 (adattamento del PA), M-03 (3V3 in TX e scelta del modo A/B), M-04 (watchdog), M-05 (armoniche), M-06 (potenza all'MMCX e corrente del PA). Le misure M-01, M-03 e M-05 possono cambiare costanti del firmware (F-01, \code{MODO\_A/B}, riduzione di potenza).

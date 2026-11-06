@@ -1,0 +1,151 @@
+% =====================================================================
+%  SYMPHONY V2 - Manuale per il firmwarista (Engineering Model)
+%  Riferimento: schematico rev. 1.45 del log hardware, 04/11/2026
+% =====================================================================
+\documentclass[11pt,a4paper,twoside,openany]{report}
+
+% ---------------------------------------------------------------- base
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{libertinus}
+\usepackage[scaled=0.84]{beramono}
+\usepackage{microtype}
+\usepackage[a4paper,inner=26mm,outer=22mm,top=26mm,bottom=26mm,headheight=15pt]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage[autostyle]{csquotes}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{array,booktabs,longtable,xltabular,multirow,makecell}
+\usepackage{siunitx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,shapes.geometric,decorations.pathreplacing}
+\usepackage[european,cuteinductors,straightvoltages]{circuitikz}
+\usepackage{tikz-timing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{bookmark}
+
+% ---------------------------------------------------------------- colori
+\definecolor{sbblue}{HTML}{1F4E79}
+\definecolor{sbblue2}{HTML}{2E75B6}
+\definecolor{sblight}{HTML}{EAF1F8}
+\definecolor{sbrow}{HTML}{F3F6FA}
+\definecolor{sbred}{HTML}{B03A2E}
+\definecolor{sbredbg}{HTML}{FBEDEB}
+\definecolor{sbgreen}{HTML}{2E7D4F}
+\definecolor{sbgreenbg}{HTML}{EAF5EE}
+\definecolor{sbgray}{HTML}{5F6B76}
+\definecolor{sbgraybg}{HTML}{F2F4F6}
+\definecolor{sborange}{HTML}{C0730A}
+\definecolor{sborangebg}{HTML}{FDF3E4}
+
+\hypersetup{colorlinks=true,linkcolor=sbblue,urlcolor=sbblue2,citecolor=sbblue,
+  pdftitle={SYMPHONY V2 - Manuale per il firmwarista},
+  pdfauthor={Team SYMPHONY},pdfsubject={Engineering Model, schematico rev. 1.45}}
+
+% ---------------------------------------------------------------- siunitx
+\sisetup{output-decimal-marker={,},group-separator={\,},per-mode=symbol,
+  range-phrase={\,\textendash\,},range-units=single,range-open-phrase={},list-final-separator={ e },
+  detect-all}
+\DeclareSIUnit\dBm{dBm}
+\DeclareSIUnit\dBc{dBc}
+\DeclareSIUnit\ppm{ppm}
+
+% ---------------------------------------------------------------- titoli
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\color{sbblue}}
+  {\begin{tikzpicture}[baseline]\node[fill=sbblue,text=white,minimum size=13mm,
+     font=\sffamily\bfseries\Huge,inner sep=0]{\thechapter};\end{tikzpicture}}
+  {12pt}{\Huge\bfseries}[\vspace{2pt}{\color{sbblue2}\titlerule[1.2pt]}]
+\titlespacing*{\chapter}{0pt}{-10pt}{24pt}
+\titleformat{\section}{\normalfont\sffamily\Large\bfseries\color{sbblue}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\sffamily\large\bfseries\color{sbblue2}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalfont\sffamily\normalsize\bfseries\color{sbgray}}{\thesubsubsection}{0.8em}{}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{1}
+\renewcommand{\cftchapfont}{\sffamily\bfseries}
+\renewcommand{\cftchappagefont}{\sffamily\bfseries}
+
+% ---------------------------------------------------------------- testatine
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{sbblue2}\leaders\hrule height \headrulewidth\hfill}}
+\fancyhead[LE]{\sffamily\small\color{sbgray}SYMPHONY V2 \textbullet{} Manuale per il firmwarista}
+\fancyhead[RO]{\sffamily\small\color{sbgray}\nouppercase{\leftmark}}
+\fancyfoot[LE,RO]{\sffamily\small\bfseries\color{sbblue}\thepage}
+\fancyfoot[RE,LO]{\sffamily\scriptsize\color{sbgray}Engineering Model \textbullet{} schematico rev.\ 1.45 \textbullet{} documento v1.0}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[LE,RO]{\sffamily\small\bfseries\color{sbblue}\thepage}}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+
+% ---------------------------------------------------------------- riquadri
+\newtcolorbox{attenzione}[1][]{enhanced,breakable,colback=sbredbg,colframe=sbred,
+  boxrule=0.9pt,arc=1.5pt,left=7pt,right=7pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbred,
+  title={Attenzione\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{regola}[1][]{enhanced,breakable,colback=sbgreenbg,colframe=sbgreen,
+  boxrule=0.9pt,arc=1.5pt,left=7pt,right=7pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbgreen,
+  title={Regola\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{nota}[1][]{enhanced,breakable,colback=sbgraybg,colframe=sbgray,
+  boxrule=0.6pt,arc=1.5pt,left=7pt,right=7pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sbgray,
+  title={Nota\ifx&#1&\else{} \textendash{} #1\fi}}
+\newtcolorbox{verifica}[1][]{enhanced,breakable,colback=sborangebg,colframe=sborange,
+  boxrule=0.6pt,arc=1.5pt,left=7pt,right=7pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=sborange,
+  title={Da verificare\ifx&#1&\else{} \textendash{} #1\fi}}
+
+% ---------------------------------------------------------------- macro
+\newcommand{\net}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\fonte}[1]{{\footnotesize\color{sbgray}[#1]}}
+\newcommand{\DV}{\textcolor{sborange}{\sffamily\bfseries\footnotesize da verificare}}
+\newcommand{\Fid}[1]{\textbf{\textcolor{sbgreen}{#1}}}
+\newcommand{\tabhead}{\rowcolor{sbblue}}
+\newcommand{\hd}[1]{\textcolor{white}{\sffamily\bfseries\footnotesize #1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\captionsetup{font={small,sf},labelfont={bf,color=sbblue},labelsep=period}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt plus 1pt}
+\tikzset{timing/.style={x=3.2ex,y=2ex},
+  blk/.style={draw=sbblue,thick,fill=sblight,rounded corners=2pt,align=center,
+     font=\sffamily\footnotesize,minimum height=9mm,inner sep=3pt},
+  blkr/.style={blk,draw=sbred,fill=sbredbg},
+  blkg/.style={blk,draw=sbgreen,fill=sbgreenbg},
+  blko/.style={blk,draw=sborange,fill=sborangebg}}
+\tikzset{timing/rowdist=3.2ex}
+
+\begin{document}
+\pagenumbering{roman}
+\input{chapters/00_frontespizio}
+\tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+\input{chapters/01_introduzione}
+\input{chapters/02_sistema}
+\input{chapters/03_alimentazione}
+\input{chapters/04_pinmap}
+\input{chapters/05_periferiche}
+\input{chapters/06_rf}
+\input{chapters/07_supervisione}
+\input{chapters/08_led_debug}
+\input{chapters/09_note_firmware}
+\appendix
+\input{chapters/10_appendici}
+\end{document}

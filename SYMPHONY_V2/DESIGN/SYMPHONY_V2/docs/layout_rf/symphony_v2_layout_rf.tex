@@ -1,0 +1,1644 @@
+% =====================================================================
+%  SYMPHONY V2 - Guida al layout della parte RF (UHF 435 MHz)
+%  Riferita allo schematico rev. 1.45 del 04/11/2026
+%  Compilare con pdflatex (due passaggi per indice e riferimenti)
+% =====================================================================
+\documentclass[a4paper,10pt]{article}
+
+% ---------- lingua e font ----------
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[sups]{XCharter}
+\usepackage[xcharter,vvarbb]{newtxmath}
+\usepackage[scaled=0.88]{helvet}
+\usepackage[scale=0.88,varqu]{inconsolata}
+\usepackage[babel]{microtype}
+\usepackage{csquotes}
+
+% ---------- pagina ----------
+\usepackage[a4paper,top=24mm,bottom=24mm,left=22mm,right=22mm,headheight=14pt]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\pretocmd{\section}{\needspace{10\baselineskip}}{}{}
+\pretocmd{\subsection}{\needspace{6\baselineskip}}{}{}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{array,booktabs,tabularx,xltabular,multirow}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,patterns,decorations.pathreplacing,fit,backgrounds}
+\usepackage[siunitx,RPvoltages]{circuitikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\usepackage{pifont}
+\usepackage{lastpage}
+\usepackage{xurl}
+\usepackage[hidelinks,bookmarksnumbered,pdfusetitle]{hyperref}
+\urlstyle{tt}
+
+\hypersetup{pdftitle={SYMPHONY V2 - Guida al layout della parte RF},
+            pdfauthor={SYMPHONY V2 - documentazione hardware},
+            pdfsubject={Layout RF UHF 435 MHz, schematico rev. 1.45}}
+
+% ---------- colori ----------
+\definecolor{sbblue}{HTML}{1F4E79}
+\definecolor{sbgray}{HTML}{555555}
+\definecolor{rxblue}{HTML}{1565C0}
+\definecolor{txred}{HTML}{C62828}
+\definecolor{rulegreen}{HTML}{2E7D32}
+\definecolor{rulegreenbg}{HTML}{EEF6EE}
+\definecolor{warnor}{HTML}{C75000}
+\definecolor{warnorbg}{HTML}{FFF3E6}
+\definecolor{whygray}{HTML}{5A6B7B}
+\definecolor{whygraybg}{HTML}{F2F4F7}
+\definecolor{verbg}{HTML}{FFF8D6}
+\definecolor{verfr}{HTML}{9A7B00}
+
+% ---------- siunitx ----------
+\sisetup{output-decimal-marker={,},group-minimum-digits=5,
+         per-mode=symbol,range-phrase={\,--\,},list-final-separator={ e }}
+
+% ---------- titoli ----------
+\titleformat{\section}{\sffamily\Large\bfseries\color{sbblue}}{\thesection}{0.8em}{}[\vspace{-0.6ex}{\color{sbblue}\rule{\linewidth}{0.6pt}}]
+\titleformat{\subsection}{\sffamily\large\bfseries\color{sbblue}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\sffamily\normalsize\bfseries\color{sbgray}}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{3.2ex plus 1ex minus .2ex}{1.6ex}
+\titlespacing*{\subsection}{0pt}{2.6ex plus 1ex minus .2ex}{1.0ex}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+% ---------- intestazioni ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\color{sbgray}SYMPHONY V2 \textbullet{} Guida al layout RF}
+\fancyhead[R]{\sffamily\footnotesize\color{sbgray}\nouppercase{\leftmark}}
+\fancyfoot[L]{\sffamily\footnotesize\color{sbgray}Schematico rev.~1.45 (04/11/2026) \textbullet{} Guida rev.~A}
+\fancyfoot[R]{\sffamily\footnotesize\color{sbgray}Pagina \thepage{} di \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}
+
+% ---------- liste ----------
+\setlist{itemsep=2pt,topsep=4pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.4em}
+\setlist[enumerate]{leftmargin=1.8em}
+\newlist{checklist}{itemize}{2}
+\setlist[checklist]{label=\Large$\square$,leftmargin=2.0em,itemsep=3pt}
+
+% ---------- comandi ----------
+\newcommand{\net}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\cmp}[1]{\textsf{#1}}
+\newcommand{\dv}{\textcolor{verfr}{\textbf{[da verificare]}}}
+\newcommand{\fonte}[1]{{\footnotesize\color{sbgray}[#1]}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% ---------- riquadri ----------
+\newcounter{regola}
+\newtcolorbox{regola}[1][]{enhanced,breakable,colback=rulegreenbg,colframe=rulegreen,
+  boxrule=0.8pt,arc=1.5pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=rulegreen,
+  title={\stepcounter{regola}Regola R\theregola\ifx\relax#1\relax\else{} \textendash{} #1\fi}}
+\newtcolorbox{attenzione}[1][]{enhanced,breakable,colback=warnorbg,colframe=warnor,
+  boxrule=0.8pt,arc=1.5pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=warnor,
+  title={Attenzione\ifx\relax#1\relax\else{} \textendash{} #1\fi}}
+\newtcolorbox{perche}[1][]{enhanced,breakable,colback=whygraybg,colframe=whygray,
+  boxrule=0.6pt,arc=1.5pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=whygray,
+  title={Perché\ifx\relax#1\relax\else{} \textendash{} #1\fi}}
+\newtcolorbox{verifica}[1][]{enhanced,breakable,colback=verbg,colframe=verfr,
+  boxrule=0.6pt,arc=1.5pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  fonttitle=\sffamily\bfseries\small,coltitle=white,colbacktitle=verfr,
+  title={Da verificare\ifx\relax#1\relax\else{} \textendash{} #1\fi}}
+
+% ---------- stili TikZ ----------
+\tikzset{
+  blk/.style={draw=black!70,rounded corners=1.2pt,line width=0.6pt,align=center,
+              font=\sffamily\scriptsize,inner sep=2pt},
+  rxb/.style={blk,fill=rxblue!10},
+  txb/.style={blk,fill=txred!10},
+  pab/.style={blk,fill=txred!22},
+  sib/.style={blk,fill=green!10},
+  ckb/.style={blk,fill=yellow!25},
+  neu/.style={blk,fill=black!6},
+  rxl/.style={draw=rxblue,line width=1.4pt,-{Stealth[length=2.6mm]}},
+  txl/.style={draw=txred,line width=1.4pt,-{Stealth[length=2.6mm]}},
+  fence/.style={draw=black!65,line width=0.9pt,dash pattern=on 0.8pt off 1.6pt,line cap=round},
+  dig/.style={draw=violet,line width=0.9pt,dashed,-{Stealth[length=2mm]}},
+  dim/.style={draw=black!60,line width=0.4pt,{Latex[length=1.6mm]}-{Latex[length=1.6mm]}},
+  lab/.style={font=\sffamily\tiny,text=black!75,align=center},
+}
+
+\begin{document}
+
+% =====================================================================
+%  FRONTESPIZIO
+% =====================================================================
+\pagenumbering{alph}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[sbblue] (current page.north west) rectangle ([yshift=-62mm]current page.north east);
+  \node[anchor=north west,text=white,font=\sffamily\bfseries\fontsize{30}{34}\selectfont,align=left]
+     at ([xshift=22mm,yshift=-18mm]current page.north west) {SYMPHONY V2};
+  \node[anchor=north west,text=white!85!sbblue,font=\sffamily\Large,align=left]
+     at ([xshift=22mm,yshift=-34mm]current page.north west) {Ricetrasmettitore UHF \SI{435}{\mega\hertz} per CubeSat};
+  \fill[txred] ([yshift=-62mm]current page.north west) rectangle ([yshift=-64mm]current page.north east);
+\end{tikzpicture}
+
+\vspace*{62mm}
+{\sffamily\bfseries\fontsize{26}{31}\selectfont\color{sbblue} Guida al layout\\[2pt] della parte RF\par}
+\vspace{6mm}
+{\sffamily\large\color{sbgray} Piazzamento, sbroglio, masse, stackup, netclass e controlli\\
+per la catena antenna -- switch -- LNA -- Si4464 -- PA -- filtro\par}
+
+\vspace{14mm}
+\begin{tcolorbox}[colback=black!3,colframe=black!35,boxrule=0.5pt,arc=1pt,width=0.86\linewidth,
+                  left=8pt,right=8pt,top=6pt,bottom=6pt]
+\sffamily\small
+\begin{tabular}{@{}L{44mm}L{86mm}@{}}
+Documento & Guida al layout RF, rev.~A\\
+Data & 04/11/2026\\
+Riferimento di progetto & Schematico SYMPHONY V2 \textbf{rev.~1.45 del 04/11/2026}\\
+                        & (netlist esportata con \texttt{kicad-cli} 10.0.8 il 04/11/2026)\\
+Note di layout riprese & \S24 del log (rev.~1.12) e nota L-01 (rev.~1.45)\\
+Stato del PCB & non ancora sbrogliato; stackup non ancora deciso\\
+Destinatario & chi disegna il PCB (parte RF)\\
+\end{tabular}
+\end{tcolorbox}
+
+\vfill
+{\small\color{sbgray}
+Questa guida tratta solo la parte RF del foglio UHF e i punti in cui il resto della scheda la tocca
+(alimentazione del PA, masse, separazione dal digitale, TCXO). Ogni valore numerico ha una fonte
+(datasheet o application note, con pagina) o un calcolo mostrato; quando la fonte non era verificabile
+il valore è marcato \dv. Lo schematico e il file di progetto KiCad non sono stati modificati.\par}
+\end{titlepage}
+
+% =====================================================================
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+% =====================================================================
+%  SINTESI
+% =====================================================================
+\section*{Sintesi: le 10 regole più importanti}
+\addcontentsline{toc}{section}{Sintesi: le 10 regole più importanti}
+\markboth{Sintesi}{Sintesi}
+
+{\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}>{\sffamily\bfseries\color{sbblue}}c Y L{30mm}@{}}
+\toprule
+\textnormal{\#} & \textbf{Regola} & \textbf{Dove}\\
+\midrule
+1 & \textbf{Piano di massa In1.Cu continuo} sotto tutta la zona RF: nessuna pista, nessun taglio. Sotto la zona RF anche In2.Cu e B.Cu solo GND, tranne un unico corridoio digitale (regola 10). & \S\ref{sec:stackup}, \S\ref{sec:generali}\\
+2 & \textbf{Linee \SI{50}{\ohm} coplanari con massa (CPWG) su F.Cu}: pista \SI{0.20}{mm}, distanza dal GND \SI{0.20}{mm} sullo stackup JLC04161H-3313. Corte, dritte, senza via e senza stub. Confermare con il calcolatore JLCPCB. & \S\ref{sec:stackup}\\
+3 & \textbf{Catena in linea, ad anello}: J201 sul bordo, C206, IC202; TX sopra (esce da RF2), RX sotto (esce da RF1). Per l'ordine dei pin il \textbf{Si4464 va dentro l'anello con il lato RF verso l'esterno}, altrimenti TX e RX si incrociano. & \S\ref{sec:floorplan}\\
+4 & \textbf{LNA vicino allo switch}: da J201 all'ingresso di Q201 al massimo circa \SI{15}{mm} di pista, filtro C210--L201--C209 compreso. & \S\ref{sec:rx}\\
+5 & \textbf{Rete d'uscita del PA = layout EVB Qorvo} (nota L-01): stesso ordine, stesse posizioni e lunghezze; C260, C261, C262 con via di massa propria sul pad (almeno 2 per C260 e C261); \SI{1}{mm} libero intorno a C260 e C262 per la taratura. & \S\ref{sec:pa}\\
+6 & \textbf{PA: massa e calore}. Pad esposto con matrice di via, altre via nel GND intorno, rame su B.Cu verso la struttura. Pin~4 (GND2) a massa con pista di circa \SI{1}{mm} (40 mil), pin~2 diretto. Ramo 3V3$\rightarrow$L242: almeno \SI{0.62}{mm} (IPC-2221), consigliato \SI{1}{mm} o un pour, dedicato dal buck. & \S\ref{sec:pa}\\
+7 & \textbf{FL201 tra PA e switch}, ingresso e uscita in direzioni opposte, via su tutti i 6 pad GND, fila di via trasversale sotto il filtro: l'uscita non deve \enquote{vedere} l'ingresso. & \S\ref{sec:fl201}\\
+8 & \textbf{Rete AN643 compatta e simmetrica sui pin 2/3 del Si4464}: \net{RF_RX_P} e \net{RF_RX_N} sotto \SI{3}{mm} e uguali entro \SI{0.5}{mm}; L206 subito tra i pad RXP e RXN, C220 al pad RXN con via accanto. Footprint standard, non HandSolder. & \S\ref{sec:rx}\\
+9 & \textbf{Via fence e cucitura}: passo $\le$\,\SI{2}{mm} lungo le linee RF e sul bordo (\SI{1.5}{mm} intorno a PA e FL201). Fila di via tra zona TX e zona RX. PA ad almeno \SI{15}{mm} da Y201 e dalla catena RX. & \S\ref{sec:generali}\\
+10 & \textbf{TCXO vicino a XIN} (C204, R201 in linea, $\le$\,\SI{5}{mm} in tutto \dv), lontano da PA e L242. \textbf{Digitale mai sotto o vicino all'RF} ($\ge$\,\SI{2}{mm} su F.Cu); i segnali che entrano nell'anello lo attraversano una sola volta, a \ang{90}, su B.Cu/In2 sotto In1 GND, nel tratto TX a basso livello. & \S\ref{sec:tcxo}, \S\ref{sec:floorplan}\\
+\bottomrule
+\end{tabularx}}
+
+\medskip
+\begin{attenzione}[prima di iniziare]
+Nel file \texttt{SYMPHONY.kicad\_pro} attuale \textbf{non ci sono le netclass RF}: c'è solo la classe
+\texttt{Default}, nessuna assegnazione e nessun pattern, anche se il log (rev.~1.12 e 1.13) le dà come
+inserite. Vanno ricreate prima di sbrogliare (\S\ref{sec:netclass}). Il file \texttt{SYMPHONY.kicad\_pcb}
+esistente ha inoltre uno stackup a 6 strati con \texttt{In1.Cu} di segnale sotto F.Cu, incompatibile con
+le regole di questa guida (\S\ref{sec:stackup}).
+\end{attenzione}
+
+\clearpage
+% =====================================================================
+\section{Scopo, fonti e convenzioni}
+\label{sec:intro}
+
+\subsection{Cosa copre questa guida}
+La guida dice come piazzare e sbrogliare tutta la catena RF del foglio UHF: connettore d'antenna J201,
+switch HMC349A (IC202), catena RX con LNA TQP3M9036 (Q201), filtri e rete AN643, ricetrasmettitore
+Si4464 (IC204) con TCXO (Y201), rete TX AN648, attenuatore, PA QPA9510 (IC2) con la sua rete d'uscita,
+filtro passa-basso LFCG-490+ (FL201). Il resto della scheda resta al progettista; qui se ne parla solo
+dove tocca la parte RF.
+
+Riprende e integra la guida al layout UHF del log (\S24, rev.~1.12) e la nota di layout L-01
+(rev.~1.45). Dove questa guida aggiunge o precisa qualcosa rispetto a quelle note lo dice in modo
+esplicito; le differenze da decidere sono raccolte nell'Appendice~\ref{app:verifiche}.
+
+\subsection{Fonti}
+\begin{itemize}
+\item Netlist KiCad esportata il 04/11/2026 da \texttt{SYMPHONY.kicad\_sch} (rev.~1.45): componenti,
+      valori, footprint e collegamenti di questa guida vengono da lì (file \texttt{net.xml} nella cartella
+      di questo documento).
+\item Log hardware \texttt{report/entries}: 001 (picchi del PA, alimentazione dedicata), 007 (rete RX
+      AN643), 009 e 023 (L242), 010 (\S24, netclass e guida UHF), 043 (nota L-01).
+\item Revisione indipendente del 04/11/2026 (\texttt{SYMPHONY\_V2\_review\_finale\_2026-11-04.pdf}), punti P05, P08, P10.
+\item Datasheet: Si4464 rev.~1.4; QPA9510 del 23/06/2025 e \emph{QPA9510 410--470\,MHz EVB Test
+      Summary} del 30/06/2025; HMC349AMS8G rev.~F; TQP3M9036 del 27/11/2018; Mini-Circuits LFCG-490+;
+      ECS-TXO-20CSMV4; DreamLNK DL-MMCX-KEF-180.
+\item JLCPCB: tabella degli stackup a 4 strati (\nolinkurl{jlcpcb.com/impedance}) e capacità di
+      produzione (\nolinkurl{jlcpcb.com/capabilities/pcb-capabilities}), consultate il 04/11/2026.
+\item Silicon Labs AN629 (layout Si446x), AN643 (match RX) e AN648 (match TX): il sito Silicon Labs ha
+      rifiutato l'accesso ai PDF durante la stesura (HTTP 403). I valori di AN643 e AN648 sono quelli già
+      riportati nel log (entries 001, 007, 012); le regole attribuite ad AN629 sono marcate \dv.
+\end{itemize}
+
+\subsection{Convenzioni}
+\begin{regola}[esempio]
+Un riquadro verde è una regola da seguire. Le regole sono numerate R1, R2, \ldots{} in tutto il documento.
+\end{regola}
+\addtocounter{regola}{-1}
+\begin{attenzione}
+Un riquadro arancio segnala un errore facile da fare o un punto aperto del progetto.
+\end{attenzione}
+\begin{perche}
+Un riquadro grigio spiega il motivo di una regola, con il calcolo quando serve.
+\end{perche}
+Le reti sono scritte in \net{carattere_macchina} con il nome della netlist senza il prefisso
+\net{/UHF/}. Le quote sono in millimetri. \enquote{GND} è la massa unica della scheda.
+
+% =====================================================================
+\section{La catena RF secondo la netlist}
+\label{sec:catena}
+
+\subsection{Percorso del segnale}
+\begin{center}
+\begin{tikzpicture}[node distance=3.5mm and 3.2mm, every node/.style={font=\sffamily\scriptsize}]
+\node[neu] (j) {J201\\MMCX};
+\node[neu,right=of j] (c206) {C206\\100p};
+\node[neu,right=of c206,minimum height=12mm] (sw) {IC202\\HMC349A};
+% RX
+\node[rxb,below right=6mm and 3mm of sw] (c207) {C207\\100p};
+\node[rxb,right=of c207] (lpf) {C210\,/\,L201\,/\,C209\\LPF $\pi$ 6,8p--22n--6,8p};
+\node[rxb,right=of lpf] (c212) {C212\\100p};
+\node[rxb,right=of c212] (lna) {Q201\\TQP3M9036\\(L202 bias)};
+\node[rxb,below=6mm of lna] (f2) {C213 + C217\,/\,L203\,/\\C216\,/\,L204\,/\,C218};
+\node[rxb,left=of f2] (an643) {C219, L205,\\L206, C220\\AN643};
+\node[sib,left=of an643,minimum height=12mm] (si) {IC204\\Si4464};
+\node[ckb,below=4mm of si] (y) {Y201 TCXO 32\,MHz\\C204, R201 $\to$ XIN};
+% TX
+\node[txb,above right=6mm and 3mm of sw] (c208) {C208\\100p};
+\node[txb,right=of c208] (fl) {FL201\\LFCG-490+};
+\node[txb,right=of fl] (c230) {C230\\56p};
+\node[pab,right=of c230] (om) {C261/C262, L243,\\C260, L242};
+\node[pab,right=of om] (pa) {IC2\\QPA9510};
+\node[txb,above=6mm of pa] (att) {C255 + $\pi$\\R245--R248};
+\node[txb,left=of att] (an648) {C701, C704, L702,\\C702, L703\\AN648};
+% wires
+\draw[line width=1pt] (j) -- (c206) -- (sw);
+\draw[rxl] (sw.south east) |- (c207.west);
+\draw[rxl] (c207) -- (lpf); \draw[rxl] (lpf) -- (c212); \draw[rxl] (c212) -- (lna);
+\draw[rxl] (lna) -- (f2); \draw[rxl] (f2) -- (an643); \draw[rxl] (an643) -- (si);
+\draw[draw=olive,line width=0.9pt,-{Stealth[length=2mm]}] (y) -- (si);
+\draw[txl] (si.north) |- (an648.west);
+\draw[txl] (an648) -- (att); \draw[txl] (att) -- (pa); \draw[txl] (pa) -- (om);
+\draw[txl] (om) -- (c230); \draw[txl] (c230) -- (fl); \draw[txl] (fl) -- (c208);
+\draw[txl] (c208.west) -| (sw.north east);
+\node[anchor=west,text=rxblue,font=\sffamily\scriptsize\bfseries] at ($(c207.south west)+(0,-3mm)$) {RX: RF1 (pin 5)};
+\node[anchor=west,text=txred,font=\sffamily\scriptsize\bfseries] at ($(c208.north west)+(0,3mm)$) {TX: RF2 (pin 8)};
+\end{tikzpicture}
+\end{center}
+\noindent{\footnotesize Schema a blocchi della netlist rev.~1.45 (non è un piazzamento). In blu la catena RX, in
+rosso la TX.}
+
+\subsection{Reti RF con nome}
+{\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{xltabular}{\linewidth}{@{}L{27mm}L{62mm}Y@{}}
+\toprule
+\textbf{Rete} & \textbf{Nodi (netlist rev.~1.45)} & \textbf{Ruolo per il layout}\\
+\midrule\endhead
+\midrule\multicolumn{3}{r}{\footnotesize\itshape continua\ldots}\\\endfoot
+\bottomrule\endlastfoot
+\net{RF_ANT} & J201.1, C206.2 & linea d'antenna \SI{50}{\ohm}, TX fino a circa \SI{30}{dBm}\\
+\net{RF_SW_COM} & C206.1, IC202.3 (RFC) & porta comune dello switch\\
+\net{RF_SW_RX} & IC202.5 (RF1), C207.2 & uscita RX dello switch\\
+\net{RF_SW_TX} & IC202.8 (RF2), C208.2 & ingresso TX dello switch\\
+\net{RF_RX_F1}, \net{RF_RX_F2} & C207, C210, L201 / L201, C209, C212 & filtro passa-basso $\pi$ prima del LNA\\
+\net{RF_LNA_IN} & C212.1, Q201.2 & ingresso LNA (punto più sensibile)\\
+\net{RF_LNA_OUT} & Q201.7, C213.2, L202.1 & uscita LNA + bias (L202 da 3V3)\\
+\net{RF_RX_F3}, \net{RF_RX_F4} & C213, C217, L203 / L203, C216, L204 & filtro dopo il LNA\\
+\net{RF_RX_MATCH} & L204, C218, C219, L205 & uscita filtro, ingresso rete AN643\\
+\net{RF_RX_P} & C219.1, IC204.2 (RXP), L206.1 & ingresso differenziale, alta impedenza\\
+\net{RF_RX_N} & L205.1, L206.2, C220.2, IC204.3 (RXN) & ingresso differenziale, alta impedenza\\
+\net{RF_SI_TX} & IC204.4 (TX), L703.2, C702.2 & pin TX in classe E (picchi di tensione)\\
+\net{RF_TX_M1}, \net{RF_TX_M2} & C702, L702 / L702, C704, C701 & match AN648\\
+\net{RF_ATT_IN}, \net{RF_ATT_OUT} & C701, R245, R246 / R246, R247, R248, C255 & attenuatore $\pi$ (\SI{10.8}{dB})\\
+\net{RF_PA_IN} & C255.2, IC2.3 & ingresso PA\\
+\net{RF_PA_OUT} & IC2.9--12, C260, L243, L242 & nodo a circa \SI{5}{\ohm}, \SI{1.7}{A} DC\\
+\net{RF_PA_MATCH} & L243, C261, C262, C230 & nodo intermedio del match d'uscita\\
+\net{RF_LPF_IN}, \net{RF_LPF_OUT} & C230, FL201.8 / FL201.4, C208 & ingresso e uscita del filtro\\
+\net{RF_TCXO_OUT}, \net{RF_TCXO_AC}, \net{RF_XIN} & Y201.3, C204 / C204, R201 / R201, IC204.17, TP701 & clock \SI{32}{MHz} al Si4464\\
+\net{PA_VCC1}, \net{PA_VCC1_F} & IC2.1, L240 / L240, R240, C244 & alimentazione e match interstadio\\
+\net{PA_VCC2}, \net{PA_VCC2_F} & IC2.5--7, L241 / L241, R241, C248 & alimentazione e match interstadio\\
+\end{xltabular}}
+
+Il resto delle connessioni che servono al layout: IC2 pin~14 (VCC) su 3V3 con C251; APC1/APC2
+(pin 15, 16) sulla rete \net{Net-(IC2-APC1)} con R242, R243, C252; pin~8 (2F0) e pin~13 (NC)
+scollegati; pin~2, 4 e pad esposto 17 a GND. IC202: VDD (pin~1) su 5V0 con C211, CTRL (pin~2) da
+\net{EN_TX_ANT_SW}, EN (pin~4) a GND. Q201: SHUT\_DOWN (pin~6) da \net{EN_RX_LNA} tramite R202 (R203 DNP
+verso GND), pin NC 1, 3, 4, 5, 8 a GND. IC204: VDD pin~6 e 8 su 3V3 (C201), XOUT (pin~16) scollegato.
+
+% =====================================================================
+\section{Stackup e linee a 50 ohm}
+\label{sec:stackup}
+
+\subsection{Situazione}
+Lo stackup non è ancora deciso. Il log (\S24.1) indica un 4 strati da \SI{1.6}{mm} con prepreg 3313 e
+In1.Cu a GND; il file \texttt{SYMPHONY.kicad\_pcb} attuale contiene invece uno stackup a 6 strati
+(F.Cu, In1 \enquote{SIG}, In2 \enquote{GND}, In3 \enquote{SIG}, In4 \enquote{POWER}, B.Cu), con un piano
+di segnale subito sotto F.Cu. Questa guida assume il 4 strati JLCPCB qui sotto.
+
+\begin{attenzione}[stackup del file PCB]
+Con lo stackup a 6 strati presente oggi nel file PCB, le linee RF su F.Cu avrebbero come riferimento
+In1 \enquote{SIG}: non va bene. Se si resta a 6 strati, In1 deve diventare GND pieno sotto la zona RF e
+le larghezze vanno ricalcolate.
+\end{attenzione}
+
+\subsection{Stackup proposto: JLCPCB JLC04161H-3313}
+
+\begin{center}
+\begin{minipage}{0.46\linewidth}
+\centering
+\begin{tikzpicture}[x=1mm,y=1mm]
+\def\w{52}
+% layers from top (y decreasing)
+\fill[green!45!black!60] (0,40) rectangle (\w,41) node[midway,text=white,font=\sffamily\tiny]{solder mask};
+\fill[orange!80!black] (0,38.6) rectangle (\w,40);
+\node[anchor=west,font=\sffamily\tiny] at (\w+1,39.3) {F.Cu \SI{35}{\micro\metre}: RF, componenti};
+\fill[yellow!25] (0,33.6) rectangle (\w,38.6);
+\node[font=\sffamily\tiny] at (\w/2,36.1) {prepreg 3313, \SI{0.0994}{mm}, $\varepsilon_r$ 4,1};
+\fill[orange!80!black] (0,32.8) rectangle (\w,33.6);
+\node[anchor=west,font=\sffamily\tiny] at (\w+1,33.2) {In1.Cu \SI{15}{\micro\metre}: \textbf{GND pieno}};
+\fill[yellow!45] (0,14.2) rectangle (\w,32.8);
+\node[font=\sffamily\tiny,align=center] at (\w/2,23.5) {core \SI{1.265}{mm}, $\varepsilon_r$ 4,6\\(non in scala)};
+\fill[orange!80!black] (0,13.4) rectangle (\w,14.2);
+\node[anchor=west,font=\sffamily\tiny] at (\w+1,13.8) {In2.Cu \SI{15}{\micro\metre}: alimentazioni};
+\fill[yellow!25] (0,8.4) rectangle (\w,13.4);
+\node[font=\sffamily\tiny] at (\w/2,10.9) {prepreg 3313, \SI{0.0994}{mm}};
+\fill[orange!80!black] (0,7) rectangle (\w,8.4);
+\node[anchor=west,font=\sffamily\tiny] at (\w+1,7.7) {B.Cu \SI{35}{\micro\metre}: segnali, GND};
+\fill[green!45!black!60] (0,6) rectangle (\w,7);
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Strato} & \textbf{Spessore / materiale}\\
+\midrule
+F.Cu & \SI{0.035}{mm} (1 oz)\\
+prepreg & 3313, \SI{0.0994}{mm}, $\varepsilon_r=4{,}1$\\
+In1.Cu & \SI{0.0152}{mm} (0,5 oz)\\
+core & \SI{1.265}{mm}, $\varepsilon_r=4{,}6$\\
+In2.Cu & \SI{0.0152}{mm} (0,5 oz)\\
+prepreg & 3313, \SI{0.0994}{mm}, $\varepsilon_r=4{,}1$\\
+B.Cu & \SI{0.035}{mm} (1 oz)\\
+\midrule
+totale & circa \SI{1.56}{mm} + solder mask\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+{\footnotesize\color{sbgray}Fonte: JLCPCB, tabella \enquote{4 layers} di \texttt{jlcpcb.com/impedance}
+(consultata il 04/11/2026).}
+\end{minipage}
+\end{center}
+
+Uso degli strati nella zona RF: F.Cu per linee RF e componenti; In1.Cu \textbf{solo GND, senza
+interruzioni}; In2.Cu alimentazioni (3V3, 5V0, pour del PA), ma sotto le linee RF solo GND; B.Cu segnali
+lenti e GND, sotto la zona RF solo GND cucito.
+
+\begin{attenzione}[spessori nel log]
+Il \S24.1 del log scrive \enquote{F.Cu -- prepreg 0.1 -- In1 -- core 0.535 -- In2 -- prepreg 0.1 -- B.Cu,
+\SI{1.6}{mm}}: la somma fa circa \SI{0.88}{mm}, non \SI{1.6}{mm}. Il core del JLC04161H-3313 è
+\SI{1.265}{mm}. Per le linee su F.Cu conta solo il prepreg superiore (\SI{0.0994}{mm}), quindi le
+larghezze del \S24.1 restano valide.
+\end{attenzione}
+
+\subsection{Formule usate}
+\textbf{Microstriscia} (Hammerstad--Jensen, con correzione per lo spessore $t$ del rame). Con $u=W/h$:
+\begin{gather*}
+Z_{01}(u)=\frac{\eta_0}{2\pi}\ln\!\left[\frac{f(u)}{u}+\sqrt{1+\frac{4}{u^2}}\right],\qquad
+f(u)=6+(2\pi-6)\,e^{-(30{,}666/u)^{0{,}7528}}\\[2pt]
+\varepsilon_\mathrm{eff}(u)=\frac{\varepsilon_r+1}{2}+\frac{\varepsilon_r-1}{2}\left(1+\frac{10}{u}\right)^{-ab},
+\qquad Z_0=\frac{Z_{01}(u_r)}{\sqrt{\varepsilon_\mathrm{eff}(u_r)}}
+\end{gather*}
+dove $a$, $b$ sono i coefficienti di Hammerstad--Jensen e $u_r=u+\Delta u_r$ è la larghezza corretta per
+lo spessore. $\eta_0=\SI{376.73}{\ohm}$.
+
+\textbf{Coplanare con massa (CPWG)}, metodo della trasformazione conforme, spessore nullo. Con pista $W$,
+distanza $s$ dal GND di F.Cu e dielettrico $h$ verso In1:
+\begin{gather*}
+k=\frac{W}{W+2s},\qquad k_3=\frac{\tanh(\pi W/4h)}{\tanh\!\big(\pi (W+2s)/4h\big)},\qquad k'=\sqrt{1-k^2}\\[2pt]
+\varepsilon_\mathrm{eff}=\frac{1+\varepsilon_r\,\dfrac{K(k')}{K(k)}\dfrac{K(k_3)}{K(k_3')}}{1+\dfrac{K(k')}{K(k)}\dfrac{K(k_3)}{K(k_3')}},\qquad
+Z_0=\frac{60\pi}{\sqrt{\varepsilon_\mathrm{eff}}}\;\frac{1}{\dfrac{K(k)}{K(k')}+\dfrac{K(k_3)}{K(k_3')}}
+\end{gather*}
+con $K(k)/K(k')$ calcolato con l'approssimazione di Hilberg (errore $<10^{-5}$).
+
+Il calcolo non tiene conto della solder mask, che abbassa $Z_0$ di 1--3\,\si{\ohm} su piste così strette
+\dv; la CPWG è a spessore nullo, e lo spessore reale (\SI{35}{\micro\metre}) la abbassa ancora di poco.
+Per questo i risultati vanno confermati con il calcolatore JLCPCB.
+
+\subsection{Risultati}
+{\small
+\begin{center}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Stackup JLC} & $h$ [mm] & $\varepsilon_r$ & \textbf{Microstriscia} & \textbf{CPWG $s$\,=\,0,20} & \textbf{CPWG $s$\,=\,0,15}\\
+& & & $W_{50}$ [mm] ($\varepsilon_\mathrm{eff}$) & $W_{50}$ [mm] ($\varepsilon_\mathrm{eff}$) & $W_{50}$ [mm]\\
+\midrule
+\textbf{JLC04161H-3313} & 0,0994 & 4,10 & \textbf{0,175} (2,93) & \textbf{0,206} (3,16) & 0,200\\
+JLC04161H-2116 & 0,1164 & 4,16 & 0,206 (2,98) & 0,235 (3,16) & 0,227\\
+JLC04161H-1080 & 0,0764 & 3,91 & 0,135 (2,78) & 0,168 (3,09) & 0,163\\
+JLC04161H-7628 & 0,2104 & 4,40 & 0,372 (3,19) & 0,376 (3,17) & 0,355\\
+\bottomrule
+\end{tabular}
+\end{center}}
+\noindent{\footnotesize Rame esterno \SI{35}{\micro\metre}. Verifiche puntuali sul 3313: CPWG \SI{0.20}{}/\SI{0.20}{mm}
+$=\SI{50.9}{\ohm}$ con $\varepsilon_r=4{,}1$ e \SI{48.8}{\ohm} con $\varepsilon_r=4{,}5$ (stesso risultato del
+\S24.1); microstriscia \SI{0.20}{mm} $=\SI{46.5}{\ohm}$; microstriscia \SI{0.5}{mm} $=\SI{25.6}{\ohm}$;
+\SI{1.0}{mm} $=\SI{14.9}{\ohm}$.}
+
+\begin{verifica}[impedenze]
+Verificare tutte le larghezze con il calcolatore d'impedenza JLCPCB per lo stackup scelto, con solder
+mask, prima di sbrogliare. Se la larghezza cambia, aggiornare la netclass \net{RF_50R}.
+\end{verifica}
+
+\subsection{Quale linea e perché}
+
+\begin{regola}[tipo di linea]
+Usare la \textbf{CPWG}: pista \SI{0.20}{mm}, distanza dal GND di F.Cu \SI{0.20}{mm}, In1.Cu GND pieno
+sotto, via di cucitura lungo i due bordi del GND (\S\ref{sec:generali}). È la scelta del \S24.1.
+\end{regola}
+
+\begin{perche}[CPWG invece di microstriscia]
+\begin{itemize}
+\item Con un dielettrico di \SI{0.1}{mm} la CPWG da \SI{50}{\ohm} è quasi una microstriscia (il GND di F.Cu
+      a \SI{0.2}{mm} sposta poco l'impedenza: \SI{0.175}{mm} contro \SI{0.206}{mm}), ma porta il GND di
+      superficie fino al bordo della linea. Così i condensatori in parallelo trovano massa e via a pochi
+      decimi di millimetro e si può mettere la fila di via a ridosso della linea.
+\item È la stessa linea usata nella EVB dell'HMC349A (CPWG, \SI{0.41}{mm} di pista e \SI{0.33}{mm} di
+      distanza su \SI{0.25}{mm} di RO4350, \fonte{HMC349AMS8G DS rev.~F p.~9}) e della TQP3M9036
+      (\SI{0.51}{mm}/\SI{0.81}{mm} su \SI{0.25}{mm} RO4350B, \fonte{TQP3M9036 DS p.~10}).
+\item Una pista più stretta del pad (\SI{0.2}{mm} contro \SIrange{0.5}{0.9}{mm} dei pad 0402--0805) crea un
+      gradino. A \SI{435}{MHz} su linee da \SI{50}{\ohm} è trascurabile: il pad di un 0603
+      (\SI{1.0}{}$\times$\SI{0.6}{mm}) sopra \SI{0.1}{mm} di prepreg vale circa
+      $C=\varepsilon_0\varepsilon_r A/h\approx\SI{0.22}{pF}$, cioè $|X|\approx\SI{1.7}{k\ohm}$. Diventa invece
+      importante nei punti ad alta impedenza (ingresso del Si4464) o a bassissima impedenza (uscita del PA),
+      trattati a parte.
+\end{itemize}
+\end{perche}
+
+\begin{perche}[perché il prepreg sottile (3313) va bene]
+\begin{itemize}
+\item La via di massa di un condensatore in parallelo arriva subito al piano: l'induttanza del tratto
+      F.Cu--In1 vale circa $L\approx 0{,}2\,h_v\left[\ln(4h_v/d)+1\right]\,\si{nH}$ ($h_v$, $d$ in mm),
+      con $h_v\approx\SI{0.13}{mm}$ e $d=\SI{0.3}{mm}$: \SI{0.04}{nH} ($|X|\approx\SI{0.11}{\ohm}$ a
+      \SI{435}{MHz}). Con il 7628 ($h_v\approx\SI{0.25}{mm}$) diventa \SI{0.11}{nH}.
+\item Linee strette e campo confinato: meno accoppiamento tra piste vicine (\S\ref{sec:generali}).
+\end{itemize}
+Lo svantaggio è nella rete d'uscita del PA: la EVB Qorvo usa piste di circa \SI{0.5}{mm}, che sul 3313
+valgono circa \SI{26}{\ohm} invece di \SI{50}{\ohm} (\S\ref{sec:pa}). Con il JLC04161H-7628 la stessa pista
+da \SI{0.5}{mm} vale \SI{42}{\ohm}, più vicino alla EVB. È un'alternativa da valutare, non la scelta di
+questa guida.
+\end{perche}
+
+\subsection{Perdite e lunghezza d'onda a 435 MHz}
+\begin{itemize}
+\item $\lambda_0=c/f=\SI{689.7}{mm}$; in linea CPWG ($\varepsilon_\mathrm{eff}\approx3{,}16$)
+      $\lambda_g=\lambda_0/\sqrt{\varepsilon_\mathrm{eff}}\approx\SI{388}{mm}$. Una pista di \SI{10}{mm} è
+      $\lambda_g/39$: corta, ma non trascurabile nei nodi a bassa impedenza.
+\item Perdita stimata della linea da \SI{0.2}{mm} su FR4 ($\tan\delta=0{,}02$ \dv):
+      dielettrico
+      \[\alpha_d\approx27{,}3\,\frac{\varepsilon_r}{\sqrt{\varepsilon_\mathrm{eff}}}\,\frac{\varepsilon_\mathrm{eff}-1}{\varepsilon_r-1}\,\frac{\tan\delta}{\lambda_0}\approx\SI{0.0012}{dB/mm};\]
+      conduttore $\alpha_c\approx8{,}686\,R_s/(Z_0W)$ con $R_s=\sqrt{\pi f\mu_0\rho}=\SI{5.4}{m\ohm}$:
+      $\approx\SI{0.0047}{dB/mm}$. In tutto circa \SI{0.006}{dB/mm}, cioè \SI{0.06}{dB} ogni \SI{10}{mm}.
+\end{itemize}
+
+% =====================================================================
+\section{Floorplan della parte RF}
+\label{sec:floorplan}
+
+\subsection{Un vincolo che decide la disposizione}
+\begin{attenzione}[ordine dei pin: TX e RX si incrociano se non si gira il Si4464]
+I pin dell'HMC349A e del Si4464 sono numerati in senso antiorario (vista dall'alto):
+\begin{itemize}
+\item IC202, con RFC (pin~3) verso J201: RF2 (pin~8, \textbf{TX}) è in alto a destra, RF1 (pin~5,
+      \textbf{RX}) in basso a destra;
+\item IC204, con il lato RF verso sinistra: dall'alto RXP (pin~2), RXN (pin~3), poi TX (pin~4).
+\end{itemize}
+Le due catene formano un anello chiuso dallo switch e dal Si4464. Si dimostra che senza incroci
+sullo stesso strato i casi sono due: o la porta RFC dello switch resta \emph{dentro} l'anello (impossibile:
+J201 è sul bordo) oppure \textbf{i pin non RF del Si4464 restano dentro l'anello e il suo lato RF guarda
+verso l'esterno}. Lo schema del \S24.3 del log (Si4464 con il lato RF verso lo switch, RX sopra e TX
+sotto) è indicativo e, così com'è, porta a un incrocio TX/RX vicino allo switch.
+\end{attenzione}
+
+\begin{regola}[orientamento di IC202 e IC204]
+IC202 con RFC verso J201; \textbf{catena TX sopra} (da RF2) e \textbf{catena RX sotto} (da RF1). IC204
+\textbf{ruotato di \ang{180}}, con il lato RF (pin 1--5) verso l'esterno dell'anello: la RX gira intorno
+all'angolo inferiore del Si4464 ed entra in RXP/RXN; la TX esce dal pin~4 e gira intorno all'angolo
+superiore. Le reti AN643 e AN648 stanno in quei due angoli.
+\end{regola}
+
+\begin{regola}[corridoio digitale]
+I segnali che devono entrare nell'anello (SPI, nIRQ, SDN di IC204; \net{EN_TX_ANT_SW} per Q701 e l'APC
+del PA) lo attraversano \textbf{una sola volta}, a \ang{90}, su B.Cu o In2.Cu, con In1.Cu GND integro
+sopra, nel \textbf{tratto TX a basso livello} (tra C701 e C255, sotto l'attenuatore). Mai sotto la catena
+RX, la rete AN643, il PA, la rete d'uscita, FL201 o J201.
+\end{regola}
+
+\begin{perche}
+Il segnale TX tra Si4464 e PA è a \SIrange{0}{20}{dBm} su \SI{50}{\ohm}, con In1 GND nel mezzo:
+l'accoppiamento verso una pista su B.Cu è molto basso. Sotto la RX anche un disturbo piccolo arriva al
+LNA; sotto il PA ci sono \SI{30}{dBm}. Un'alternativa senza incroci RF è passare sotto il corpo di IC202
+(lato GND, pin 6--7 e pad esposto), ma si esce vicino all'antenna: da usare solo se il corridoio TX non è
+possibile.
+\end{perche}
+
+L'alternativa è scambiare RF1 e RF2 di IC202 e portare CTRL dal segnale invertito di U701; è una modifica
+di schema e di logica, fuori dallo scopo di questa guida (Appendice~\ref{app:verifiche}).
+
+\subsection{Disposizione dei blocchi}
+
+\begin{center}
+\begin{tikzpicture}[x=1.55mm,y=1.55mm]
+% board area
+\fill[black!3] (0,0) rectangle (104,64);
+\draw[black!40,dash pattern=on 2pt off 1.5pt] (0,0) rectangle (104,64);
+\fill[black!70] (0,22) rectangle (0.8,38);
+\node[lab,rotate=90] at (-1.8,30) {bordo scheda};
+% TX/RX separation fence
+\draw[fence] (22,31) -- (74,31);
+\node[lab,fill=black!3,inner sep=1pt] at (50,31) {fila di via GND (separazione TX/RX)};
+% J201, C206, switch
+\node[neu,minimum width=7mm,minimum height=9mm] (j) at (4.6,30) {J201};
+\node[neu,minimum width=4mm,minimum height=3mm] (c206) at (10.5,30) {C206};
+\node[neu,minimum width=8mm,minimum height=11mm,fill=black!12] (sw) at (17,30) {IC202};
+\draw[line width=1.2pt] (j) -- (c206) -- (sw);
+% TX row (top, y=48)
+\node[txb,minimum height=5mm] (c208) at (24,47) {C208};
+\node[txb,minimum width=10mm,minimum height=7mm] (fl) at (31,47) {FL201};
+\node[txb] (c230) at (38.5,47) {C230};
+\node[pab,minimum width=15mm,minimum height=8mm] (om) at (46.5,47) {C261 C262\\L243 C260};
+\node[pab,minimum width=10mm,minimum height=10mm] (pa) at (57,47) {IC2\\PA};
+\node[txb,minimum width=11mm] (att) at (68,47) {C255\\R245--248};
+\node[txb,minimum width=12mm] (an648) at (82,51) {C701 C704\\L702 C702\\L703};
+\node[neu,minimum width=9mm,minimum height=4.5mm,fill=txred!30] (l242) at (47,56.5) {L242};
+\node[lab,anchor=south] at (47,59.2) {3V3 PA: pista $\ge$\,1\,mm / pour};
+\draw[line width=1.2pt,black!60] (l242.south) -- ($(om.north)+(0.5,0)$);
+\draw[line width=1.6pt,black!50] (l242.north) -- (47,59);
+% Si4464 rotated, RF side to the right
+\node[sib,minimum width=12mm,minimum height=12mm] (si) at (82,31) {IC204\\Si4464\\(ruotato \ang{180})};
+\node[lab,anchor=west] at (88.5,34.2) {4 TX};
+\node[lab,anchor=west] at (88.5,30.8) {3 RXN};
+\node[lab,anchor=west] at (88.5,28.6) {2 RXP};
+\node[lab] at (75.5,31) {SPI};
+% AN643 corner
+\node[rxb,minimum width=12mm] (an643) at (92,17) {C219 L205\\L206 C220};
+% TCXO
+\node[ckb,minimum width=9mm] (y) at (78,22.5) {Y201\\C204 R201};
+% RX row (bottom, y=12)
+\node[rxb] (c207) at (24,12) {C207};
+\node[rxb,minimum width=12mm] (lpf) at (31.5,12) {C210 L201\\C209};
+\node[rxb] (c212) at (39,12) {C212};
+\node[rxb,minimum width=10mm,minimum height=8mm] (lna) at (46,12) {Q201\\LNA};
+\node[rxb,minimum width=24mm] (f2) at (62,12) {C213 C217 L203\\C216 L204 C218};
+% RX arrows
+\draw[rxl] (sw.south east) |- (c207.west);
+\draw[rxl] (c207) -- (lpf); \draw[rxl] (lpf) -- (c212); \draw[rxl] (c212) -- (lna);
+\draw[rxl] (lna) -- (f2);
+\draw[rxl] (f2.east) -| (an643.south);
+\draw[rxl] (an643.north) |- (88,29.6);
+% TX arrows
+\draw[txl] (88,34.2) -| (an648.south east);
+\draw[txl] (an648.west) -| (att.north);
+\draw[txl] (att) -- (pa); \draw[txl] (pa) -- (om); \draw[txl] (om) -- (c230);
+\draw[txl] (c230) -- (fl); \draw[txl] (fl) -- (c208);
+\draw[txl] (c208.west) -| (sw.north east);
+% clock
+\draw[draw=olive!80!black,line width=1pt,-{Stealth[length=2mm]}] (y.north) -- (79,25);
+% fences around PA and FL201
+\draw[fence] (51.2,41) -- (51.2,53); \draw[fence] (62.8,41) -- (62.8,53);
+\draw[fence] (31,41.5) -- (31,52.5);
+\node[lab,anchor=north] at (31,41.3) {via sotto FL201};
+% digital corridor
+\draw[dig] (75.6,29) -- (70,29) -- (70,62);
+\node[lab,text=violet,anchor=west,align=left] at (70.6,60.5) {corridoio digitale\\su B.Cu/In2, a \ang{90}};
+% distances
+\draw[dim] (57,41.5) -- (57,13.5);
+\node[lab,fill=black!3,inner sep=1pt] at (57,35.5) {$\ge$\,15\,mm};
+\draw[dim] (62.5,44) -- (75,24.5);
+\node[lab,fill=black!3,inner sep=1pt] at (69.5,37.5) {$\ge$\,15\,mm};
+\draw[dim] (6,6) -- (41.5,6);
+\node[lab,fill=black!3,inner sep=1pt] at (24,6) {J201 $\to$ Q201: $\le$\,15\,mm di pista};
+% legend
+\node[lab,anchor=west,text=txred] at (2,61) {\textbf{TX} (fino a \SI{30}{dBm} dopo FL201)};
+\node[lab,anchor=west,text=rxblue] at (2,2.5) {\textbf{RX} (piccolo segnale)};
+\end{tikzpicture}
+\end{center}
+\noindent{\footnotesize Floorplan indicativo, non in scala. Le quote marcate sono vincoli; posizione
+assoluta, forma della zona RF e lato verso l'MCU li sceglie il progettista. La posizione di L242 sopra la
+linea d'uscita deriva dalla EVB ruotata di \ang{180} (\S\ref{sec:pa}).}
+
+\subsection{Ordine di piazzamento}
+\begin{enumerate}
+\item \textbf{J201 sul bordo} e GND della zona RF (In1 pieno, contorno della zona, fila di via sul bordo).
+\item \textbf{IC202 e C206} a ridosso di J201; C207 e C208 sui pin RF1/RF2.
+\item \textbf{Rete d'uscita del PA, IC2, L242}: copiata dalla EVB come blocco unico (nota L-01), ruotata
+      in modo che l'ingresso guardi verso il Si4464 e l'uscita verso FL201.
+\item \textbf{FL201} tra C230 e C208, in linea.
+\item \textbf{Q201 con il filtro C210--L201--C209 e C212}, il più vicino possibile a RF1.
+\item \textbf{IC204} ruotato, con \textbf{rete AN643} sui pin 2/3 e \textbf{rete AN648} sul pin~4;
+      \textbf{Y201} vicino a XIN.
+\item Attenuatore e C255 tra AN648 e PA; filtro dopo il LNA tra Q201 e la rete AN643.
+\item Disaccoppiamenti (IC204, Y201, Q201, IC202, PA), poi fence, cuciture e corridoio digitale.
+\end{enumerate}
+
+\subsection{Distanze critiche}
+{\small
+\begin{tabularx}{\linewidth}{@{}L{55mm}L{30mm}Y@{}}
+\toprule
+\textbf{Tra} & \textbf{Valore} & \textbf{Origine}\\
+\midrule
+J201 -- ingresso Q201 (pista totale) & $\le$\,\SI{15}{mm} & \S\ref{sec:rx}: rumore e captazione; perdita \SI{0.006}{dB/mm}\\
+PA (IC2, L242, rete d'uscita) -- Y201 & $\ge$\,\SI{15}{mm} & \S24.3 del log (10--15\,mm); qui si prende il valore alto\\
+PA -- catena RX e rete AN643 & $\ge$\,\SI{15}{mm} + fila di via & \S24.3 del log\\
+ingresso FL201 -- uscita FL201 (piste) & direzioni opposte, nessun tratto parallelo & \S\ref{sec:fl201}\\
+ingresso PA -- uscita PA (piste) & lati opposti del PA, mai affiancate & guadagno \SI{42}{dB}, \S\ref{sec:pa}\\
+L242, L243 -- L702, L703, FL201 & $\ge$\,\SI{5}{mm}, assi perpendicolari \dv & nota L-01 regola 8\\
+pista digitale su F.Cu -- linea RF & $\ge$\,\SI{2}{mm} con GND cucito in mezzo & \S\ref{sec:generali}\\
+C204--R201--XIN (pista totale) & $\le$\,\SI{5}{mm} \dv & \S\ref{sec:tcxo}\\
+\bottomrule
+\end{tabularx}}
+
+% =====================================================================
+\section{Regole per ogni blocco}
+\label{sec:blocchi}
+
+% ---------------------------------------------------------------------
+\subsection{Connettore MMCX J201 e linea d'antenna}
+\label{sec:j201}
+J201 è un MMCX da bordo scheda (footprint \path{MMCX_Molex_73415-0961_Horizontal_0.8mm-PCB}):
+pad centrale \SI{2.0}{}$\times$\SI{1.1}{mm}, due pad di massa \SI{3.0}{}$\times$\SI{1.4}{mm} ai lati.
+\net{RF_ANT} va da J201.1 a C206 (\SI{100}{pF}, DC block dello switch).
+
+\begin{regola}[J201]
+\begin{itemize}
+\item Pad di massa collegati al GND di F.Cu con almeno 3 via ciascuno, a meno di \SI{0.5}{mm} dal bordo
+      del pad; fila di via sul bordo scheda ai due lati del connettore.
+\item C206 subito dopo il pad centrale (\S24.5), poi IC202. Pista \net{RF_ANT} dritta, larghezza
+      \net{RF_50R}, senza via.
+\item Nessuna pista o via di altre reti entro \SI{3}{mm} dal connettore.
+\end{itemize}
+\end{regola}
+
+\begin{perche}[il pad grande non è un problema a 435 MHz]
+Il pad centrale sopra \SI{0.0994}{mm} di prepreg vale circa
+$C=\varepsilon_0\cdot4{,}1\cdot(2{,}0\times1{,}1)\,\si{mm^2}/\SI{0.0994}{mm}\approx\SI{0.80}{pF}$, cioè
+$|X|=\SI{455}{\ohm}$ a \SI{435}{MHz}: in parallelo a \SI{50}{\ohm} dà $|\Gamma|\approx0{,}05$, return loss
+circa \SI{25}{dB}. Non serve togliere il GND di In1 sotto il pad (e non va tolto: è il riferimento).
+\end{perche}
+
+\begin{attenzione}[footprint e spessore della scheda]
+Il footprint scelto è per un PCB da \SI{0.8}{mm}; il codice JLC C2999837 è un DreamLNK DL-MMCX-KEF-180
+(revisione indipendente, P05). Con uno stackup da \SI{1.6}{mm} il connettore edge-mount per \SI{0.8}{mm}
+non si monta correttamente: esiste anche \path{MMCX_Molex_73415-0961_Horizontal_1.6mm-PCB}. Brik81
+ha chiuso P-05/R-23 senza modifiche; resta da verificare la compatibilità tra codice, footprint e spessore
+scelto. \dv
+\end{attenzione}
+
+% ---------------------------------------------------------------------
+\subsection{Switch HMC349A (IC202)}
+\label{sec:sw}
+SOP-8 con pad esposto: pin~3 RFC, pin~5 RF1 (RX), pin~8 RF2 (TX), pin 6--7 e pad esposto a GND, pin~1
+VDD (5V0, C211), pin~2 CTRL, pin~4 EN a GND. Le porte RF sono in continua verso VDD all'interno, per
+questo servono i DC block C206, C207, C208 \fonte{HMC349AMS8G DS rev.~F p.~8}.
+
+\begin{regola}[IC202]
+\begin{itemize}
+\item \textbf{Pad esposto con matrice di via} (almeno 6, per esempio 2$\times$3 da \SI{0.3}{mm}): la EVB ADI
+      mette \enquote{as many plated through vias as possible} attorno alle linee e sotto il pad
+      \fonte{DS p.~9}. Il footprint \texttt{SOP65P490X110-9N} oggi \textbf{non ha via} nel pad 9:
+      aggiungerle.
+\item Pin 6 e 7 collegati al pad esposto e a via proprie; pin~4 (EN) a GND con via sul pad.
+\item C206, C207, C208 (0603) a ridosso dei pin RFC, RF1, RF2, in linea con la pista.
+\item C211 sul pin~1 con via GND sul pad. CTRL (pin~2) è accanto a RFC: la pista di controllo esce
+      perpendicolare, verso l'esterno, senza correre lungo \net{RF_ANT} o \net{RF_SW_COM}.
+\end{itemize}
+\end{regola}
+
+% ---------------------------------------------------------------------
+\subsection{Catena RX: filtro, LNA, filtro post-LNA, rete AN643}
+\label{sec:rx}
+
+\subsubsection{Dallo switch al LNA}
+RF1 $\rightarrow$ C207 (\SI{100}{pF}) $\rightarrow$ \net{RF_RX_F1} (C210 \SI{6.8}{pF} verso GND)
+$\rightarrow$ L201 (\SI{22}{nH}) $\rightarrow$ \net{RF_RX_F2} (C209 \SI{6.8}{pF} verso GND)
+$\rightarrow$ C212 (\SI{100}{pF}) $\rightarrow$ Q201 pin~2. È un passa-basso $\pi$ (perdita \SI{0.17}{dB} a
+\SI{435}{MHz}, revisione del 04/11, P11; la nota \enquote{passa banda} sullo schema va ignorata, decisione
+di Brik81 registrata nel log 043).
+
+\begin{regola}[ingresso LNA]
+\begin{itemize}
+\item Pista totale da J201 a Q201 pin~2 \textbf{non oltre \SI{15}{mm}}, filtro compreso; componenti in
+      linea, senza ritorni.
+\item C210 e C209 (0805) con la via di GND sul pad lato massa, non condivisa.
+\item L201 (0805) con l'asse lungo la pista; nessun'altra induttanza parallela entro \SI{3}{mm}.
+\item Nessuna pista di altre reti tra switch e LNA, su nessuno strato (In1 GND, In2/B.Cu solo GND).
+\end{itemize}
+\end{regola}
+
+\begin{perche}[perché il LNA va vicino allo switch]
+La perdita di \SI{15}{mm} di linea è solo \SI{0.09}{dB} circa (\S\ref{sec:stackup}): conta poco sul rumore.
+Il motivo principale è la captazione: davanti al LNA ogni segnale indesiderato raccolto dalla pista viene
+amplificato di circa \SI{21}{dB} insieme al segnale utile.
+\end{perche}
+
+\subsubsection{LNA TQP3M9036 (Q201)}
+Pin~2 RF In, pin~7 RF Out con bias tramite L202 (\SI{120}{nH}, verso 3V3 con C214 \SI{100}{pF} e
+C215 \SI{1}{\micro F}), pin~6 Shut Down, pin NC a GND, pad esposto a GND.
+
+\begin{regola}[Q201]
+\begin{itemize}
+\item \textbf{Pad esposto con via}: il datasheet le richiede per massa RF e calore, foro \SI{0.35}{mm},
+      finito \SI{0.25}{mm} \fonte{TQP3M9036 DS p.~11}. Il footprint \texttt{SON50P200X200X95-9N-D} oggi
+      \textbf{non ha via}: aggiungerne almeno 3 in colonna (pad \SI{0.85}{}$\times$\SI{1.65}{mm}).
+\item Pin NC 1, 3, 4, 5, 8 saldati su pad collegati a GND (\enquote{grounded land pads}, \fonte{DS p.~10}).
+\item L202 dal pin~7 con pista corta; C214 sul lato 3V3 di L202 con via sul pad, C215 subito dopo.
+      L202 perpendicolare a L203.
+\item R202/R203 sul pin~6, lato opposto all'ingresso; la pista di \net{EN_RX_LNA} arriva dall'esterno
+      dell'anello senza passare vicino a \net{RF_LNA_IN}.
+\item Ingresso (pin~2) e uscita (pin~7) sono su lati opposti: le due piste non devono affiancarsi.
+\end{itemize}
+\end{regola}
+
+\subsubsection{Filtro dopo il LNA}
+C213 (\SI{100}{pF}, serie) $\rightarrow$ \net{RF_RX_F3} (C217 \SI{5.6}{pF}) $\rightarrow$ L203
+(\SI{22}{nH}) $\rightarrow$ \net{RF_RX_F4} (C216 \SI{8.2}{pF}) $\rightarrow$ L204 (\SI{22}{nH})
+$\rightarrow$ \net{RF_RX_MATCH} (C218 \SI{5.6}{pF}). Passa-basso a 5 elementi.
+
+\begin{regola}[filtro post-LNA]
+Componenti in linea, condensatori in parallelo con via propria, L203 e L204 sulla stessa linea ma
+\textbf{non affiancate} (distanza tra i corpi $\ge$\,\SI{1}{mm}, assi allineati alla pista). Questo tratto
+può essere lungo quanto serve per raggiungere l'angolo inferiore del Si4464.
+\end{regola}
+
+\subsubsection{Rete AN643 e coppia RF\_RX\_P / RF\_RX\_N}
+
+\begin{center}
+\begin{circuitikz}[scale=0.85,transform shape,font=\sffamily\small]
+\draw (0,0) node[left]{\net{RF_RX_MATCH}} to[short,o-*] (1,0);
+\draw (1,0) -- (1,1.5) to[C,l=C219 2{,}2p] (4,1.5) to[short,-*] (5,1.5) -- (6.5,1.5) node[right]{RXP (pin 2)};
+\draw (1,0) -- (1,-1.5) to[L,l_=L205 56n] (4,-1.5) to[short,-*] (5,-1.5) -- (6.5,-1.5) node[right]{RXN (pin 3)};
+\draw (5,1.5) to[L,l=L206 62n] (5,-1.5);
+\draw (4,-1.5) to[short,*-] (4,-2.2) to[C,l=C220 4{,}7p] (4,-3.6) node[ground]{};
+\draw (1,0) to[C,l_=C218 5{,}6p] (-0.3,-1.6) node[ground]{};
+\draw[decorate,decoration={brace,amplitude=4pt,raise=2pt},draw=sbgray] (6.6,1.8) -- (6.6,-1.8)
+      node[midway,right=8pt,align=left,font=\sffamily\scriptsize,text=sbgray]{$<$\,3\,mm,\\uguali};
+\end{circuitikz}
+\end{center}
+
+L'ingresso del LNA del Si4464 a \SI{434}{MHz} vale circa \SI{480}{\ohm} in parallelo a \SI{0.97}{pF}
+(AN643 Tab.~1, riportato nel log 007). Non è una linea da adattare in impedenza: conta che le due piste
+siano corte, simmetriche e con parassiti uguali (\S24.2).
+
+\begin{regola}[rete AN643]
+\begin{itemize}
+\item Rete compatta sull'angolo del Si4464 vicino ai pin 2/3; dal nodo \net{RF_RX_MATCH} i due rami
+      (C219 verso RXP, L205 verso RXN) partono simmetrici rispetto all'asse tra i due pin.
+\item \net{RF_RX_P} e \net{RF_RX_N} più corte di \SI{3}{mm} ciascuna e \textbf{uguali entro
+      \SI{0.5}{mm}}; stessa larghezza (\SI{0.20}{mm}), stessa distanza dal GND.
+\item L206 (0603) subito tra i pad RXP e RXN, con due tratti di uscita dai pin uguali (i pad sono a
+      passo \SI{0.5}{mm}: L206 va di traverso, a meno di \SI{1}{mm} dai pin).
+\item C220 (0805) sul lato RXN con la via di GND direttamente sul pad lato massa.
+\item Footprint standard (non HandSolder) per C219, C220, L205, L206 (\S24.5). Lasciare \SI{0.5}{mm} libero
+      intorno ai quattro componenti per la taratura con VNA prevista da AN643.
+\item Nessuna via sulle due reti; nessun'altra pista entro \SI{1}{mm}.
+\end{itemize}
+\end{regola}
+
+\begin{perche}[i parassiti contano qui]
+Il pad di un 0402 vale circa \SI{0.09}{pF}, quello di un 0603 circa \SI{0.2}{pF}
+($\varepsilon_0\varepsilon_rA/h$ su \SI{0.0994}{mm}): confrontati con gli \SI{0.97}{pF} dell'ingresso del
+Si4464 non sono trascurabili, e se sono diversi tra RXP e RXN sbilanciano la coppia. Una differenza di
+lunghezza di \SI{0.5}{mm} invece sposta la fase di appena $360^\circ\cdot0{,}5/388\approx\ang{0.5}$.
+\end{perche}
+
+% ---------------------------------------------------------------------
+\subsection{Si4464 (IC204)}
+\label{sec:si}
+QFN-20 \SI{4}{}$\times$\SI{4}{mm}. Pin~2/3 RXP/RXN, pin~4 TX, pin~6 e 8 VDD (3V3, C201 \SI{100}{nF}),
+pin~17 XIN, pin~16 XOUT libero, pin~18 GND, pad esposto 21 GND. Il pad esposto fornisce la massa RF e
+di tutto il chip: serve una buona saldatura sul piano di massa \fonte{Si4464 DS rev.~1.4 p.~47}.
+
+\begin{regola}[IC204]
+\begin{itemize}
+\item \textbf{Pad esposto con via} verso In1 (per esempio 3$\times$3 da \SI{0.3}{mm}, passo \SI{0.8}{mm}
+      \dv): il footprint \texttt{QFN50P400X400X90-21N-D} oggi \textbf{non ha via}. Pasta a finestre
+      (circa 50--70\,\% dell'area \dv) per non far galleggiare il chip.
+\item Pin~18 (GND) collegato al pad esposto e a una via propria.
+\item C201 a ridosso dei pin~6/8, via GND sul pad. \dv{} Silicon Labs usa nelle sue schede più
+      condensatori per VDD (AN629 non consultabile): se il progettista ne aggiunge, il più piccolo va più
+      vicino al pin.
+\item SPI, nIRQ e SDN escono dal lato opposto al lato RF e raggiungono il corridoio digitale
+      (\S\ref{sec:floorplan}); nessuna pista digitale sotto il chip su F.Cu o B.Cu oltre al necessario.
+\end{itemize}
+\end{regola}
+
+\subsubsection{Rete TX AN648 vicino al pin}
+\net{RF_SI_TX}: pin~4, L703 (\SI{220}{nH}, choke da 3V3) e C702 (\SI{9.1}{pF}, serie) $\rightarrow$
+\net{RF_TX_M1} $\rightarrow$ L702 (\SI{33}{nH}) $\rightarrow$ \net{RF_TX_M2}: C704 (\SI{15}{pF} verso GND),
+C701 (\SI{100}{pF}, DC block verso l'attenuatore). Valori AN648 Tab.~2 per \SI{434}{MHz} (log 001).
+
+\begin{regola}[AN648]
+\begin{itemize}
+\item L703 e C702 attaccati al pin~4 (pista $\le$\,\SI{1}{mm} \dv); la rete prosegue in linea, lontana
+      dalla rete AN643: le due reti partono dal Si4464 in direzioni opposte (TX verso l'angolo superiore,
+      RX verso quello inferiore).
+\item L703 e L702 con l'asse perpendicolare a L205/L206 (induttanze vicine non allineate: AN629 secondo
+      la sintesi di Microwaves\&RF \dv).
+\item Lato 3V3 di L703: in netlist non c'è un condensatore dedicato. Portare il 3V3 a L703 con una via vicina
+      a C201 o, meglio, prevedere un condensatore (\SI{100}{pF} + \SI{100}{nF}) sul nodo: richiede modifica di
+      schema \dv.
+\item C704 con via propria sul pad. Se le misure di spurie lo richiedessero, il passa-basso AN648 andrebbe
+      tra C704 e C701 (log 001): lasciare, se possibile, circa \SI{4}{mm} di linea dritta in quel punto.
+\end{itemize}
+\end{regola}
+
+\begin{perche}
+Il pin TX lavora in classe E: la tensione di picco sul pin arriva a \SI{6.5}{V} (Si4464 DS tab.~7, citato
+nel log 001) e la rete fa parte del funzionamento dello stadio. Il pin~4 è accanto a RXN (pin~3): più
+corta è la rete sul pin, meno il TX si accoppia nella rete RX e nel resto della scheda.
+\end{perche}
+
+% ---------------------------------------------------------------------
+\subsection{TCXO Y201}
+\label{sec:tcxo}
+ECS-TXO-20CSMV4-320 (\SI{32}{MHz}, \SI{2.0}{}$\times$\SI{1.6}{mm}): pin 1--2 GND, pin~3 uscita, pin~4 VDD
+(3V3, C202 \SI{1}{\micro F} e C203 \SI{100}{nF}). Uscita in clipped sine su \SI{10}{k\ohm}\,//\,\SI{10}{pF},
+accoppiata in AC: \net{RF_TCXO_OUT} $\rightarrow$ C204 (\SI{10}{nF}) $\rightarrow$ \net{RF_TCXO_AC}
+$\rightarrow$ R201 (\SI{33}{\ohm}) $\rightarrow$ \net{RF_XIN} (pin~17, TP701). Il Si4464 chiede
+\SIrange{0.6}{1.4}{V} picco-picco in AC su XIN \fonte{Si4464 DS p.~38}.
+
+\begin{regola}[TCXO]
+\begin{itemize}
+\item Y201 vicino al pin~17, dentro l'anello (lato XIN del Si4464, dopo la rotazione rivolto verso il basso):
+      C204 e R201 in linea, pista totale TCXO$\rightarrow$XIN $\le$\,\SI{5}{mm} \dv; netclass \net{RF_CLK}
+      (\SI{0.20}{mm}, distanza \SI{0.30}{mm}, \S24.2).
+\item C203 e C202 sul pin~4 di Y201, il \SI{100}{nF} più vicino, ciascuno con via GND sul pad.
+\item Pin 1--2 a GND con via proprie; GND pieno sotto il TCXO su tutti gli strati.
+\item \textbf{Almeno \SI{15}{mm} dal PA, da L242 e dalla pista 3V3 del PA}; fila di via tra il TCXO e la
+      catena RX che gli passa sotto.
+\item TP701 è un pad da \SI{1}{mm} sulla pista \net{RF_XIN}: va posato direttamente sulla pista, senza
+      tratto laterale (vale circa \SI{0.29}{pF}, trascurabile rispetto ai \SI{10}{pF} di carico).
+\end{itemize}
+\end{regola}
+
+\begin{perche}
+Il TCXO non deve ricevere calore (deriva) né RF del PA (spurie e modulazione della frequenza di
+riferimento). Le armoniche del clock (13$\times$32 = \SI{416}{MHz}, 14$\times$32 = \SI{448}{MHz}) cadono
+vicino alla banda: piste di clock corte e circondate da GND limitano quanto arriva alla catena RX.
+\end{perche}
+
+% ---------------------------------------------------------------------
+\subsection{Attenuatore R245--R248 e C255}
+\label{sec:att}
+$\pi$ con R245 \SI{100}{\ohm} (0603) verso GND su \net{RF_ATT_IN}, R246 \SI{68}{\ohm} (0603) in serie,
+R247 \SI{100}{\ohm} e R248 \SI{180}{\ohm} (0402) verso GND su \net{RF_ATT_OUT}, poi C255 \SI{56}{pF} verso il
+pin~3 del PA. Con carico \SI{50}{\ohm}: $Z_\mathrm{in}=\SI{49.0}{\ohm}$, attenuazione \SI{10.76}{dB}
+(calcolo con R247\,//\,R248 = \SI{64.3}{\ohm}). R248 corrisponde a R1 della EVB Qorvo, C255 a C1.
+
+\begin{regola}[attenuatore]
+\begin{itemize}
+\item Blocco compatto, in linea, ogni resistenza verso GND con via propria sul pad.
+\item R248 e C255 copiano l'ingresso della EVB: circa \SI{0.9}{mm} da R248 a C255 e \SI{0.9}{mm} da C255 al
+      pin~3 (linee TL2 e TL3 del modello Qorvo, EVB Test Summary p.~12, letti dalla figura \dv).
+\item R245 dissipa circa \SI{49}{mW} con il Si4464 a \SI{+20}{dBm} (revisione 04/11): pad 0603 collegato
+      a un po' di rame GND.
+\item Questo è il punto dove il corridoio digitale può passare sotto (su B.Cu/In2, In1 integro).
+\end{itemize}
+\end{regola}
+
+% ---------------------------------------------------------------------
+\subsection{PA QPA9510 (IC2) e rete d'uscita}
+\label{sec:pa}
+
+\subsubsection{Nota L-01 (ripresa dal log, rev.~1.45)}
+\begin{tcolorbox}[enhanced,breakable,colback=txred!4,colframe=txred,boxrule=1pt,arc=1.5pt,
+  title={\sffamily\bfseries Nota di layout L-01 \textendash{} rete d'uscita del QPA9510},fonttitle=\small,
+  coltitle=white,colbacktitle=txred,left=6pt,right=6pt,top=4pt,bottom=4pt]
+\small
+\begin{enumerate}
+\item Copiare la EVB: stesso ordine, stesse distanze, lunghezze e larghezze di pista tra pin RF\_OUT,
+      C260, L243 e C261/C262.
+\item Se lo stackup è diverso si ricalcola solo la larghezza della linea \SI{50}{\ohm} dopo C230; nel tratto
+      pin--C261/C262 restano lunghezze e posizioni della EVB.
+\item Tutto sul top, lato PA, nessuna via nel percorso RF, nessun cambio di strato.
+\item C260, C261, C262: ognuno con la propria via di massa sul pad o subito accanto (almeno 2 vie per C260
+      e C261), non in comune con una pista; piano di massa continuo sotto la rete.
+\item Pad esposto del PA: matrice di vie come da datasheet/EVB (massa RF e calore).
+\item L242 al nodo \net{RF_PA_OUT} nella stessa posizione della EVB; lato 3V3 disaccoppiato subito con vie sul
+      pad; pista larga per circa \SI{1.7}{A} di picco, separata da MCU e radio.
+\item Circa \SI{1}{mm} libero intorno a C260 e C262 per sostituirli a mano al banco.
+\item L243 e L242 lontane dalle induttanze del match TX del Si4464 e da FL201.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsubsection{Corrispondenza con la EVB Qorvo 410--470 MHz}
+{\footnotesize
+\begin{tabularx}{\linewidth}{@{}lllY@{}}
+\toprule
+\textbf{SYMPHONY} & \textbf{EVB} & \textbf{Valore} & \textbf{Posizione / funzione}\\
+\midrule
+C255 & C1 & 56p & DC block ingresso, a circa \SI{0.9}{mm} dal pin~3\\
+R248 & R1 & 180 & resistenza verso GND sull'ingresso (prima di C1)\\
+L240 / R240 & L1 / L7 & 12n / 0\,\si{\ohm} & VCC1, match interstadio; L7 è DNP sulla EVB, qui R240 montata\\
+C244 / C240 / C241 & C19 / C2 / C3 & 330p / 10n / 1n & disaccoppiamento VCC1\\
+L241 / R241 & L6 / L2 & 6,8n / 0\,\si{\ohm} & VCC2 (pin 5, 6, 7), match interstadio\\
+C248 / C245 / C246 / C247 & C20 / C21 / C5 / C6 & 330p / 10\textmu{} (3,3\textmu) / 10n / 1n & disaccoppiamento VCC2\\
+C251 & C15 & 100p & VCC pin~14\\
+C252 & C16 & 10n & APC (pin 15/16); C17 della EVB non ha corrispondente\\
+L242 & L3 & 1\si{\micro H} & choke dello stadio finale (NRS2012, 2020)\\
+C256 / C257 / C258 & C18 / C13 / C14 & 10\textmu{} (3,3\textmu) / 1n / 47p & disaccoppiamento lato 3V3 di L242\\
+C260 & C10 & 27p (0603) & primo condensatore in parallelo al nodo \net{RF_PA_OUT}\\
+L243 & L4 & 2,7n (0402) & serie\\
+C261 / C262 & C11 / C25 & 22p / 2p (0402) & in parallelo al nodo \net{RF_PA_MATCH} (C262 = taratura)\\
+C230 & C12 & 56p & DC block verso la linea \SI{50}{\ohm}\\
+\bottomrule
+\end{tabularx}}
+\noindent{\footnotesize Fonti: EVB Test Summary p.~2--3 (schema, foto, BOM), revisione 04/11 \S2.2. C8 (2F0), C9,
+C22--C24 della EVB sono DNP.}
+
+\subsubsection{Geometria della EVB e cosa cambia con lo stackup}
+La pagina~12 della EVB Test Summary mostra il modello usato da Qorvo per l'impedenza di carico. Lette
+dalla figura (risoluzione bassa \dv), le linee d'uscita sono:
+
+\begin{center}
+\begin{circuitikz}[scale=0.74,transform shape,font=\sffamily\small]
+\draw (0,0) node[left,align=right]{pin RF\_OUT\\(9--12)} to[TL,l=1{,}34] (2.6,0) to[short,-*] (2.6,0);
+\draw (2.6,0) to[C,l_=C260 27p] (2.6,-1.8) node[ground]{};
+\draw (2.6,0) -- (2.6,0.9) to[L,l=L242 1µ] (2.6,2.6) node[above]{3V3};
+\draw (2.6,0) to[TL,l=1{,}54] (5.2,0) to[L,l=L243 2{,}7n] (7.4,0) to[TL,l=0{,}88] (9.6,0) to[short,-*] (9.6,0);
+\draw (9.6,0) to[C,l_=C261 22p] (9.6,-1.8) node[ground]{};
+\draw (9.6,0) -- (10.8,0) to[short,-*] (10.8,0) to[C,l=C262 2p] (10.8,-1.8) node[ground]{};
+\draw (10.8,0) to[TL,l=3{,}82] (13.4,0) to[C,l=C230 56p] (15.4,0) to[TL,l=5{,}97] (17.8,0) node[right]{FL201};
+\end{circuitikz}
+\end{center}
+\noindent{\footnotesize Lunghezze in mm tra i componenti, larghezza del modello \enquote{W = 19,8}
+(probabilmente mil, circa \SI{0.50}{mm}). Il punto d'innesto di L242 (L3) va rilevato dalla foto/Gerber EVB.}
+
+\begin{perche}[perché le piste fanno parte del match]
+Al pin l'obiettivo Qorvo è $4{,}47+j0{,}65\,\si{\ohm}$ a \SI{430}{MHz} \fonte{EVB Test Summary p.~12}. Una
+linea con $Z_0$ e $\varepsilon_\mathrm{eff}$ ha induttanza $L'=Z_0\sqrt{\varepsilon_\mathrm{eff}}/c$: per una
+linea da \SI{50}{\ohm} ($\varepsilon_\mathrm{eff}=3{,}16$) $L'=\SI{0.30}{nH/mm}$, cioè circa
+\SI{0.8}{\ohm} di reattanza per millimetro a \SI{435}{MHz}, una frazione grande dei \SI{4.5}{\ohm} del
+nodo. Calcoli fatti per questa guida (ABCD, linee senza perdite, $\varepsilon_\mathrm{eff}=2{,}8$):
+\begin{itemize}
+\item componenti ideali, senza linee: $Z=1{,}78-j4{,}60\,\si{\ohm}$ a \SI{435}{MHz} (stesso valore della
+      revisione del 04/11);
+\item con le lunghezze lette dalla figura: $Z=2{,}16-j2{,}68\,\si{\ohm}$ (\SI{435}{MHz}); con ESL tipiche
+      dei condensatori (\SIrange{0.4}{0.6}{nH} \dv) $Z\approx2{,}0-j2{,}2\,\si{\ohm}$.
+\end{itemize}
+Le linee spostano l'impedenza verso l'obiettivo ma, con i dati disponibili, non bastano a raggiungerlo:
+il modello Qorvo contiene anche pad, gradini e modelli dei componenti che dalla figura non si leggono.
+Conclusione: copiare la EVB il più fedelmente possibile e tarare al banco (M-06), come dice L-01.
+\end{perche}
+
+\begin{attenzione}[L-01 punto 1 e 2 con uno stackup diverso dalla EVB]
+Le piste della EVB (circa \SI{0.5}{mm}, compatibili con \SI{50}{\ohm} su \SI{0.25}{mm} di RO4350B, lo stesso
+substrato dichiarato per la EVB della TQP3M9036 \fonte{TQP3M9036 DS p.~10}; substrato della EVB QPA9510
+\dv) sul JLC04161H-3313 valgono circa \SI{26}{\ohm}: a parità di lunghezza hanno circa metà
+dell'induttanza ($L'\approx\SI{0.15}{nH/mm}$ contro \SI{0.28}{nH/mm}). Copiare la larghezza fisica
+(L-01 punto~1) non copia quindi il comportamento elettrico. Questa guida segue L-01 alla lettera
+(stesse posizioni, lunghezze e larghezze, \SI{0.5}{mm}), perché la pista deve comunque portare la corrente
+(vedi sotto), e conta sulla taratura di C260 e C262. Se dopo la taratura la potenza resta bassa, la
+prima cosa da rivedere è questo tratto. Da decidere con Brik81 (Appendice~\ref{app:verifiche}).
+\end{attenzione}
+
+\subsubsection{Regole per il PA}
+\begin{regola}[rete d'uscita, integra L-01]
+\begin{itemize}
+\item \textbf{Blocco EVB ruotato di \ang{180}}: ingresso (pin~3) verso l'attenuatore, uscita (pin 9--12)
+      verso FL201. La rotazione conserva tutte le distanze; il lato APC (pin 13--16) guarda dentro l'anello,
+      il lato VCC2 (pin 5--8) e L242 verso l'esterno.
+\item Pin 9--12 uniti da un unico pad di rame sul lato del package (come sulla EVB), da cui parte la pista
+      d'uscita.
+\item Pista pin$\rightarrow$C260$\rightarrow$L243$\rightarrow$C261/C262 larga come sulla EVB (circa
+      \SI{0.5}{mm} \dv), lunghezze della figura sopra; dopo C262 la linea passa a \net{RF_50R}
+      (\SI{0.20}{mm}) con una rastremazione di circa \SI{0.5}{mm}.
+\item Masse dirette (\enquote{solid}, senza razze termiche) per C260, C261, C262, C230: almeno 2 via per
+      C260 e C261, 1--2 per C262, sul pad o a meno di \SI{0.3}{mm}.
+\item \SI{1}{mm} libero intorno a C260 e C262; niente serigrafia sopra i pad; riferimenti leggibili.
+\item Pin~8 (2F0) e pin~13 (NC): pad saldati ma \textbf{senza pista}; il pin~7 (NC) va unito a VCC2 come
+      sulla EVB (decisione P19).
+\end{itemize}
+\end{regola}
+
+\begin{regola}[masse del PA]
+\begin{itemize}
+\item \textbf{Pin~2 (GND1)}: collegamento corto, via dedicata subito accanto
+      \fonte{QPA9510 DS p.~7}.
+\item \textbf{Pin~4 (GND2)}: il datasheet consiglia una pista di circa \textbf{40 mil (\SI{1}{mm})} verso il
+      piano di massa, per ridurre il rumore in uscita (riduce di poco il guadagno), e via dedicate per la
+      stabilità \fonte{QPA9510 DS p.~7}. Copiare la forma della EVB.
+\item Disaccoppiamenti: il condensatore più piccolo (\SI{47}{}/\SI{100}{}/\SI{330}{pF}) attaccato al pin o
+      al nodo, poi \SI{1}{nF}, poi \SI{10}{nF}, poi \SI{10}{\micro F}; ogni condensatore con la sua via
+      (\S24.4). L240 e L241 nella posizione della EVB (fanno parte del match interstadio,
+      \fonte{QPA9510 DS p.~7}).
+\end{itemize}
+\end{regola}
+
+\begin{regola}[pad termico e calore]
+\begin{itemize}
+\item Matrice 3$\times$3 nel pad esposto (già nel footprint: foro \SI{0.25}{mm}, pad \SI{0.45}{mm}, passo
+      \SI{0.5}{mm}); Qorvo indica foro finito \SIrange{0.203}{0.330}{mm} su griglia \SIrange{0.5}{1.2}{mm} e
+      rame da 1 oz su top e bottom \fonte{QPA9510 DS p.~8}.
+\item Aggiungere \textbf{almeno 12 via} nel GND di F.Cu intorno al package (entro \SI{3}{mm}) e un'area di
+      rame su B.Cu di almeno \SI{10}{}$\times$\SI{10}{mm} \dv, accoppiabile termicamente alla struttura
+      del CubeSat.
+\item Via del pad riempite e chiuse se JLC lo offre sul 4 strati (sulla pagina capacità è predefinito
+      dal 6 strati in su \dv); altrimenti chiuse dal lato B.Cu con solder mask e pasta a finestre sul pad.
+\end{itemize}
+\end{regola}
+
+\begin{perche}[il conto termico]
+Il PA dissipa circa \SIrange{2.1}{2.3}{W} alla massima potenza (\S24.4 e log 001). Una via con foro
+\SI{0.25}{mm} e rame del foro di \SI{20}{\micro m} (valore assunto \dv) attraverso \SI{1.6}{mm} ha
+$R_\theta=\ell/(k\,\pi d\,t)=\num{1.6e-3}/(385\cdot\pi\cdot\num{0.25e-3}\cdot\num{20e-6})\approx\SI{265}{K/W}$;
+9 via in parallelo $\approx\SI{29}{K/W}$, cioè circa \SI{65}{K} con \SI{2.2}{W} se tutto il calore passasse
+solo da lì. Per questo servono le via aggiuntive, il rame di B.Cu e il collegamento alla struttura (nel
+vuoto non c'è convezione). Con le trasmissioni lunghe verificare la temperatura (S-14, F-03).
+\end{perche}
+
+\subsubsection{Alimentazione del PA e L242}
+\begin{regola}[3V3 del PA]
+\begin{itemize}
+\item Pista \textbf{dedicata} dal buck al PA, separata da quelle di MCU, Si4464 e TCXO (log 001).
+\item Ramo 3V3$\rightarrow$L242: \textbf{almeno \SI{0.62}{mm} su strato esterno}, consigliato \SI{1}{mm} o
+      un pour (\S24.4). Su strato interno JLC (\SI{0.5}{oz}) servirebbero circa \SI{3.7}{mm}: tenere il
+      ramo su F.Cu o usare un pour largo.
+\item Almeno 4 via da \SI{0.4}{mm} per ogni cambio di strato del ramo di potenza (\S24.4).
+\item C258 (\SI{47}{pF}) attaccato al lato 3V3 di L242, poi C257 (\SI{1}{nF}) e C256 (\SI{10}{\micro F}),
+      ognuno con via sul pad.
+\item L242 lontana da L243, da L702/L703 e da FL201 (L-01 punto 8), corpo dell'induttore non sopra linee RF.
+\end{itemize}
+\end{regola}
+
+\begin{perche}[i numeri della corrente]
+IPC-2221: $I=k\,\Delta T^{0{,}44}A^{0{,}725}$ ($A$ in mil$^2$, $k=0{,}048$ esterno, $0{,}024$ interno). Con
+$I=\SI{1.7}{A}$ e $\Delta T=\SI{10}{K}$: esterno $A=\SI{33.9}{mil^2}$, cioè \SI{0.62}{mm} su
+\SI{35}{\micro m}; interno $A=\SI{88}{mil^2}$, cioè \SI{3.7}{mm} su \SI{15}{\micro m} (il \S24.4 indica
+\SI{1.6}{mm}, valore che vale per 1 oz interno). Caduta su \SI{30}{mm} di pista da \SI{1}{mm}:
+\SI{14.7}{m\ohm}, \SI{25}{mV} a \SI{1.7}{A}. Nel tratto pin--C260 passano anche circa \SI{0.67}{A} RF efficaci
+($\sqrt{\SI{2}{W}/\SI{4.5}{\ohm}}$): è un altro motivo per non stringere quella pista sotto la larghezza
+della EVB.
+\end{perche}
+
+\begin{regola}[ingresso e isolamento del PA]
+Ingresso e uscita del PA su lati opposti, piste mai affiancate, fila di via GND che separa il tratto
+d'ingresso (attenuatore, C255) dalla rete d'uscita e da FL201.
+\end{regola}
+
+\begin{perche}
+Il PA ha circa \SI{42}{dB} di guadagno a \SI{430}{MHz} \fonte{EVB Test Summary p.~6}: se l'uscita torna
+all'ingresso con meno di \SI{42}{dB} di isolamento più margine, il PA oscilla. L'accoppiamento tra piste
+vicine su FR4 sottile è dell'ordine di $1/(1+(d/h)^2)$: a $d=\SI{2}{mm}$ e $h=\SI{0.1}{mm}$ circa
+\SI{-52}{dB}, appena sufficiente; per questo, oltre alla distanza, serve la fila di via.
+\end{perche}
+
+% ---------------------------------------------------------------------
+\subsection{Filtro FL201 (LFCG-490+)}
+\label{sec:fl201}
+Mini-Circuits LFCG-490+, \SI{2.0}{}$\times$\SI{1.25}{mm}: pad~8 ingresso (\net{RF_LPF_IN}, da C230), pad~4
+uscita (\net{RF_LPF_OUT}, verso C208), pad 1, 2, 3, 5, 6, 7 GND \fonte{LFCG-490+ DS p.~3}. Perdita circa
+\SI{1.15}{dB} a \SI{435}{MHz}; \SI{3.5}{W} a \SI{25}{\celsius} con derating fino a \SI{0.9}{W} a
+\SI{125}{\celsius} \fonte{DS p.~1--2}.
+
+\begin{center}
+\begin{tikzpicture}[x=6mm,y=6mm]
+\fill[black!6] (-6,-2.6) rectangle (6,2.6);
+\fill[orange!70!black] (-6,-0.17) rectangle (-1.7,0.17);
+\fill[orange!70!black] (1.7,-0.17) rectangle (6,0.17);
+\node[font=\sffamily\tiny,above] at (-4.2,0.2) {da C230};
+\node[font=\sffamily\tiny,above] at (4.2,0.2) {verso C208};
+\draw[black!70,line width=0.5pt,fill=black!20] (-1.0,-0.62) rectangle (1.0,0.62);
+\node[font=\sffamily\tiny] at (0,0) {FL201};
+\foreach \x in {-0.65,0,0.65}{
+  \fill[orange!70!black] (\x-0.18,0.4) rectangle (\x+0.18,1.4);
+  \fill[orange!70!black] (\x-0.18,-1.4) rectangle (\x+0.18,-0.4);
+  \fill[white] (\x,1.75) circle (0.15); \draw (\x,1.75) circle (0.15);
+  \fill[white] (\x,-1.75) circle (0.15); \draw (\x,-1.75) circle (0.15);
+}
+\fill[orange!70!black] (-1.7,-0.18) rectangle (-0.7,0.18);
+\fill[orange!70!black] (0.7,-0.18) rectangle (1.7,0.18);
+\foreach \y in {-2.3,2.3} \foreach \x in {-5,-4,-3,-2,2,3,4,5} {\draw[fill=white] (\x,\y) circle (0.12);}
+\foreach \y in {-1.0,1.0} \foreach \x in {-5,-4,-3,-2.2,2.2,3,4,5} {\draw[fill=white] (\x,\y) circle (0.12);}
+\node[font=\sffamily\tiny,align=center] at (0,-3.2) {via su ogni pad GND, fence ai lati delle linee, nessun tratto parallelo tra ingresso e uscita};
+\end{tikzpicture}
+\end{center}
+
+\begin{regola}[FL201]
+\begin{itemize}
+\item In linea tra C230 e C208: ingresso e uscita \textbf{in direzioni opposte}, piste dritte per almeno
+      \SI{2}{mm} da ogni lato del filtro; mai un percorso a U che riavvicini l'uscita all'ingresso.
+\item Una via per ciascuno dei 6 pad GND, il più vicino possibile al pad (in totale 6 via), più la fence
+      delle linee; le via sui due lati del filtro formano una barriera trasversale tra il lato PA e il lato
+      switch.
+\item Footprint conforme al layout consigliato Mini-Circuits PL-429 (\fonte{DS p.~3}): il footprint
+      \texttt{IC:LFCG490} (pad \SI{0.35}{}$\times$\SI{1.0}{mm}) va confrontato con PL-429 \dv.
+\item Lontano da L242 e L243 (L-01 punto 8). Il filtro scalda: GND attorno con buone via verso In1.
+\end{itemize}
+\end{regola}
+
+\begin{perche}
+FL201 attenua circa \SI{60}{dB} a 800--960\,MHz \fonte{revisione 04/11, \S2.2}: perché questa attenuazione
+arrivi all'antenna, l'accoppiamento diretto tra le piste d'ingresso e d'uscita deve essere molto più
+basso di \SI{-60}{dB}. Con il filtro lungo appena \SI{2}{mm} questo si ottiene solo con piste che si
+allontanano in direzioni opposte e con le masse sui pad.
+\end{perche}
+
+\begin{attenzione}[armoniche dello switch]
+FL201 è a monte dello switch: le armoniche prodotte da IC202 a circa \SI{30}{dBm} non vengono filtrate
+(revisione 04/11 P10, log M-05). Il layout non lo risolve; tenere solo il tratto C208--RF2 corto.
+\end{attenzione}
+
+% =====================================================================
+\section{Regole generali RF}
+\label{sec:generali}
+
+\subsection{Piano di massa e ritorni di corrente}
+\begin{regola}[GND]
+\begin{itemize}
+\item In1.Cu GND pieno sotto tutta la zona RF (e, se possibile, sotto tutta la scheda); nessuna pista su In1.
+\item Sotto la zona RF anche In2.Cu e B.Cu solo GND, cuciti con In1, tranne il corridoio digitale.
+\item GND di F.Cu riempito intorno a tutte le linee e i componenti RF, con la distanza della CPWG
+      (\SI{0.20}{mm}); nessuna isola di rame scollegata o \enquote{appesa} con una sola via.
+\item Ogni condensatore in parallelo ha la sua via: il ritorno non deve passare per la pista o per un pad
+      di un altro componente.
+\item Le correnti forti del PA (ritorno della pista 3V3 e del buck) non devono attraversare la zona RX:
+      la pista 3V3 del PA arriva dall'esterno dell'anello, lato L242.
+\end{itemize}
+\end{regola}
+
+\subsection{Via di cucitura e via fence}
+Il passo delle via segue la regola pratica $p\le\lambda/20$ alla frequenza più alta da contenere (regola
+d'uso comune, non da una application note specifica). Con $\lambda_g=\lambda_0/\sqrt{\varepsilon_\mathrm{eff}}$
+($\varepsilon_\mathrm{eff}=3{,}16$) e, più conservativo, $\lambda_d=\lambda_0/\sqrt{\varepsilon_r}$ ($\varepsilon_r=4{,}1$):
+
+\begin{center}
+\begin{minipage}{0.47\linewidth}
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$n$ & $f$ [MHz] & $\lambda_g/20$ [mm] & $\lambda_d/20$ [mm]\\
+\midrule
+1 & 435 & 19,4 & 17,0\\
+2 & 870 & 9,7 & 8,5\\
+3 & 1305 & 6,5 & 5,7\\
+5 & 2175 & 3,9 & 3,4\\
+10 & 4350 & 1,9 & 1,7\\
+\bottomrule
+\end{tabular}
+\end{minipage}\hfill
+\begin{minipage}{0.5\linewidth}
+\begin{tikzpicture}
+\begin{axis}[width=\linewidth,height=44mm,xlabel={armonica $n$},ylabel={passo max [mm]},
+  ymode=log,xmin=1,xmax=10,ymin=1,ymax=25,grid=major,
+  tick label style={font=\scriptsize},label style={font=\scriptsize},
+  legend style={font=\tiny,at={(0.98,0.98)},anchor=north east},
+  ytick={1,2,5,10,20},yticklabels={1,2,5,10,20}]
+\addplot[domain=1:10,samples=10,thick,sbblue] {388/(20*x)};
+\addplot[domain=1:10,samples=10,thick,dashed,txred] {340.6/(20*x)};
+\addplot[black!60,thin] coordinates {(1,2) (10,2)};
+\legend{$\lambda_g/20$,$\lambda_d/20$,2\,mm}
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+\begin{regola}[passo delle via]
+\begin{itemize}
+\item \textbf{Fence lungo le linee RF}: via da \SI{0.6}{}/\SI{0.3}{mm} su entrambi i lati, centro a
+      \SIrange{0.5}{0.7}{mm} dal bordo della pista (cioè a \SIrange{0.3}{0.5}{mm} dal bordo del GND
+      coplanare), \textbf{passo $\le$\,\SI{2}{mm}} (\S24.1): copre fino alla 10$^a$ armonica
+      (\SI{4.35}{GHz}).
+\item \textbf{Intorno al PA, alla rete d'uscita e a FL201: passo $\le$\,\SI{1.5}{mm}} (sotto $\lambda_d/20$ a
+      \SI{4.35}{GHz}).
+\item Bordo della zona RF e bordo scheda: fila di via a passo $\le$\,\SI{2}{mm}.
+\item Cucitura delle aree GND nella zona RF: griglia $\le$\,\SI{3}{mm} (sotto $\lambda/20$ alla 5$^a$
+      armonica).
+\item Fila di via tra zona TX e zona RX (\S24.3), passo $\le$\,\SI{2}{mm}.
+\end{itemize}
+\end{regola}
+
+\begin{center}
+\begin{tikzpicture}[x=5mm,y=5mm]
+\fill[black!8] (0,0) rectangle (16,5);
+\fill[white] (0,2.0) rectangle (16,3.0);
+\fill[orange!70!black] (0,2.2) rectangle (16,2.8);
+\foreach \x in {1,3,...,15} {\draw[fill=white] (\x,3.65) circle (0.22); \draw[fill=white] (\x,1.35) circle (0.22);}
+\draw[dim] (1,4.5) -- (3,4.5); \node[lab,above] at (2,4.5) {$\le$\,2\,mm};
+\draw[dim] (16.6,2.2) -- (16.6,2.8); \node[lab,right] at (16.7,2.5) {$W=0{,}20$};
+\draw[dim] (17.9,2.8) -- (17.9,3.0); \node[lab,right] at (18.0,3.3) {$s=0{,}20$};
+\node[lab,below] at (8,0) {CPWG su F.Cu, In1.Cu GND sotto; via di fence sui due bordi del GND coplanare};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Clearance, angoli, pad e transizioni}
+\begin{regola}[geometria delle piste RF]
+\begin{itemize}
+\item Clearance delle reti RF verso il GND = gap della CPWG (\SI{0.20}{mm}); verso altre reti
+      $\ge$\,\SI{0.5}{mm}, verso piste digitali su F.Cu $\ge$\,\SI{2}{mm} con GND cucito in mezzo.
+\item Curve a \ang{45} o ad arco (\S24.1). A \SI{435}{MHz} un angolo a \ang{90} su \SI{0.2}{mm} vale circa
+      $W\cdot C'\approx\SI{0.02}{pF}$ in più ($C'=\SI{0.12}{pF/mm}$): trascurabile sulle linee \SI{50}{\ohm};
+      la regola serve per pulizia e armoniche. Nella rete del PA vale la geometria EVB.
+\item Pista che entra in un pad: al centro del lato corto, in linea; nessun pad attraversato di lato.
+      La pista non si allarga prima del pad (niente teardrop sulle reti RF).
+\item Nessuno stub: la pista va da pad a pad; un condensatore in parallelo si posa \emph{sulla} pista, non
+      a lato con un tratto di collegamento.
+\item Componenti RF 0402/0603/0805 con footprint standard (non HandSolder) nel percorso RF (\S24.5,
+      rev.~1.13). Restano HandSolder solo disaccoppiamenti del PA, L240, L241, L202, R240--R243: accettabile
+      perché non sono nel percorso a \SI{50}{\ohm} \dv{} (L240 e L241 fanno parte del match interstadio).
+\item Nessuna via nel percorso RF; se inevitabile (non sulle reti di L-01), 2--4 via GND accanto (\S24.5).
+\end{itemize}
+\end{regola}
+
+\subsection{Separazione dal digitale}
+\begin{regola}[digitale]
+\begin{itemize}
+\item Nessuna pista digitale o di alimentazione switching sotto le linee RF, su nessuno strato, tranne
+      l'attraversamento unico del corridoio (\S\ref{sec:floorplan}).
+\item SPI, nIRQ, SDN, \net{EN_TX_ANT_SW}, \net{EN_RX_LNA}: dal lato MCU, con il percorso più corto, mai in
+      parallelo a una linea RF per più di \SI{5}{mm}.
+\item Il buck TPSM863257 e le sue piste di commutazione lontani dalla zona RF (almeno \SI{20}{mm} \dv) e
+      mai sotto.
+\end{itemize}
+\end{regola}
+
+\begin{perche}
+Per due piste sopra un piano a distanza $h$ l'accoppiamento scende circa come $1/(1+(d/h)^2)$: con
+$h=\SI{0.1}{mm}$, a $d=\SI{1}{mm}$ vale circa \SI{-40}{dB}, a \SI{2}{mm} circa \SI{-52}{dB}. Con un GND
+cucito in mezzo il valore reale è ancora più basso.
+\end{perche}
+
+\subsection{Schermatura (opzione)}
+Lo schermo non è in schema. Se si vuole tenere l'opzione:
+\begin{itemize}
+\item solo telaio o clip SMD, niente componenti a foro passante (\S24.3);
+\item anello di GND su F.Cu senza solder mask, largo circa \SI{1}{mm} \dv, con via a passo
+      $\le$\,\SI{2}{mm}; due scomparti: (1) PA, rete d'uscita, FL201; (2) LNA, filtri, Si4464, TCXO;
+      lo switch e J201 fuori o in uno scomparto a parte;
+\item dove una linea RF attraversa una parete, la parete ha una tacca larga almeno 3 volte $(W+2s)$ \dv;
+\item altezza interna maggiore del componente più alto più \SI{0.5}{mm} (L242 \SI{1.2}{mm});
+\item richiede l'aggiunta del componente in schema e in BOM (modifica da approvare).
+\end{itemize}
+
+\subsection{Punti di test e taratura}
+\begin{itemize}
+\item Esistenti: TP701 su \net{RF_XIN} (ampiezza TCXO, \SIrange{0.6}{1.4}{Vpp}), TP702 su
+      \net{EN_TX_ANT_SW}, TP703 su \net{EN_RX_LNA}. Pad sulla pista, senza tratti laterali.
+\item Misure al collaudo dal connettore J201 con attenuatore di potenza (M-01, M-05, M-06 del log).
+\item \textbf{Senza modifiche di schema}: lasciare piazzole GND senza solder mask (circa
+      \SI{1.5}{}$\times$\SI{1.5}{mm}, su F.Mask) accanto a C230, C255, C212 e C213, per saldare la calza di un
+      cavo semirigido al posto del condensatore serie e misurare il PA o il LNA separatamente.
+\item \textbf{Opzione con modifica di schema}: un connettore U.FL DNP con 0402 da \SI{0}{\ohm} a T
+      sull'uscita di C230 \dv. Non consigliato nel tratto L-01 (aggiunge parassiti al nodo).
+\item Spazio di taratura: \SI{1}{mm} intorno a C260 e C262; \SI{0.5}{mm} intorno a C219, C220, L205, L206,
+      C702, C704, L702.
+\end{itemize}
+
+% =====================================================================
+\section{Netclass e regole DRC in KiCad}
+\label{sec:netclass}
+
+\subsection{Cosa c'è oggi in SYMPHONY.kicad\_pro}
+\begin{attenzione}[netclass mancanti]
+Il file contiene una sola classe, \texttt{Default} (pista \SI{0.2}{mm}, clearance \SI{0.2}{mm}, via
+\SI{0.6}{}/\SI{0.3}{mm}), con \texttt{netclass\_assignments} vuoto e \texttt{netclass\_patterns} vuoto; la
+netlist assegna \texttt{Default} a tutte le reti. Il log dice che in rev.~1.12 sono state aggiunte 6 netclass
+con 31 assegnazioni e che in rev.~1.13 le assegnazioni sono state riportate sui nuovi nomi; nessuno dei
+backup in \texttt{report\_src/bak\_*} contiene \texttt{RF\_50R}. \textbf{Tutte le netclass e le assegnazioni
+vanno ricreate.}
+\end{attenzione}
+
+Regole di scheda presenti: clearance minima \SI{0.15}{mm}, pista minima \SI{0.1}{mm}, via minima
+\SI{0.3}{mm}, foro passante minimo \SI{0.3}{mm}, anello minimo \SI{0.1}{mm}, foro--foro \SI{0.2}{mm},
+rame--bordo \SI{0.2}{mm}.
+
+\begin{attenzione}[via del pad di IC2]
+Il footprint di IC2 ha via con foro \SI{0.25}{mm}, sotto il minimo di scheda (\texttt{min\_through\_hole\_diameter}
+= \SI{0.3}{mm}): il DRC le segnalerà. JLCPCB accetta fori da \SI{0.2}{mm} (preferito) e \SI{0.15}{mm}
+(minimo) sul 4 strati; con foro \SI{0.25}{mm} e via $\ge$\,\SI{0.45}{mm} non c'è sovrapprezzo
+\fonte{jlcpcb.com/capabilities}. Abbassare il minimo a \SI{0.25}{mm} o portare le via a \SI{0.3}{mm}
+(Qorvo ammette fino a \SI{0.330}{mm}).
+\end{attenzione}
+
+\subsection{Netclass da creare}
+{\small
+\renewcommand{\arraystretch}{1.15}
+\begin{xltabular}{\linewidth}{@{}L{22mm}L{23mm}L{17mm}Y@{}}
+\toprule
+\textbf{Netclass} & \textbf{Pista / clearance} & \textbf{Via} & \textbf{Reti (nomi netlist, prefisso \net{/UHF/})}\\
+\midrule\endhead
+\midrule\multicolumn{4}{r}{\footnotesize\itshape continua\ldots}\\\endfoot
+\bottomrule\endlastfoot
+\textbf{RF\_50R} & \SI{0.20}{} / \SI{0.20}{mm} & \SI{0.6}{} / \SI{0.3}{} & \net{RF_ANT} \net{RF_SW_COM} \net{RF_SW_RX} \net{RF_SW_TX} \net{RF_RX_F1} \net{RF_RX_F2} \net{RF_LNA_IN} \net{RF_LNA_OUT} \net{RF_RX_F3} \net{RF_RX_F4} \net{RF_RX_MATCH} \net{RF_SI_TX} \net{RF_TX_M1} \net{RF_TX_M2} \net{RF_ATT_IN} \net{RF_ATT_OUT} \net{RF_PA_IN} \net{RF_PA_MATCH} \net{RF_LPF_IN} \net{RF_LPF_OUT} (20 reti, come \S24.2)\\
+\midrule
+\textbf{RF\_DIFF} & \SI{0.20}{mm}, gap \SI{0.20}{mm} & -- & \net{RF_RX_P}, \net{RF_RX_N} (coppia: KiCad riconosce i suffissi \_P/\_N)\\
+\midrule
+\textbf{RF\_PA\_OUT} & \SI{1.0}{} / \SI{0.25}{mm} & \SI{0.8}{} / \SI{0.4}{} & \net{RF_PA_OUT}. Il valore \SI{1.0}{mm} (\S24.2) vale per il ramo L242; il tratto pin--C260--L243 si traccia a mano con la larghezza EVB (\S\ref{sec:pa})\\
+\midrule
+\textbf{RF\_CLK} & \SI{0.20}{} / \SI{0.30}{mm} & -- & \net{RF_TCXO_OUT}, \net{RF_TCXO_AC}, \net{RF_XIN}\\
+\midrule
+\textbf{PA\_BIAS} & \SI{0.50}{} / \SI{0.20}{mm} & \SI{0.8}{} / \SI{0.4}{} & \net{PA_VCC1}, \net{PA_VCC1_F}, \net{PA_VCC2}, \net{PA_VCC2_F}\\
+\midrule
+\textbf{PWR} & \SI{0.50}{} / \SI{0.20}{mm} & \SI{0.8}{} / \SI{0.4}{} & \net{3V3}, \net{5V0} (reti globali, senza prefisso). Il ramo 3V3 del PA si traccia a mano $\ge$\,\SI{1}{mm} o a pour\\
+\end{xltabular}}
+
+Pattern consigliati (Impostazioni scheda $\rightarrow$ Netclass $\rightarrow$ assegnazioni), in quest'ordine:
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Pattern} & \textbf{Netclass}\\
+\midrule
+\texttt{/UHF/RF\_RX\_P}, \texttt{/UHF/RF\_RX\_N} & RF\_DIFF\\
+\texttt{/UHF/RF\_TCXO\_*}, \texttt{/UHF/RF\_XIN} & RF\_CLK\\
+\texttt{/UHF/RF\_PA\_OUT} & RF\_PA\_OUT\\
+\texttt{/UHF/PA\_VCC*} & PA\_BIAS\\
+le 20 reti di RF\_50R, una per riga (non usare \texttt{/UHF/RF\_*}: prenderebbe anche \net{RF_SDN}) & RF\_50R\\
+\texttt{3V3}, \texttt{5V0} & PWR\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Regole personalizzate (file .kicad\_dru)}
+Proposta, sintassi da controllare in KiCad 10 \dv:
+\begingroup\small
+\begin{verbatim}
+(version 1)
+(rule "RF: niente via sulle reti RF a 50 ohm e RF_DIFF"
+   (condition "A.Type == 'via' && (A.NetClass == 'RF_50R' || A.NetClass == 'RF_DIFF')")
+   (constraint disallow via))
+(rule "RF: clearance verso altre reti"
+   (condition "A.NetClass == 'RF_50R' && B.Net != A.Net && B.NetName != 'GND'")
+   (constraint clearance (min 0.5mm)))
+(rule "Zona RF: In1 solo GND"
+   (layer "In1.Cu")
+   (condition "A.insideArea('ZONA_RF') && A.NetName != 'GND'")
+   (constraint disallow track via zone))
+\end{verbatim}
+\endgroup
+La terza regola richiede una \emph{rule area} chiamata \texttt{ZONA\_RF} sopra la parte RF; la seconda
+non vale per la pista \net{EN_TX_ANT_SW} vicino a CTRL di IC202, che va controllata a vista.
+
+\subsection{Impostazioni delle zone}
+\begin{itemize}
+\item Zona GND di F.Cu nella parte RF: clearance \SI{0.20}{mm} (uguale al gap CPWG), connessione dei pad
+      \textbf{piena} (non a razze) per i pad GND dei componenti RF, larghezza minima \SI{0.2}{mm},
+      rimozione delle isole.
+\item Priorità della zona GND di F.Cu nella parte RF più alta delle eventuali zone 3V3 sullo stesso strato.
+\end{itemize}
+
+% =====================================================================
+\section{Checklist prima dei Gerber}
+\label{sec:checklist}
+\subsection*{Progetto e stackup}
+\begin{checklist}
+\item Netclass RF\_50R, RF\_DIFF, RF\_PA\_OUT, RF\_CLK, PA\_BIAS, PWR create; tutte le reti della tabella
+      \S\ref{sec:netclass} assegnate (controllo nel pannello Net Inspector).
+\item Stackup in KiCad = stackup ordinato a JLCPCB; In1.Cu GND; larghezze verificate con il calcolatore
+      JLCPCB (con solder mask).
+\item Footprint di J201 compatibile con spessore scheda e codice JLC.
+\item Via nei pad esposti di IC202, Q201, IC204 aggiunte; via di IC2 compatibili con le regole di scheda.
+\end{checklist}
+\subsection*{Piazzamento}
+\begin{checklist}
+\item IC202 con RFC verso J201; TX da RF2, RX da RF1; IC204 ruotato con il lato RF verso l'esterno
+      dell'anello; nessun incrocio TX/RX.
+\item J201--Q201 $\le$\,\SI{15}{mm} di pista; componenti RX in linea.
+\item Rete AN643 sui pin 2/3; \net{RF_RX_P}/\net{RF_RX_N} $<$\,\SI{3}{mm}, differenza $\le$\,\SI{0.5}{mm};
+      L206 tra i pad; C220 con via.
+\item Rete AN648 sul pin~4, lontana dalla rete AN643, induttanze non allineate.
+\item Y201 vicino a XIN, $\ge$\,\SI{15}{mm} da PA e L242; C203/C202 sul pin~4 di Y201.
+\item Blocco PA copiato dalla EVB (ordine, distanze, lunghezze, larghezze); \SI{1}{mm} libero intorno a C260 e C262.
+\item FL201 in linea, ingresso e uscita in direzioni opposte.
+\item PA $\ge$\,\SI{15}{mm} dalla catena RX; ingresso e uscita del PA su lati opposti.
+\end{checklist}
+\subsection*{Sbroglio e masse}
+\begin{checklist}
+\item Nessuna via sulle reti RF\_50R, RF\_DIFF, \net{RF_PA_OUT}, \net{RF_PA_MATCH}; nessun cambio di strato.
+\item Nessuno stub; condensatori in parallelo posati sulla pista.
+\item Ogni condensatore in parallelo con la sua via; C260 e C261 con almeno 2 via; pad GND RF a connessione piena.
+\item Pin~4 del PA con pista di circa \SI{1}{mm} verso la via (DS p.~7); pin~2 diretto.
+\item Pin~8 (2F0) e pin~13 del PA senza pista.
+\item Fence a passo $\le$\,\SI{2}{mm} su tutte le linee, $\le$\,\SI{1.5}{mm} intorno a PA e FL201; fila di
+      via tra TX e RX; via su tutti i 6 pad GND di FL201.
+\item In1.Cu senza piste né tagli nella zona RF; In2/B.Cu solo GND sotto le linee RF.
+\item Corridoio digitale unico, a \ang{90}, sotto il tratto TX a basso livello; nessuna pista digitale a
+      meno di \SI{2}{mm} dalle linee RF su F.Cu.
+\item Ramo 3V3$\rightarrow$L242 dedicato, $\ge$\,\SI{1}{mm} (o pour) su strato esterno, $\ge$\,4 via per
+      cambio strato; C258/C257/C256 sul lato 3V3 di L242.
+\item Pad termico di IC2 con 9 via + almeno 12 via intorno + rame su B.Cu.
+\end{checklist}
+\subsection*{Controlli finali}
+\begin{checklist}
+\item DRC senza errori con le regole RF; controllo a vista delle reti RF in 3D e sul layer F.Cu da solo.
+\item Confronto netlist--PCB (\emph{Update PCB from Schematic} senza differenze; R243 = \SI{220}{\ohm}).
+\item Piazzole di misura (GND senza mask) accanto a C230, C255, C212, C213 se volute.
+\item Serigrafia: riferimenti leggibili di C260, C262, C219, C220, L205, L206, C702, C704; nessuna
+      serigrafia sui pad.
+\item Revisione del layout RF con questa checklist firmata da un secondo progettista.
+\end{checklist}
+
+% =====================================================================
+\appendix
+\section{Componenti RF: footprint e note di piazzamento}
+\label{app:componenti}
+{\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{xltabular}{\linewidth}{@{}L{11mm}L{23mm}L{35mm}Y@{}}
+\toprule
+\textbf{Ref} & \textbf{Valore} & \textbf{Footprint} & \textbf{Rete / note di piazzamento}\\
+\midrule\endhead
+\midrule\multicolumn{4}{r}{\footnotesize\itshape continua\ldots}\\\endfoot
+\bottomrule\endlastfoot
+\multicolumn{4}{@{}l}{\textbf{Antenna e switch}}\\
+J201 & MMCX & MMCX Molex 73415-0961 0.8mm-PCB & bordo scheda; 3 via per pad GND; vedi P05\\
+C206 & 100p & C\_0603 & \net{RF_ANT}--\net{RF_SW_COM}, subito dopo J201\\
+IC202 & HMC349AMS8GE & SOP65P490X110-9N & RFC verso J201; via nel pad esposto (da aggiungere)\\
+C211 & 100n & C\_0402 & VDD pin~1 (5V0), via sul pad\\
+C207 & 100p & C\_0603 & sul pin RF1 (RX)\\
+C208 & 100p & C\_0603 & sul pin RF2 (TX)\\
+\multicolumn{4}{@{}l}{\textbf{RX prima del LNA}}\\
+C210 & 6.8p & C\_0805 & \net{RF_RX_F1} verso GND, via propria\\
+L201 & 22n & L\_0805 & serie, asse lungo la pista\\
+C209 & 6.8p & C\_0805 & \net{RF_RX_F2} verso GND, via propria\\
+C212 & 100p & C\_0603 & DC block sul pin~2 di Q201; piazzola GND di misura vicina\\
+Q201 & TQP3M9036 & SON50P200X200X95-9N-D & via nel pad esposto (da aggiungere); NC a GND\\
+R202 & 0R & R\_0402 & pin~6, lato opposto all'ingresso\\
+R203 & DNP & R\_0402 & pin~6 verso GND\\
+L202 & 120n & L\_0402 HandSolder & choke uscita LNA, perpendicolare a L203\\
+C214 & 100p & C\_0402 & lato 3V3 di L202, via sul pad\\
+C215 & 1u & C\_0402 & dopo C214\\
+\multicolumn{4}{@{}l}{\textbf{RX dopo il LNA e AN643}}\\
+C213 & 100p & C\_0603 & serie, uscita LNA\\
+C217 & 5.6p & C\_0603 & \net{RF_RX_F3} verso GND\\
+L203 & 22n & L\_0805 & serie, non affiancata a L204\\
+C216 & 8.2p & C\_0805 & \net{RF_RX_F4} verso GND\\
+L204 & 22n & L\_0805 & serie\\
+C218 & 5.6p & C\_0603 & \net{RF_RX_MATCH} verso GND\\
+C219 & 2.2p & C\_0603 & serie verso RXP; simmetrico a L205; spazio taratura\\
+L205 & 56n & L\_0603 & serie verso RXN\\
+L206 & 62n & L\_0603 & tra RXP e RXN, a meno di 1\,mm dai pin\\
+C220 & 4.7p & C\_0805 & RXN verso GND, via sul pad\\
+\multicolumn{4}{@{}l}{\textbf{Si4464 e TCXO}}\\
+IC204 & SI4464-B1B-FMR & QFN50P400X400X90-21N-D & ruotato \ang{180}; via nel pad esposto (da aggiungere)\\
+C201 & 100n & C\_0402 & VDD pin~6/8, via sul pad\\
+Y201 & ECS-TXO-20CSMV4-320 & ECSTXO20CSMV4320AYTR & vicino a XIN, $\ge$\,15\,mm dal PA\\
+C202 & 1u & C\_0402 & VDD di Y201\\
+C203 & 100n & C\_0402 & VDD di Y201, più vicino al pin\\
+C204 & 10n & C\_0402 & accoppiamento AC, in linea\\
+R201 & 33 & R\_0402 & in serie verso XIN\\
+TP701 & -- & TestPoint D1.0mm & sulla pista \net{RF_XIN}, senza stub\\
+\multicolumn{4}{@{}l}{\textbf{TX: AN648 e attenuatore}}\\
+L703 & 220n & L\_0603 & choke sul pin~4; 3V3 con via vicino a C201\\
+C702 & 9.1p & C\_0402 & serie sul pin~4\\
+L702 & 33n & L\_0805 & serie, asse perpendicolare a L205/L206\\
+C704 & 15p & C\_0402 & \net{RF_TX_M2} verso GND\\
+C701 & 100p & C\_0603 & DC block verso il pad\\
+R245 & 100 & R\_0603 & shunt ingresso pad, \SI{49}{mW} max\\
+R246 & 68 & R\_0603 & serie\\
+R247 & 100 & R\_0402 & shunt uscita pad\\
+R248 & 180 & R\_0402 & shunt uscita pad (R1 EVB)\\
+C255 & 56p & C\_0603 & DC block ingresso PA (C1 EVB), \SI{0.9}{mm} dal pin~3\\
+\multicolumn{4}{@{}l}{\textbf{PA QPA9510}}\\
+IC2 & QPA9510TR7 & QFN50P300X300X90-17N-D & 9 via nel pad (foro 0,25); blocco EVB ruotato \ang{180}\\
+R240 & 0 & R\_0402 HS & 3V3$\rightarrow$\net{PA_VCC1_F} (L7 EVB, lì DNP)\\
+L240 & 12n & L\_0603 HS & \net{PA_VCC1}, posizione EVB (L1)\\
+C244 & 330p & C\_0402 HS & \net{PA_VCC1_F} (C19 EVB)\\
+C240, C241 & 10n, 1n & C\_0402 HS & 3V3 lato VCC1 (C2, C3 EVB)\\
+R241 & 0 & R\_0603 HS & 3V3$\rightarrow$\net{PA_VCC2_F} (L2 EVB)\\
+L241 & 6.8n & L\_0402 HS & \net{PA_VCC2}, posizione EVB (L6)\\
+C248 & 330p & C\_0402 HS & \net{PA_VCC2_F} (C20 EVB)\\
+C245, C246, C247 & 10u, 10n, 1n & C\_0805 HS / C\_0402 HS & 3V3 lato VCC2 (C21, C5, C6 EVB)\\
+C251 & 100p & C\_0402 HS & VCC pin~14 (C15 EVB)\\
+R242, R243 & 33, 220 & R\_0402 HS & partitore APC, vicino ai pin 15/16\\
+C252 & 10n & C\_0402 HS & APC verso GND (C16 EVB)\\
+Q701 & FDN308P & SOT-23 & interruttore APC, dentro l'anello\\
+L242 & 1u NRS2012 & L\_Taiyo-Yuden\_NR-20xx & choke stadio finale; pista 3V3 $\ge$\,1\,mm\\
+C256, C257, C258 & 10u, 1n, 47p & C\_0805 HS / C\_0402 HS & lato 3V3 di L242, 47p più vicino\\
+C260 & 27p & C\_0603 & nodo \net{RF_PA_OUT}, $\ge$\,2 via, 1\,mm libero\\
+L243 & 2.7n & L\_0402 & serie, posizione EVB (L4)\\
+C261 & 22p & C\_0402 & nodo \net{RF_PA_MATCH}, $\ge$\,2 via\\
+C262 & 2p & C\_0402 & taratura (C25 EVB), 1\,mm libero\\
+C230 & 56p & C\_0603 & DC block verso FL201 (C12 EVB)\\
+\multicolumn{4}{@{}l}{\textbf{Filtro}}\\
+FL201 & LFCG-490+ & IC:LFCG490 & in linea; via su 6 pad GND; footprint da confrontare con PL-429\\
+\end{xltabular}}
+\noindent{\footnotesize HS = footprint \enquote{HandSolder}. Valori e footprint dalla netlist rev.~1.45.}
+
+% =====================================================================
+\section{Punti da verificare e incongruenze trovate}
+\label{app:verifiche}
+
+\subsection{Da verificare}
+\begin{enumerate}
+\item Larghezze delle linee con il calcolatore JLCPCB e con la solder mask (effetto stimato 1--3\,\si{\ohm}).
+\item Lunghezze e larghezze delle linee della EVB QPA9510 (lette da una figura a bassa risoluzione, unità
+      della larghezza \enquote{19,8} non chiara) e substrato della EVB: servono i Gerber Qorvo.
+\item Effetto della larghezza EVB (\SI{0.5}{mm}) sul nostro stackup nella rete del PA (circa \SI{26}{\ohm}
+      invece di \SI{50}{\ohm}): taratura di C260/C262 al banco (M-06).
+\item Footprint di J201 (\SI{0.8}{mm}) contro spessore della scheda e codice DreamLNK (P05).
+\item Footprint \texttt{IC:LFCG490} contro il layout consigliato Mini-Circuits PL-429.
+\item Numero e diametro delle via nei pad esposti di IC204 e IC202 (AN629 e disegni non consultati); pasta a finestre.
+\item Disponibilità di via riempite e chiuse (via-in-pad) sul 4 strati JLC.
+\item Rame nel foro delle via (\SI{20}{\micro m} assunto) e conto termico del PA con l'area di rame reale.
+\item Regole attribuite ad AN629 (orientamento delle induttanze, disaccoppiamento del Si4464): il PDF
+      Silicon Labs non era accessibile.
+\item Distanze indicative senza fonte diretta: TCXO--XIN $\le$\,\SI{5}{mm}; L242/L243 da L702/L703
+      $\ge$\,\SI{5}{mm}; buck $\ge$\,\SI{20}{mm} dalla zona RF; area di rame B.Cu del PA.
+\item Sintassi delle regole \texttt{.kicad\_dru} in KiCad 10.
+\end{enumerate}
+
+\subsection{Incongruenze (segnalate, non corrette)}
+\begin{enumerate}
+\item \textbf{Netclass assenti}: \texttt{SYMPHONY.kicad\_pro} ha solo \texttt{Default}, nessuna assegnazione
+      e nessun pattern; il log (1.12-02, 1.13-02) le dà come inserite. Nessun backup in
+      \texttt{report\_src} le contiene.
+\item \textbf{Stackup del file PCB}: \texttt{SYMPHONY.kicad\_pcb} ha 6 strati con In1 di segnale sotto F.Cu;
+      il log \S24.1 parla di 4 strati con In1 GND.
+\item \textbf{Spessori del \S24.1}: core \SI{0.535}{mm} con prepreg \SI{0.1}{mm} non dà \SI{1.6}{mm}; il
+      JLC04161H-3313 ha core \SI{1.265}{mm}.
+\item \textbf{Schema di posizionamento \S24.3}: con l'ordine dei pin di IC202 (RF1 = RX in basso, RF2 = TX in
+      alto) e di IC204 (RXP/RXN sopra TX), la disposizione del disegno porta a un incrocio TX/RX. Soluzioni:
+      IC204 ruotato con i pin non RF dentro l'anello (questa guida), oppure scambio RF1/RF2 con CTRL preso
+      dal segnale invertito (modifica di schema).
+\item \textbf{L-01 punti 1--2}: copiare le larghezze EVB su uno stackup diverso non copia l'impedenza delle
+      linee (EVB circa \SI{50}{\ohm}, nostro 3313 circa \SI{26}{\ohm} a \SI{0.5}{mm}).
+\item \textbf{Netclass RF\_PA\_OUT a \SI{1.0}{mm}} (\S24.2) contro \enquote{stesse larghezze della EVB} (L-01):
+      a \SI{1.0}{mm} il tratto vale circa \SI{15}{\ohm}.
+\item \textbf{IPC interno nel \S24.4}: \SI{1.6}{mm} per \SI{1.7}{A} vale con rame interno da 1 oz; con il
+      rame interno JLC da 0,5 oz servono circa \SI{3.7}{mm}.
+\item \textbf{Footprint senza via termiche}: pad esposti di IC204 (Si4464), Q201 (TQP3M9036, il datasheet
+      le richiede) e IC202 (HMC349A) senza via.
+\item \textbf{Via di IC2 sotto il minimo di scheda}: foro \SI{0.25}{mm} contro \texttt{min\_through\_hole\_diameter}
+      \SI{0.3}{mm}.
+\item \textbf{L703 senza disaccoppiamento proprio} sul lato 3V3 (solo C201 sul VDD del Si4464).
+\item \textbf{Frequenza del TCXO}: il disegno del \S24.3 scrive \enquote{TCXO 30 MHz}; Y201 è da
+      \SI{32}{MHz} (codice \texttt{-320}).
+\item \textbf{Simulazione Qorvo}: nel modello di p.~12 L4 sembra \SI{2.4}{nH} (LQG15HS), nella BOM EVB è
+      \SI{2.7}{nH} (lettura della figura \dv).
+\item \textbf{Log 001 \S5}: \enquote{EN\_TX\_ANT\_SW = 0 vuol dire switch su RF1 (TX)}, mentre nella netlist
+      RF1 è la porta RX (\net{RF_SW_RX}). Riguarda firmware e logica, non il layout; da ricontrollare con la
+      tabella di verità HMC349A (DS p.~8).
+\end{enumerate}
+
+% =====================================================================
+\section{Fonti}
+\label{app:fonti}
+{\small
+\begin{enumerate}[label={[\arabic*]}]
+\item Netlist KiCad di \texttt{SYMPHONY.kicad\_sch}, rev.~1.45, esportata con \texttt{kicad-cli} 10.0.8 il
+      04/11/2026 (\texttt{docs/layout\_rf/net.xml}).
+\item \texttt{SYMPHONY.kicad\_pro} e \texttt{SYMPHONY.kicad\_pcb} (stato al 04/11/2026), footprint in
+      \texttt{UHF\_LIB/FOOTPRINT/IC.pretty} e libreria KiCad 10 \texttt{Connector\_Coaxial}.
+\item Log hardware SYMPHONY V2, \texttt{report/entries}: 001 (\S3, \S4, \S8--10), 007 (\S21), 009
+      (\S23), 010 (\S24), 011 (\S25), 023 (\S37), 041, 043 (L-01, M-06).
+\item Revisione indipendente del 04/11/2026, \texttt{DESIGN/SYMPHONY\_V2\_review\_finale\_2026-11-04.pdf}:
+      P05, P08, P10, P11, \S2.2.
+\item Qorvo, \emph{QPA9510 3V General Purpose/GSM Power Amplifier}, data sheet 23/06/2025: p.~6 (EVB 900 MHz),
+      p.~7 (descrizione dei pad), p.~8 (PCB mounting pattern).
+\item Qorvo, \emph{QPA9510 410--470 MHz EVB Test Summary}, 30/06/2025: p.~2 (foto e schema EVB), p.~3 (BOM),
+      p.~6--7 (guadagno e P1dB), p.~11--12 (modello e impedenze simulate).
+\item Analog Devices, \emph{HMC349AMS8G}, data sheet rev.~F: p.~5 (pin), p.~8 (teoria di funzionamento),
+      p.~9 (scheda di valutazione).
+\item Qorvo, \emph{TQP3M9036}, data sheet 27/11/2018: p.~10 (pin e stackup EVB), p.~11 (PCB mounting pattern).
+\item Silicon Labs, \emph{Si4464/63/61/60}, data sheet rev.~1.4: p.~38 (TCXO su XIN), p.~46--47 (pin, pad esposto).
+\item Mini-Circuits, \emph{LFCG-490+}, data sheet: p.~1--2 (prestazioni, potenza), p.~3 (pad, layout PL-429).
+\item ECS, \emph{ECS-TXO-20CSMV4}, data sheet: pin, livello d'uscita, codici di ordinazione.
+\item JLCPCB, \emph{Impedance / stackup} (\texttt{jlcpcb.com/impedance}) e \emph{PCB capabilities}
+      (\texttt{jlcpcb.com/capabilities/pcb-capabilities}), consultati il 04/11/2026.
+\item Silicon Labs AN629, AN643, AN648: non accessibili durante la stesura (HTTP 403); valori AN643/AN648 dal log
+      [3]; una sintesi di AN629 è in \emph{Microwaves \& RF}, \enquote{Investigating ICs for Tomorrow's Radios}.
+\item IPC-2221, formula della corrente nei conduttori ($I=k\Delta T^{0{,}44}A^{0{,}725}$).
+\item Formule di linea: Hammerstad e Jensen (microstriscia, 1980); trasformazione conforme per CPWG con
+      approssimazione di Hilberg; induttanza della via $L\approx0{,}2h[\ln(4h/d)+1]$\,nH.
+\end{enumerate}}
+
+\end{document}

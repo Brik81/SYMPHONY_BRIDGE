@@ -1,0 +1,70 @@
+\chapter{Introduzione}
+\label{ch:intro}
+
+\section{Scopo del documento}
+Questo manuale descrive tutto quello che serve per scrivere il firmware della scheda SYMPHONY V2. La scheda è un ricetrasmettitore \textbf{solo UHF} a \SI{435}{\mega\hertz} per CubeSat. Non c'è una catena VHF.
+
+Il manuale è scritto per chi non conosce il progetto. Non serve aprire lo schematico per scrivere il firmware: pin, livelli, tempi e limiti sono riportati qui con la loro fonte.
+
+L'hardware descritto è l'\textbf{Engineering Model} (EM). I LED servono come riscontro visivo al banco. Sul \textbf{Flight Model} (FM) i LED di debug non si montano (capitolo~\ref{ch:led}).
+
+\section{Come usare questo manuale}
+\begin{enumerate}
+\item Leggere il capitolo~\ref{ch:sistema} per avere il quadro della scheda.
+\item Configurare clock e GPIO con la mappa dei pin del capitolo~\ref{ch:pin}. È la tabella di riferimento per CubeMX o per il codice di inizializzazione.
+\item Scrivere i driver con il capitolo~\ref{ch:periferiche} (SPI, I\textsuperscript{2}C, UART, CAN, ADC, interrupt).
+\item Scrivere il driver radio e la macchina a stati TX/RX con il capitolo~\ref{ch:rf}. È la parte più delicata: \textbf{un errore di sequenza può danneggiare il commutatore RF}.
+\item Implementare watchdog, RTC e FRAM con il capitolo~\ref{ch:supervisione}.
+\item Prima di consegnare il firmware, spuntare la checklist del capitolo~\ref{ch:notefw} e la tabella delle note F-01\ldots F-16.
+\end{enumerate}
+
+\subsection*{Convenzioni}
+\begin{itemize}
+\item I nomi delle net sono scritti così: \net{/MCU/UHF.EN\_TX\_ANT\_SW}. Sono i nomi esatti della netlist.
+\item I riferimenti dei componenti (U301, IC204, R243\ldots) sono quelli dello schematico e della BOM.
+\item \textbf{H} = livello alto (\SI{3.3}{\volt}), \textbf{L} = livello basso (\SI{0}{\volt}), \textbf{Hi-Z} = alta impedenza.
+\item Le fonti sono tra parentesi quadre, per esempio \fonte{DS-Si4464 p.\,17} o \fonte{LOG F-14}. Le sigle delle fonti sono spiegate a pagina~\pageref{app:componenti} e nella storia del documento.
+\item \DV{} indica un dato non verificato sulla fonte. Tutti questi punti sono raccolti nell'appendice~\ref{app:daverificare}.
+\end{itemize}
+
+\subsection*{I quattro tipi di riquadro}
+\begin{attenzione}[esempio]
+Rischio di danno all'hardware o di malfunzionamento in volo. Va rispettato sempre.
+\end{attenzione}
+\begin{regola}[esempio]
+Requisito che il firmware deve implementare. Di solito corrisponde a una nota F-xx del log.
+\end{regola}
+\begin{nota}[esempio]
+Spiegazione o consiglio. Non è vincolante.
+\end{nota}
+\begin{verifica}[esempio]
+Dato non confermato o incongruenza trovata tra le fonti.
+\end{verifica}
+
+\section{Glossario}
+\begin{xltabular}{\linewidth}{@{}L{26mm}Y@{}}
+\tabhead\hd{Termine}&\hd{Significato}\\
+\endhead
+APC & \emph{Automatic Power Control}: ingresso di controllo del PA QPA9510 (pin APC1/APC2). A \SI{0}{\volt} il PA è in standby, a circa \SI{2.8}{\volt} lavora alla potenza massima.\\
+AF & \emph{Alternate Function}: funzione di periferica assegnata a un pin GPIO dell'STM32 (registro \code{GPIOx\_AFRL/AFRH}).\\
+CTS & \emph{Clear To Send} del Si4464: byte \code{0xFF} che indica che il comando precedente è stato eseguito.\\
+DNP & \emph{Do Not Populate}: componente disegnato ma non montato.\\
+EM / FM & Engineering Model / Flight Model.\\
+FRAM & Memoria ferroelettrica non volatile FM25V10 (U401), \SI{1}{Mbit}.\\
+HSE & Oscillatore esterno ad alta velocità dell'MCU (quarzo Y1, \SI{24}{\mega\hertz}).\\
+Hot switching & Commutazione del deviatore RF con la potenza RF presente.\\
+LNA & Amplificatore a basso rumore di ricezione TQP3M9036 (Q201).\\
+LPF & Filtro passa-basso FL201 (Mini-Circuits LFCG-490+) dopo il PA.\\
+MMCX & Connettore d'antenna J201.\\
+MR & \emph{Manual Reset}: ingresso \(\overline{\mathrm{MR}}\) del supervisore TPS3825 (IC205).\\
+nIRQ & Uscita di interrupt del Si4464, attiva bassa.\\
+PA & Amplificatore di potenza QPA9510 (IC2).\\
+PA\_PWR\_LVL & Proprietà del Si4464 che regola la potenza d'uscita interna (128 passi).\\
+POR & \emph{Power-On Reset}.\\
+SDN & Pin di shutdown del Si4464: alto = radio spenta, registri persi.\\
+Switch & Deviatore RF SPDT HMC349A (IC202) tra antenna, ramo TX e ramo RX.\\
+TCXO & Oscillatore al quarzo compensato in temperatura Y201, \SI{32}{\mega\hertz}, clock del Si4464.\\
+WDI / WDO & Ingresso di refresh / uscita di reset del watchdog STWD100 (U403).\\
+WDS & \emph{Wireless Development Suite} di Silicon Labs: genera la configurazione del Si4464 (\code{radio\_config.h}).\\
+\bottomrule
+\end{xltabular}

@@ -1,0 +1,176 @@
+\chapter{Periferiche e bus}
+\label{ch:periferiche}
+
+\section{Clock dell'MCU}
+\begin{itemize}
+\item \textbf{HSE}: quarzo Y1 \SI{24}{\mega\hertz} (YXC X322524MMB4SI, CL \SI{10}{\pico\farad}, \SI{\pm10}{\ppm}) su PH0/PH1 \fonte{LOG 1.15-01}. Impostare \code{HSE\_VALUE = 24000000} \fonte{LOG F-06}. Con un valore diverso UART, CAN e timer lavorano alla frequenza sbagliata.
+\item \textbf{LSE}: non presente. Per l'RTC interno usare LSI; l'ora di riferimento è il DS3231M.
+\item \textbf{SYSCLK}: libera scelta del firmwarista (PLL da HSE). Le frequenze dei bus vanno scelte in modo che i prescaler SPI diano al massimo \SI{10}{\mega\hertz} su SPI1 (vedi sotto).
+\end{itemize}
+
+\begin{nota}[TrustZone]
+L'STM32L562 ha TrustZone. Con TrustZone attivo i GPIO sono \enquote{secure} dopo il reset \fonte{DS-STM32L562 p.\,33}. Se non serve, lasciare l'option byte TZEN disattivato: semplifica il firmware.
+\end{nota}
+
+\section{SPI1 \textendash{} Si4464}
+\begin{xltabular}{\linewidth}{@{}L{38mm}Y@{}}
+\tabhead\hd{Parametro}&\hd{Valore}\\
+Pin & PA5 SCK, PA6 MISO, PA7 MOSI (AF5); PA8 NSEL come GPIO.\\
+Modo & CPOL = 0, CPHA = 0 (modo 0). Il Si4464 campiona SDI sul fronte di salita e cambia SDO sul fronte di discesa; l'host legge SDO sul fronte di salita \fonte{DS-Si4464 p.\,17}.\\
+Ordine dei bit & MSB per primo, parole da 8 bit.\\
+Clock massimo & \SI{10}{\mega\hertz} \fonte{DS-Si4464 p.\,17}.\\
+Tempi minimi & $t_\text{SS}$ \SI{20}{\nano\second}, $t_\text{SH}$ \SI{50}{\nano\second}, $t_\text{SW}$ (nSEL alto tra due comandi) \SI{80}{\nano\second} \fonte{DS-Si4464 p.\,17, tab.\,8}.\\
+Chip select & Software (GPIO). Una transazione = nSEL basso, comando, argomenti, nSEL alto.\\
+Protocollo & Dopo ogni comando leggere CTS con \code{READ\_CMD\_BUFF} finché vale \code{0xFF}; tempo tipico \SI{20}{\micro\second} \fonte{DS-Si4464 p.\,17}. I registri \enquote{Fast Response} (comandi \code{0x50}, \code{0x51}, \code{0x53}, \code{0x57}) si leggono senza CTS \fonte{DS-Si4464 p.\,19}.\\
+\bottomrule
+\end{xltabular}
+
+\section{SPI2 \textendash{} FRAM FM25V10}
+\begin{xltabular}{\linewidth}{@{}L{38mm}Y@{}}
+\tabhead\hd{Parametro}&\hd{Valore}\\
+Pin & PB13 SCK, PB14 MISO, PB15 MOSI (AF5); PB12 /CS come GPIO.\\
+Modo & Modo 0 o modo 3 (il chip riconosce il modo dal livello di SCK quando /CS scende) \fonte{DS-FM25V10 pp.\,5--6}.\\
+Clock massimo & \SI{40}{\mega\hertz} con VDD \SIrange{2.7}{3.6}{\volt} \fonte{DS-FM25V10 p.\,17}.\\
+Organizzazione & \num{131072} $\times$ 8 bit, indirizzo di 3 byte (17 bit utili, i 7 bit alti \enquote{don't care}) \fonte{DS-FM25V10 pp.\,4--5}.\\
+Scrittura & Nessun ritardo di scrittura (\enquote{NoDelay}). Prima di ogni WRITE o WRSR serve WREN \fonte{DS-FM25V10 p.\,6}.\\
+/WP, /HOLD & Fissi a 3V3: la protezione hardware dello status register non è usabile.\\
+Avvio & Nessun accesso prima di $t_\text{PU}$ = \SI{250}{\micro\second} dal power-up \fonte{DS-FM25V10 p.\,19}.\\
+\bottomrule
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{@{}L{18mm}L{16mm}Y@{}}
+\caption{Codici operativi della FM25V10 \fonte{DS-FM25V10 p.\,6}.}\\
+\tabhead\hd{Comando}&\hd{Codice}&\hd{Funzione}\\
+WREN & \code{0x06} & abilita la scrittura (latch WEL)\\
+WRDI & \code{0x04} & disabilita la scrittura\\
+RDSR & \code{0x05} & legge lo status register\\
+WRSR & \code{0x01} & scrive lo status register (BP1, BP0, WPEN)\\
+READ & \code{0x03} & lettura\\
+FSTRD & \code{0x0B} & lettura veloce (con byte dummy)\\
+WRITE & \code{0x02} & scrittura\\
+SLEEP & \code{0xB9} & sleep; risveglio con /CS, $t_\text{REC}$ \SI{400}{\micro\second} max \fonte{DS-FM25V10 pp.\,11, 19}\\
+RDID & \code{0x9F} & Device ID, 9 byte: \code{7F 7F 7F 7F 7F 7F C2 24 00} \fonte{DS-FM25V10 p.\,11}\\
+\bottomrule
+\end{xltabular}
+
+\begin{regola}[F-15: chip select all'avvio]
+All'avvio configurare il prima possibile PB12 (CS della FRAM) e PA8 (NSEL del Si4464) come uscite a livello \textbf{alto}, prima di qualsiasi altra inizializzazione SPI \fonte{LOG F-15}. Le due linee non hanno pull-up esterni (decisione P-12, \enquote{Lascia com'è}).
+\end{regola}
+
+\section{I\textsuperscript{2}C}
+\begin{xltabular}{\linewidth}{@{}L{20mm}L{28mm}L{40mm}Y@{}}
+\tabhead\hd{Bus}&\hd{Pin}&\hd{Pull-up}&\hd{Dispositivi}\\
+I2C2 & PB10 SCL, PB11 SDA (AF4) & R408, R407 \SI{10}{\kilo\ohm} a 3V3, sempre montati & U404 DS3231M, indirizzo 7 bit \code{0x68} (byte \code{0xD0}/\code{0xD1}) \fonte{DS-DS3231M p.\,16}\\
+I2C1 & PB6 SCL, PB7 SDA (AF4) & R207, R206 \SI{4.7}{\kilo\ohm} a 3V3 \textbf{solo con JP201 chiuso} & bus esterno verso J203 e dock J708 (pin 9, 11). Protezione ESD D202 (PESD5V0L2BT)\\
+\bottomrule
+\end{xltabular}
+
+\begin{itemize}
+\item \textbf{Velocità I2C2.} Il DS3231M supporta \SI{400}{\kilo\hertz} \fonte{DS-DS3231M p.\,1}. Con pull-up da \SI{10}{\kilo\ohm} il tempo di salita dipende dalla capacità del bus: \SI{100}{\kilo\hertz} è la scelta prudente; \SI{400}{\kilo\hertz} va confermato misurando il tempo di salita (limite \SI{300}{\nano\second} in fast mode) \DV.
+\item \textbf{JP201 (I2C1).} Aperto di serie: i pull-up li fornisce il dock. Si chiude solo sulla scheda che deve dare i pull-up al bus \fonte{LOG R-13}. I pull-up interni dell'STM32 non sostituiscono quelli esterni. Se il bus resta a livello basso senza dock, il firmware deve gestire il timeout e non bloccarsi.
+\end{itemize}
+
+\section{UART e USB}
+\begin{itemize}
+\item \textbf{USART1} su PA9 (TX) e PA10 (RX), AF7, collegata al CH340E U402 \fonte{LOG F-07}. Il CH340E supporta da \SI{50}{bps} a \SI{2}{Mbps} \fonte{DS-CH340E p.\,1}. RTS, CTS e TNOW del CH340E non sono collegati: niente controllo di flusso.
+\item Il CH340E è alimentato dal 3V3 (VCC e V3 uniti) \fonte{REV-1104 §2.4}: con la scheda spenta la porta USB non compare sul PC.
+\item L'USB interno dell'STM32 non è usato (PA11/PA12 vanno al CAN).
+\item \textbf{Bootloader}: TP1 (BOOT0) alto al reset, poi STM32CubeProgrammer su UART \fonte{LOG F-07}. Con il watchdog attivo serve R413 montata (capitolo~\ref{ch:supervisione}).
+\end{itemize}
+
+\section{CAN}
+\begin{itemize}
+\item \textbf{FDCAN1} su PA11 (RX) e PA12 (TX), AF9 \fonte{DS-STM32L562 p.\,135}. Transceiver TCAN3414 (IC501) in modo normale fisso: STB e SHDN sono a GND \fonte{LOG R-17; REV-1104 §2.4}.
+\item CAN classico e CAN FD fino a \SI{8}{Mbps} \fonte{DS-TCAN3414 p.\,1}.
+\item Timeout di dominante su TXD: \SIrange{1.2}{4.0}{\milli\second} \fonte{DS-TCAN3414 p.\,9}. Un TXD basso più a lungo disabilita il driver: limita il bitrate minimo utilizzabile.
+\item Terminazione \SI{120}{\ohm} (R27) inserita solo con JP6 chiuso \fonte{SCH}. Linee verso J202 e J708 (pin 10 CANL, 12 CANH), protezione ESD D201.
+\end{itemize}
+
+\section{ADC: sensori di temperatura PT1000}
+\label{sec:adc}
+\begin{xltabular}{\linewidth}{@{}L{30mm}L{22mm}L{24mm}Y@{}}
+\tabhead\hd{Misura}&\hd{Pin}&\hd{Canale}&\hd{Catena}\\
+Temperatura PA & PB1 (pin 26) & ADC12\_IN16 & R\_RTD2 PT1000, R4, IC1 TLV9051, R5/R6/R7\\
+Temperatura buck & PC1 (pin 9) & ADC12\_IN2 & R\_RTD1 PT1000, R8, IC5 TLV9051, R12/R9/R10\\
+\bottomrule
+\end{xltabular}
+\fonte{LOG F-08, S-06; DS-STM32L562 pp.\,98, 104}
+
+\subsection{Circuito}
+Ogni PT1000 forma un partitore con una resistenza da \SI{3.16}{\kilo\ohm} verso 3V3. L'operazionale amplifica la differenza rispetto a un riferimento ricavato dallo stesso 3V3. Le resistenze sono allo \SI{0.1}{\percent} \fonte{LOG rev.\ 1.18}.
+
+\begin{center}
+\begin{circuitikz}[scale=0.85,transform shape,font=\small]
+\draw (0,4) node[above]{3V3} to[R,l=$R_4$ \SI{3.16}{\kilo\ohm},o-*] (0,2) coordinate(vp)
+      to[R,l=$R_t$ (PT1000)] (0,0) node[ground]{};
+\draw (vp) -- (2,2) node[op amp,anchor=+,yscale=-1] (oa) {};
+\draw (oa.-) -- ++(-0.6,0) coordinate(vm);
+\draw (vm) to[R,l_=$R_7$ \SI{19.6}{\kilo\ohm},*-] ++(0,-2.2) node[ground]{};
+\draw (vm) |- ++(0,1.6) coordinate(top);
+\draw (top) to[R,l=$R_6$ \SI{63.4}{\kilo\ohm}] ++(-2.8,0) node[left]{3V3};
+\draw (top) to[R,l=$R_5$ \SI{105}{\kilo\ohm}] (top -| oa.out) -- (oa.out);
+\draw (oa.out) to[short,*-o] ++(1.2,0) node[right]{ADC (PB1 / PC1)};
+\node[font=\scriptsize] at ($(oa)+(0.2,-1.1)$) {TLV9051};
+\end{circuitikz}
+\end{center}
+Valori per la catena del PA (IC1); la catena del buck (IC5) usa R8, R12, R9, R10 con gli stessi valori \fonte{SCH}.
+
+\subsection{Formule di conversione}
+Con $G = 1 + R_5/R_6 + R_5/R_7$ e $k = R_5/R_6$:
+\begin{align}
+\frac{V_\text{out}}{V_\text{DDA}} &= G\,\frac{R_t}{R_4+R_t} - k,
+\qquad G = 1+\frac{105}{63{,}4}+\frac{105}{19{,}6} = 8{,}0133,\quad k = \frac{105}{63{,}4}=1{,}65615\\
+\intertext{L'ADC usa VDDA (= 3V3) come riferimento, quindi la misura è raziometrica: con un codice $N$ a 12 bit, $r = N/4095$,}
+x &= \frac{r + k}{G},\qquad R_t = R_4\,\frac{x}{1-x}\\
+\intertext{e la temperatura si ricava dalla PT1000 (IEC 60751, $R_0 = \SI{1000}{\ohm}$, $A = \num{3.9083e-3}$, $B = \num{-5.775e-7}$):}
+T &= \frac{-A + \sqrt{A^2 - 4B\,(1 - R_t/R_0)}}{2B}.
+\end{align}
+Il termine $C$ della norma, valido sotto \SI{0}{\celsius}, sposta il risultato di circa \SI{0.01}{\celsius} a \SI{-40}{\celsius} (calcolo: $R_0 C (T-100) T^3 \approx \SI{0.04}{\ohm}$ contro $\approx \SI{3.9}{\ohm\per\celsius}$) e si può trascurare.
+
+\textbf{Verifiche del calcolo}: $V_\text{out}=0$ per $R_t = \SI{823}{\ohm}$ ($\approx\SI{-46}{\celsius}$) e $V_\text{out} = V_\text{DDA}$ per $R_t = \SI{1567}{\ohm}$ ($\approx\SI{+147}{\celsius}$), in accordo con la revisione \fonte{REV-1104 §2.5}. A \SI{-40}{\celsius} l'uscita vale \SI{0.10}{\volt}, a \SI{+125}{\celsius} \SI{2.97}{\volt} \fonte{LOG R-18}.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=0.78\linewidth,height=6cm,grid=both,grid style={gray!20},
+  xlabel={Temperatura [\si{\celsius}]},ylabel={$V_\text{out}$ [\si{\volt}]},
+  xmin=-50,xmax=150,ymin=0,ymax=3.3,
+  ytick={0,0.5,1,1.5,2,2.5,3,3.3},
+  yticklabel style={/pgf/number format/use comma},
+  tick label style={font=\footnotesize},label style={font=\small\sffamily},
+  legend style={font=\footnotesize,at={(0.03,0.97)},anchor=north west}]
+\addplot[very thick,sbblue,domain=-46:147,samples=80]
+  {3.3*(8.0133*(1000*(1+3.9083e-3*x-5.775e-7*x^2))/(3160+1000*(1+3.9083e-3*x-5.775e-7*x^2))-1.65615)};
+\addlegendentry{$V_\text{out}$ con 3V3 = \SI{3.30}{\volt}}
+\addplot[only marks,mark=*,sbred] coordinates {(-40,0.102) (125,2.967)};
+\addlegendentry{punti del log R-18}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+La sensibilità non è costante: \SI{20.6}{\milli\volt\per\celsius} a \SI{-40}{\celsius}, \SI{18.3}{} a \SI{15}{\celsius}, \SI{14.6}{\milli\volt\per\celsius} a \SI{125}{\celsius} (calcolo dalle formule sopra). La media fra \SI{-40}{} e \SI{125}{\celsius} è \SI{17.4}{\milli\volt\per\celsius}, in accordo con il valore $\approx$\SI{17.3}{\milli\volt\per\celsius} del log \fonte{LOG R-18}. Un LSB a 12 bit (\SI{0.81}{\milli\volt}) vale quindi circa \SIrange{0.04}{0.06}{\celsius}. Corrente nella PT1000: $3{,}3/4{,}16\,\text{k} \approx \SI{0.79}{\milli\ampere}$ \fonte{REV-1104 §2.5}.
+
+\begin{regola}[F-08: calibrazione]
+Misura raziometrica su VDDA. Fare una calibrazione a un punto per canale e salvare l'offset (per esempio in FRAM). Senza calibrazione l'offset del TLV9051 vale circa \SI{\pm0.9}{\celsius} \fonte{LOG F-08, R-18}.
+\end{regola}
+
+\begin{nota}[impostazioni ADC]
+Le uscite dei TLV9051 hanno bassa impedenza: non servono tempi di campionamento lunghi \fonte{LOG §29}. L'oversampling hardware dell'ADC riduce il rumore. Il tempo di campionamento minimo per l'impedenza di sorgente è nella tabella 110 del datasheet \fonte{DS-STM32L562 p.\,246}.
+\end{nota}
+
+\section{Timer}
+Nessuna funzione hardware richiede un timer. Il firmware può usare liberamente SysTick e i timer per la sua temporizzazione, con due vincoli:
+\begin{itemize}
+\item \textbf{PC6 (WDI) non va mai pilotato da un timer} (TIM3\_CH1 o PWM): il refresh del watchdog deve dipendere dal ciclo principale \fonte{LOG F-11}.
+\item Le attese delle sequenze RF (\SI{10}{\micro\second}, capitolo~\ref{ch:rf}) richiedono una base dei tempi con risoluzione di almeno \SI{1}{\micro\second} (per esempio il contatore DWT\_CYCCNT del Cortex-M33 o un timer a \SI{1}{\mega\hertz}).
+\end{itemize}
+
+\section{Interrupt}
+\begin{xltabular}{\linewidth}{@{}L{30mm}L{26mm}L{26mm}Y@{}}
+\tabhead\hd{Sorgente}&\hd{Pin}&\hd{Linea}&\hd{Configurazione}\\
+Si4464 nIRQ & PC0 & EXTI0 & Fronte di discesa, pull-up interno. Nella ISR leggere e cancellare lo stato con \code{GET\_INT\_STATUS} (\code{0x20}) \DV{} sulla API della revisione B1.\\
+PPS dal dock & PC14 & EXTI14 & Solo se il segnale verrà usato (§\ref{sec:pc13}), \DV.\\
+FDCAN1, USART1, I2C, SPI & \textendash & interrupt di periferica & Liberi.\\
+\bottomrule
+\end{xltabular}
+
+Segnali che \textbf{non} arrivano all'MCU: INT/SQW del DS3231M (solo pull-up R411) e uscita 32\,kHz del DS3231M \fonte{LOG S-09, R-12; REV-1104 P15}; GPIO0\ldots GPIO3 e TXRAMP del Si4464 \fonte{SCH}; ST del TPS2121 e PG del buck.

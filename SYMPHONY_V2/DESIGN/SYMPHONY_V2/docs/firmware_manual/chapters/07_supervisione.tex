@@ -1,0 +1,94 @@
+\chapter{Supervisione e affidabilità}
+\label{ch:supervisione}
+
+\section{Watchdog esterno STWD100 (U403)}
+\subsection{Collegamenti}
+\begin{xltabular}{\linewidth}{@{}L{20mm}L{34mm}Y@{}}
+\tabhead\hd{Pin U403}&\hd{Collegato a}&\hd{Note}\\
+1 \(\overline{\mathrm{WDO}}\) & NRST dell'MCU & Open-drain, attivo basso; pull-up R2 \SI{10}{\kilo\ohm}\\
+3 \(\overline{\mathrm{EN}}\) & R413 \SI{0}{\ohm} \textbf{DNP} verso 3V3 & Pull-down interno: EN flottante = watchdog \textbf{attivo}\\
+4 WDI & PC6 (\net{/MCU/WDT\_WDI}) & Refresh dal firmware\\
+5 VCC & 3V3 (C425 \SI{100}{\nano\farad}) & \\
+\bottomrule
+\end{xltabular}
+\fonte{LOG rev.\ 1.41; SCH}
+
+\subsection{Tempi (versione NY)}
+\begin{xltabular}{\linewidth}{@{}L{46mm}C{18mm}C{18mm}C{18mm}Y@{}}
+\tabhead\hd{Parametro}&\hd{min}&\hd{tip}&\hd{max}&\hd{Fonte}\\
+Timeout $t_{WD}$ & \SI{1.12}{\second} & \SI{1.6}{\second} & \SI{2.24}{\second} & \fonte{LOG rev.\ 1.41 (DS Rev 10, tab.\,4)}\\
+Impulso di reset $t_{PW}$ & \SI{140}{\milli\second} & \SI{210}{\milli\second} & \SI{280}{\milli\second} & idem\\
+Pull-down interno su EN & \SI{32}{\kilo\ohm} & \SI{63}{\kilo\ohm} & \SI{100}{\kilo\ohm} & idem\\
+Impulso minimo su WDI ed EN & \SI{1}{\micro\second} & & & idem; glitch $<$\SI{100}{\nano\second} ignorati\\
+\bottomrule
+\end{xltabular}
+Nella versione Y il timer si azzera sia sul fronte di salita sia su quello di discesa di WDI \fonte{DS-STWD100 Rev 8 p.\,14 (pagina stampata 11)}.
+
+\begin{regola}[F-11, F-12, F-13: watchdog]
+\begin{itemize}
+\item \textbf{F-11}: commutare PC6 almeno ogni circa \SI{1}{\second}, anche durante le operazioni lunghe ($t_{WD}$ min \SI{1.12}{\second}). Il fronte va generato \textbf{dal software nel ciclo principale}, dopo aver verificato che il sistema funziona. Mai con un timer in PWM o con un interrupt a tempo autonomo: il timer continuerebbe a girare con la CPU bloccata \fonte{LOG F-11, rev.\ 1.42}.
+\item \textbf{F-12}: primo fronte entro \SI{1.12}{\second} dall'accensione, prima delle inizializzazioni lente (per esempio l'attesa di \SI{300}{\milli\second} del Si4464) \fonte{LOG F-12}.
+\item \textbf{F-13}: all'avvio leggere \code{RCC\_CSR} per la causa del reset (pin NRST = watchdog esterno o debugger) e riportarla in telemetria \fonte{LOG F-13}.
+\end{itemize}
+\end{regola}
+
+\begin{nota}[schema di refresh consigliato]
+Un approccio robusto è il \enquote{watchdog a richiesta}: ogni task critico alza un suo flag; il ciclo principale commuta PC6 solo se tutti i flag sono alzati, poi li azzera. Un periodo di commutazione di qualche centinaio di millisecondi lascia margine rispetto a \SI{1.12}{\second}. Nelle attese lunghe (scritture, sequenze di avvio) inserire refresh espliciti.
+\end{nota}
+
+\begin{attenzione}[R413 e configurazione di volo]
+R413 non montata = watchdog sempre attivo (volo). R413 \SI{0}{\ohm} montata = EN alto, watchdog spento (debug SWD, bootloader UART) \fonte{SCH nota MCU; LOG rev.\ 1.42}. Un GPIO su EN è stato scartato di proposito: un firmware fuori controllo non deve poter disattivare il proprio watchdog. R413 non ha il flag \enquote{Exclude from BOM}: il controllo della BOM prima dell'ordine è procedurale \fonte{LOG P-06}.
+\end{attenzione}
+
+Dopo un reset dell'MCU PC6 è in alta impedenza. Se il firmware non riparte entro \SI{1.12}{\second}, il watchdog resetta di nuovo: è il comportamento voluto \fonte{LOG rev.\ 1.41}.
+
+\section{Supervisore TPS3825 (IC205) e RF\_MR\_N}
+\begin{itemize}
+\item Soglia sul 3V3: \SI{2.88}{}/\SI{2.93}{}/\SI{3.00}{\volt} (min/tip/max) \fonte{LOG §46}.
+\item Ritardo dopo il rilascio: $t_d$ = \SI{120}{}/\SI{200}{}/\SI{300}{\milli\second} \fonte{DS-TPS3825 p.\,8}.
+\item \(\overline{\mathrm{MR}}\): impulso minimo \SI{1}{\micro\second} \fonte{DS-TPS3825 p.\,8}; soglie \(0{,}3\,V_\text{DD}\) e \(0{,}7\,V_\text{DD}\); pull-up interno \SI{90}{\kilo\ohm} \fonte{DS-TPS3825 pp.\,5, 7} più R208 \SI{10}{\kilo\ohm} esterno.
+\item Uscita RESET (attiva alta) $\to$ R204 $\to$ SDN del Si4464. Uscita \(\overline{\mathrm{RESET}}\) $\to$ R209 \SI{1.5}{\kilo\ohm} $\to$ LED D203 \fonte{SCH}.
+\item Uso da firmware e modi A/B: paragrafo~\ref{sec:sdn}. Misura M-03: paragrafo~\ref{sec:collaudo}.
+\end{itemize}
+
+\section{RTC DS3231M (U404)}
+\subsection{Collegamenti}
+I2C2 (PB10/PB11, pull-up \SI{10}{\kilo\ohm}), indirizzo \code{0x68}. \(\overline{\mathrm{RST}}\) su PB9. INT/SQW ha solo il pull-up R411 e non arriva all'MCU; l'uscita 32\,kHz è scollegata (R410 rimossa) \fonte{SCH; LOG rev.\ 1.45, P03}. Alimentazione di backup da 10 supercondensatori CPH3225A (\SI{110}{\milli\farad}) caricati dal 3V3 tramite BAT54WS e \SI{1}{\kilo\ohm}: il requisito è tenere l'ora per pochi secondi; l'autonomia stimata è di circa \SI{7}{\hour} \fonte{LOG R-06, R-24}.
+
+\subsection{Registri da impostare all'avvio}
+\begin{xltabular}{\linewidth}{@{}L{18mm}L{36mm}L{28mm}Y@{}}
+\caption{Registri di controllo del DS3231M \fonte{DS-DS3231M pp.\,11, 13, 15}.}\\
+\tabhead\hd{Registro}&\hd{Bit}&\hd{Valore al POR}&\hd{Impostazione consigliata}\\
+\endfirsthead
+\tabhead\hd{Registro}&\hd{Bit}&\hd{Valore al POR}&\hd{Impostazione consigliata}\\
+\endhead
+\code{0Eh} Control & EOSC (7), BBSQW (6), CONV (5), INTCN (2), A2IE (1), A1IE (0) & EOSC = 0, BBSQW = 0, INTCN = 1, A1IE = A2IE = 0 & Lasciare EOSC = 0 (oscillatore attivo anche in batteria), BBSQW = 0, INTCN = 1, allarmi disabilitati: INT/SQW non è collegato.\\
+\code{0Fh} Status & OSF (7), EN32KHZ (3), BSY (2), A2F (1), A1F (0) & OSF = 1, EN32KHZ = 1 & \textbf{EN32KHZ = 0} (F-16). OSF: leggerlo, poi azzerarlo dopo aver scritto un'ora valida. Azzerare A1F e A2F.\\
+\code{10h} Aging & SIGN + DATA & 0 & Lasciare 0 (non serve per la precisione dichiarata) \fonte{DS-DS3231M p.\,15}.\\
+\code{00h}--\code{06h} & ora e data (BCD) & non definiti al primo POR & Scrivere l'ora (da terra o dal dock) quando OSF = 1.\\
+\bottomrule
+\end{xltabular}
+
+\begin{regola}[F-09 e F-16: DS3231M]
+All'avvio scrivere EN32KHZ = 0 (registro \code{0Fh}, bit 3): il pin 32\,kHz non è usato e l'uscita abilitata consuma la carica di backup (circa \SI{0.85}{\micro\ampere} contro \SI{0.75}{\micro\ampere} a \SI{3}{\volt}) \fonte{LOG F-16}. Dopo un'interruzione lunga controllare il flag OSF e risincronizzare l'ora \fonte{LOG F-09}.
+\end{regola}
+
+\begin{nota}[F-09 e F-16]
+F-09 (rev.\ 1.29) e F-16 (rev.\ 1.45) contengono la stessa regola su EN32KHZ. F-09 aggiunge il controllo di OSF.
+\end{nota}
+
+\subsection{Pin RST (PB9)}
+\(\overline{\mathrm{RST}}\) è un'uscita open-drain con pull-up interno da \SI{50}{\kilo\ohm} e anche un ingresso per pulsante con antirimbalzo \fonte{DS-DS3231M p.\,7}. Va basso quando VCC scende sotto $V_\text{PF}$ e resta basso per $t_\text{REC}$ (\SI{250}{\milli\second} tip., \SI{300}{\milli\second} max) dopo il ritorno di VCC \fonte{DS-DS3231M pp.\,3, 10}. Lo stato di RST non influisce su I2C e RTC \fonte{DS-DS3231M p.\,4}.
+\begin{itemize}
+\item Configurare PB9 come \textbf{ingresso senza pull}. Si può usare come indicatore di power-fail.
+\item Non configurare PB9 come uscita push-pull: entrerebbe in conflitto con l'uscita del DS3231M. Portare RST basso da firmware avvia un ciclo di reset del DS3231M \fonte{DS-DS3231M p.\,10}: non serve.
+\end{itemize}
+
+\section{FRAM FM25V10 (U401)}
+\begin{itemize}
+\item \SI{1}{Mbit} (\num{131072} byte), \num{e14} cicli di lettura/scrittura, scrittura senza attesa \fonte{DS-FM25V10 p.\,1}.
+\item La FRAM all'accensione ha la scrittura disabilitata: WREN prima di ogni WRITE/WRSR \fonte{DS-FM25V10 p.\,6}.
+\item Controllare RDID all'avvio (\code{7F 7F 7F 7F 7F 7F C2 24 00}) come test di presenza del bus SPI2 \fonte{DS-FM25V10 p.\,11}.
+\item /WP è fisso alto: la protezione hardware dello status register non c'è. Usare i bit BP1/BP0 se serve proteggere zone della memoria \fonte{DS-FM25V10 p.\,7}.
+\item Consiglio di progetto firmware: proteggere i dati critici (offset di calibrazione F-08, contatori di reset F-10/F-13, configurazione) con CRC e doppia copia.
+\end{itemize}

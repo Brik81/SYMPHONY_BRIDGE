@@ -1,0 +1,134 @@
+\chapter{Mappa completa dei pin dell'MCU}
+\label{ch:pin}
+
+\section{Come leggere le tabelle}
+Le tabelle sono ricavate pin per pin dalla netlist dello schematico \fonte{SCH}. Le funzioni alternate sono quelle delle tabelle 22 e 23 del datasheet STM32L562 \fonte{DS-STM32L562 pp.\,127--129, 135}; i canali ADC vengono dalla tabella 21 \fonte{DS-STM32L562 pp.\,98--104}.
+
+\begin{itemize}
+\item \textbf{Dir}: direzione vista dall'MCU. I = ingresso, O = uscita, IO = bidirezionale, OD = open-drain, A = analogico.
+\item \textbf{Pull int.}: resistenza interna consigliata (PU = pull-up, PD = pull-down, \textendash{} = nessuna).
+\item \textbf{Reset}: stato del pin durante il reset e prima dell'inizializzazione. \textbf{Sicuro}: livello da impostare in caso di errore o di arresto controllato.
+\item \textbf{Att.}: livello attivo della funzione.
+\end{itemize}
+
+\begin{nota}[stato dei GPIO al reset]
+Dopo il reset i pin sono in alta impedenza \fonte{LOG rev.\ 1.41}. Fanno eccezione i pin di debug: PA13 (SWDIO) con pull-up, PA14 (SWCLK) con pull-down, PA15 e PB4 con pull-up; sono in funzione alternata JTAG/SWD \fonte{DS-STM32L562 p.\,126, nota 3}. Il modo esatto di reset degli altri pin (analogico) va confermato sul reference manual RM0438: \DV.
+\end{nota}
+
+% ======================================================= tabella pin usati
+\begin{landscape}
+\section{Pin usati}
+\label{sec:pin-usati}
+{\scriptsize
+\rowcolors{3}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}C{6mm}L{9mm}L{30mm}L{30mm}C{6mm}C{7mm}L{24mm}C{6mm}L{34mm}Y@{}}
+\caption{Pin dell'MCU U301 collegati a un componente.}\label{tab:pin}\\
+\tabhead\hd{Pin}&\hd{Porta}&\hd{Net}&\hd{Funzione / periferica (AF)}&\hd{Dir}&\hd{Pull int.}&\hd{Reset $\to$ sicuro}&\hd{Att.}&\hd{Collegato a}&\hd{Note}\\
+\endfirsthead
+\tabhead\hd{Pin}&\hd{Porta}&\hd{Net}&\hd{Funzione / periferica (AF)}&\hd{Dir}&\hd{Pull int.}&\hd{Reset $\to$ sicuro}&\hd{Att.}&\hd{Collegato a}&\hd{Note}\\
+\endhead
+\multicolumn{10}{r}{\itshape continua nella pagina seguente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+2 & PC13 & \net{GPIOSX\_2} & GPIO (uso da definire) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textendash & J708 pin 13 (dock) & Pin a bassa corrente: max \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} \fonte{DS p.\,126}. \textcolor{sborange}{?} = \DV. Collegato dopo la rev.\ 1.45, vedi §\ref{sec:pc13}.\\
+3 & PC14 & \net{GPIO\_PPS} & GPIO / EXTI14 (PPS dal dock) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textcolor{sborange}{?} & J708 pin 17 (dock) & Come sopra. Polarità e livelli del PPS: \DV.\\
+4 & PC15 & \net{GPIOSX\_0} & GPIO (uso da definire) & I & \textcolor{sborange}{?} & Hi-Z $\to$ ingresso & \textendash & J708 pin 14 (dock) & Come PC13.\\
+5 & PH0 & \net{HSE\_IN} & RCC OSC\_IN & A & \textendash & \textendash & \textendash & Y1 \SI{24}{\mega\hertz}, C2 \SI{10}{\pico\farad} & HSE\_VALUE = 24000000 (F-06).\\
+6 & PH1 & \net{HSE\_OUT} & RCC OSC\_OUT & A & \textendash & \textendash & \textendash & R1 \SI{0}{\ohm} $\to$ Y1, C1 & Quarzo CL \SI{10}{\pico\farad}, \SI{\pm10}{\ppm} \fonte{LOG 1.15-01}.\\
+7 & NRST & \net{/IF/DBG.nRST} & reset & IO & \textendash & \textendash & L & R2 \SI{10}{\kilo\ohm} pull-up, C3 \SI{100}{\nano\farad}, J1.3, WDO di U403 & Il watchdog esterno resetta l'MCU da qui (F-13).\\
+8 & PC0 & \net{/MCU/UHF.RF\_IRQ} & GPIO, EXTI0 fronte di discesa & I & PU & Hi-Z $\to$ ingresso & L & IC204 pin 11 nIRQ & nIRQ non richiede pull-up esterno \fonte{DS-Si4464 p.\,46}; il PU interno evita un ingresso flottante con il Si4464 in shutdown.\\
+9 & PC1 & \net{/MCU/V\_TEMP\_BUCK} & ADC12\_IN2 & A & \textendash & analogico & \textendash & uscita di IC5 (TLV9051), R12 & PT1000 del buck, §\ref{sec:adc}.\\
+10 & PC2 & \net{/MCU/UHF.EN\_TX\_ANT\_SW} & GPIO uscita push-pull & O & \textendash & Hi-Z (R702 $\to$ H) $\to$ \textbf{H} & L = TX & IC202 CTRL, gate Q701 (R703 \SI{0}{\ohm}, R702 \SI{100}{\kilo\ohm} a 3V3), U701 ingresso, TP702 & \textbf{Comando RF unico}. H = RX, PA spento. Sequenze: §\ref{sec:sequenze}.\\
+21 & PA5 & \net{/MCU/SPI1.CLK} & SPI1\_SCK (AF5) & O & \textendash & Hi-Z $\to$ L & \textendash & IC204 SCLK & SPI modo 0, max \SI{10}{\mega\hertz} \fonte{DS-Si4464 p.\,17}.\\
+22 & PA6 & \net{/MCU/SPI1.MISO} & SPI1\_MISO (AF5) & I & \textendash & Hi-Z & \textendash & IC204 SDO & \\
+23 & PA7 & \net{/MCU/SPI1.MOSI} & SPI1\_MOSI (AF5) & O & \textendash & Hi-Z $\to$ L & \textendash & IC204 SDI & \\
+24 & PC4 & \net{RF\_MR\_N} & GPIO uscita push-pull & O & \textendash & Hi-Z (R208 $\to$ H) $\to$ L & L & IC205 \(\overline{\mathrm{MR}}\), R208 \SI{10}{\kilo\ohm} a 3V3, R205 (DNP) verso SDN & Modo A (di serie): L = radio in reset. Modo B: logica invertita (F-05), §\ref{sec:sdn}.\\
+26 & PB1 & \net{/MCU/V\_TEMP\_PA} & ADC12\_IN16 & A & \textendash & analogico & \textendash & uscita di IC1 (TLV9051), R5 & PT1000 del PA, §\ref{sec:adc}.\\
+28 & PB10 & \net{/MCU/I2C2\_SCL} & I2C2\_SCL (AF4) & OD & \textendash & Hi-Z & \textendash & U404 SCL, R408 \SI{10}{\kilo\ohm} a 3V3 & RTC, indirizzo \code{0x68}.\\
+29 & PB11 & \net{/MCU/I2C2\_SDA} & I2C2\_SDA (AF4) & OD & \textendash & Hi-Z & \textendash & U404 SDA, R407 \SI{10}{\kilo\ohm} a 3V3 & \\
+33 & PB12 & \net{/MCU/FRAM\_CS} & GPIO uscita (CS software) & O & \textendash & Hi-Z $\to$ \textbf{H} & L & U401 /CS & \textbf{Nessun pull-up esterno}: portarlo alto per primo (F-15).\\
+34 & PB13 & \net{/MCU/SPI2\_SCK} & SPI2\_SCK (AF5) & O & \textendash & Hi-Z $\to$ L & \textendash & U401 SCK & SPI modo 0 o 3, max \SI{40}{\mega\hertz} \fonte{DS-FM25V10 p.\,17}.\\
+35 & PB14 & \net{/MCU/SPI2\_MISO} & SPI2\_MISO (AF5) & I & \textendash & Hi-Z & \textendash & U401 SO & \\
+36 & PB15 & \net{/MCU/SPI2\_MOSI} & SPI2\_MOSI (AF5) & O & \textendash & Hi-Z $\to$ L & \textendash & U401 SI & /WP e /HOLD di U401 sono fissi a 3V3.\\
+37 & PC6 & \net{/MCU/WDT\_WDI} & GPIO uscita push-pull & O & \textendash & Hi-Z $\to$ commuta & $\updownarrow$ & U403 WDI & Commutare \textbf{da software}, mai con timer o PWM (F-11). Non usare TIM3\_CH1 (AF2).\\
+41 & PA8 & \net{/MCU/SPI1.CS} & GPIO uscita (NSEL software) & O & \textendash & Hi-Z $\to$ \textbf{H} & L & IC204 nSEL & \textbf{Nessun pull-up esterno}: portarlo alto per primo (F-15).\\
+42 & PA9 & \net{/IF/UART1.TX} & USART1\_TX (AF7) & O & \textendash & Hi-Z $\to$ H & \textendash & U402 RXD (CH340E) & Console (F-07).\\
+43 & PA10 & \net{/IF/UART1.RX} & USART1\_RX (AF7) & I & PU & Hi-Z & \textendash & U402 TXD (CH340E) & Il PU tiene la linea a riposo se il CH340E non pilota.\\
+44 & PA11 & \net{/IF/CAN\_MCU1.CAN\_RX} & FDCAN1\_RX (AF9) & I & \textendash & Hi-Z & \textendash & IC501 RXD & \\
+45 & PA12 & \net{/IF/CAN\_MCU1.CAN\_TX} & FDCAN1\_TX (AF9) & O & \textendash & Hi-Z $\to$ H (recessivo) & \textendash & IC501 TXD & TXD alto = recessivo.\\
+46 & PA13 & \net{/IF/DBG.SWDIO} & SWDIO (AF0) & IO & PU (reset) & AF debug & \textendash & R16 \SI{22}{\ohm} $\to$ J1.2 & Non riconfigurare se serve il debug.\\
+49 & PA14 & \net{/IF/DBG.SWCLK} & SWCLK (AF0) & I & PD (reset) & AF debug & \textendash & R17 \SI{22}{\ohm} $\to$ J1.4 & \\
+54 & PB3 & \net{/IF/DBG.SWO} & TRACESWO (AF0) & O & \textendash & AF debug & \textendash & R11 \SI{22}{\ohm} $\to$ J1.6 & Opzionale (printf via SWO).\\
+57 & PB6 & \net{/IF/I2C1.SCL} & I2C1\_SCL (AF4) & OD & \textendash & Hi-Z & \textendash & J203.3, J708.11, D202, R207 \SI{4.7}{\kilo\ohm} via JP201 & Bus esterno. JP201 aperto = nessun pull-up a bordo \fonte{LOG R-13}.\\
+58 & PB7 & \net{/IF/I2C1.SDA} & I2C1\_SDA (AF4) & OD & \textendash & Hi-Z & \textendash & J203.2, J708.9, D202, R206 \SI{4.7}{\kilo\ohm} via JP201 & \\
+59 & PH3 & \net{/IF/DBG.BOOT0} & BOOT0 & I & \textendash & L (R3) & H & R3 \SI{10}{\kilo\ohm} a GND, TP1 & Alto al reset = bootloader di sistema (F-07).\\
+61 & PB9 & \net{/MCU/RTC\_RSTn} & GPIO ingresso & I & \textendash & Hi-Z $\to$ ingresso & L & U404 pin 4 \(\overline{\mathrm{RST}}\) & Pull-up interno \SI{50}{\kilo\ohm} nel DS3231M \fonte{DS-DS3231M p.\,7}. \textbf{Mai uscita push-pull.}\\
+\end{xltabular}}
+\end{landscape}
+
+\section{Pin di alimentazione}
+\begin{xltabular}{\linewidth}{@{}L{30mm}L{40mm}Y@{}}
+\tabhead\hd{Pin}&\hd{Net}&\hd{Note}\\
+1 (VBAT) & \net{3V3} & Nessuna batteria di backup per l'MCU.\\
+13 (VDDA) & \net{3V3} & Riferimento dell'ADC (VREF+ collegato a VDDA nel package, \DV{} su RM0438/datasheet).\\
+19, 32, 64 (VDD) & \net{3V3} & Disaccoppiamento C301\ldots C307 \fonte{REV-1104 §2.3}.\\
+48 (VDDUSB) & \net{3V3} & USB interno dell'MCU non usato.\\
+12 (VSSA), 18, 31, 47, 63 (VSS) & \net{GND} & \\
+30, 62 (VDD12) & non collegati & Corretto senza SMPS esterno \fonte{REV-1104 §2.3}.\\
+\bottomrule
+\end{xltabular}
+
+\section{Pin liberi}
+\label{sec:pin-liberi}
+Diciotto GPIO non sono collegati (simbolo di non collegato sullo schematico) \fonte{SCH}. Configurarli in modo \textbf{analogico}: è lo stato a consumo minimo e non lascia ingressi digitali flottanti.
+
+\begin{xltabular}{\linewidth}{@{}C{10mm}L{14mm}L{50mm}Y@{}}
+\tabhead\hd{Pin}&\hd{Porta}&\hd{Funzioni utili (riserva)}&\hd{Configurazione consigliata}\\
+\endhead
+11 & PC3 & ADC12\_IN4 & analogico\\
+14 & PA0 & ADC12\_IN5, wakeup & analogico\\
+15 & PA1 & ADC12\_IN6 & analogico\\
+16 & PA2 & ADC12\_IN7 & analogico\\
+17 & PA3 & ADC12\_IN8 & analogico\\
+20 & PA4 & ADC12\_IN9 & analogico\\
+25 & PB0 & ADC12\_IN15 & analogico\\
+27 & PB2 & \textendash & analogico\\
+38 & PC7 & \textendash & analogico\\
+39 & PC8 & \textendash & analogico\\
+40 & PC9 & \textendash & analogico\\
+50 & PA15 & JTDI (pull-up al reset) & analogico dopo l'avvio\\
+51 & PC10 & \textendash & analogico\\
+52 & PC11 & \textendash & analogico\\
+53 & PC12 & \textendash & analogico\\
+55 & PB4 & NJTRST (pull-up al reset) & analogico dopo l'avvio\\
+56 & PB5 & \textendash & analogico\\
+60 & PB8 & \textendash & analogico\\
+\bottomrule
+\end{xltabular}
+\fonte{canali ADC: DS-STM32L562 pp.\,100--103}
+
+\section{Boot, debug e reset}
+\begin{xltabular}{\linewidth}{@{}L{22mm}L{30mm}L{40mm}Y@{}}
+\tabhead\hd{Segnale}&\hd{Pin MCU}&\hd{Hardware}&\hd{Uso}\\
+\endhead
+NRST & 7 & R2 \SI{10}{\kilo\ohm} a 3V3, C3 \SI{100}{\nano\farad}, J1 pin 3, WDO di U403 (open-drain) & Reset da debugger o da watchdog.\\
+BOOT0 & 59 (PH3) & R3 \SI{10}{\kilo\ohm} a GND, TP1 & Normale: boot da flash. TP1 a 3V3 durante il reset: bootloader di sistema su USART1 (STM32CubeProgrammer) \fonte{LOG F-07}.\\
+SWDIO & 46 (PA13) & R16 \SI{22}{\ohm} $\to$ J1 pin 2 & Debug SWD.\\
+SWCLK & 49 (PA14) & R17 \SI{22}{\ohm} $\to$ J1 pin 4 & Debug SWD.\\
+SWO & 54 (PB3) & R11 \SI{22}{\ohm} $\to$ J1 pin 6 & Trace opzionale.\\
+VCC / GND & \textendash & J1 pin 1 = 3V3, pin 5 = GND & Il debugger legge il 3V3: la scheda va alimentata (EN\_DOCK).\\
+\bottomrule
+\end{xltabular}
+Il connettore J1 è un TC2030 (Tag-Connect, solo footprint) \fonte{SCH; LOG P-15}.
+
+\begin{attenzione}[watchdog e debug]
+Con R413 non montata (configurazione di volo) il watchdog è sempre attivo. Un breakpoint, il bootloader UART o un firmware di prova che non commuta PC6 provocano un reset ogni circa \SI{1.6}{\second}. Durante lo sviluppo montare R413 (\SI{0}{\ohm}, 0402): EN alto, watchdog spento \fonte{LOG rev.\ 1.41--1.42}.
+\end{attenzione}
+
+\section{PC13, PC14 e PC15 verso il dock}
+\label{sec:pc13}
+\begin{verifica}[incongruenza tra schematico e log]
+Nella netlist attuale (schematico salvato il 04/11/2026 alle 15:22) PC13, PC14 e PC15 sono collegati a J708 pin 13 (\net{GPIOSX\_2}), 17 (\net{GPIO\_PPS}) e 14 (\net{GPIOSX\_0}). Nella netlist della rev.\ 1.45 erano non collegati, e il log (R-12, S-09; revisione del 04/11, P15) dice che PPS e GPIOSX \enquote{non arrivano all'MCU}. La modifica non è registrata nel log. Funzione, direzione e livelli di questi segnali vanno chiariti con il team: \DV.
+\end{verifica}
+Fino a una decisione, configurare i tre pin come ingressi senza pull (o in modo analogico). Se in futuro diventano uscite, ricordare i limiti di questi pin: al massimo \SI{3}{\milli\ampere}, \SI{2}{\mega\hertz} con \SI{30}{\pico\farad} di carico, mai come sorgente di corrente \fonte{DS-STM32L562 p.\,126, nota 1}. PC14 e PC15 sono anche i pin dell'oscillatore LSE: sulla scheda non c'è un quarzo a \SI{32}{\kilo\hertz}, quindi l'RTC interno dell'MCU può usare solo l'LSI.

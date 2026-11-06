@@ -1,0 +1,113 @@
+\chapter{Panoramica del sistema}
+\label{ch:sistema}
+
+\section{Schema a blocchi}
+La figura~\ref{fig:blocchi} mostra i blocchi della scheda e i collegamenti che il firmware usa. Tutti i collegamenti sono presi dalla netlist \fonte{SCH}.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=6mm and 8mm,
+   lab/.style={font=\sffamily\scriptsize,midway,fill=white,inner sep=1pt},
+   bus/.style={-{Stealth[length=2mm]},thick,sbblue2},
+   pwr/.style={-{Stealth[length=2mm]},very thick,sbred!80},
+   rf/.style={-{Stealth[length=2mm]},very thick,sborange},
+   ctl/.style={-{Stealth[length=2mm]},thick,sbgreen,densely dashed}]
+% ---- MCU
+\node[blk,minimum width=34mm,minimum height=62mm,font=\sffamily\small\bfseries] (mcu) at (0,0) {U301\\STM32L562RET6P\\[2pt]\normalfont\footnotesize LQFP64\\HSE \SI{24}{\mega\hertz} (Y1)};
+% ---- sinistra: memorie e bus
+\node[blk,minimum width=28mm,anchor=east] (fram) at ($(mcu.west)+(-14mm,22mm)$) {U401 FM25V10\\FRAM \SI{1}{Mbit}};
+\node[blk,minimum width=28mm,anchor=east] (rtc) at ($(mcu.west)+(-14mm,9mm)$) {U404 DS3231M\\RTC};
+\node[blk,minimum width=28mm,anchor=east] (wdt) at ($(mcu.west)+(-14mm,-4mm)$) {U403 STWD100\\watchdog};
+\node[blk,minimum width=28mm,anchor=east] (adc) at ($(mcu.west)+(-14mm,-17mm)$) {IC1, IC5 TLV9051\\2 $\times$ PT1000};
+\node[blk,minimum width=28mm,anchor=east] (swd) at ($(mcu.west)+(-14mm,-29mm)$) {J1 TC2030\\SWD + NRST};
+\draw[bus] (mcu.west|-fram) -- node[lab]{SPI2 + PB12} (fram);
+\draw[bus] (mcu.west|-rtc) -- node[lab]{I2C2, PB9} (rtc);
+\draw[bus] (mcu.west|-wdt) -- node[lab]{PC6 WDI} (wdt);
+\draw[bus] (adc) -- node[lab]{PB1, PC1} (mcu.west|-adc);
+\draw[bus] (swd) -- node[lab]{PA13/14, PB3} (mcu.west|-swd);
+\draw[ctl] (wdt.south west) ++(2mm,0) |- ++(-6mm,-3mm) node[left,font=\sffamily\scriptsize,text=sbgreen]{WDO$\to$NRST};
+% ---- destra: radio
+\node[blk,minimum width=26mm,anchor=west] (si) at ($(mcu.east)+(16mm,20mm)$) {IC204 Si4464\\transceiver};
+\node[blk,minimum width=20mm,above=5mm of si] (tcxo) {Y201 TCXO\\\SI{32}{\mega\hertz}};
+\node[blko,minimum width=26mm,anchor=west] (sup) at ($(mcu.east)+(16mm,2mm)$) {IC205 TPS3825\\supervisore};
+\node[blko,minimum width=26mm,anchor=west] (ctl) at ($(mcu.east)+(16mm,-14mm)$) {Q701 + U701\\APC / LNA};
+\draw[bus] (mcu.east|-si) ++(0,2mm) -- node[lab]{SPI1 + PA8} ($(si.west)+(0,2mm)$);
+\draw[bus] ($(si.west)+(0,-3mm)$) -- node[lab]{nIRQ$\to$PC0} ($(mcu.east|-si)+(0,-3mm)$);
+\draw[bus] (mcu.east|-sup) -- node[lab]{PC4 MR} (sup);
+\draw[ctl] (sup.north) -- node[right,font=\sffamily\scriptsize]{SDN} (si.south);
+\draw[bus] (mcu.east|-ctl) -- node[lab]{PC2} (ctl);
+\draw[rf] (tcxo) -- (si);
+% ---- catena RF
+\node[blk,minimum width=13mm,anchor=west] (pad) at ($(si.east)+(8mm,0)$) {pad\\\SI{10.8}{dB}};
+\node[blkr,minimum width=15mm,right=5mm of pad] (pa) {IC2\\QPA9510};
+\node[blk,minimum width=13mm,right=5mm of pa] (lpf) {FL201\\LPF};
+\node[blko,minimum width=16mm,anchor=north] (sw) at ($(lpf.south)+(10mm,-16mm)$) {IC202\\HMC349A};
+\node[blk,minimum width=13mm,anchor=east] (lna) at ($(sw.west)+(-10mm,-2mm)$) {Q201\\LNA};
+\node[blk,minimum width=13mm,left=5mm of lna] (frx) {filtro\\RX};
+\node[draw=sbgray,thick,circle,inner sep=1.5pt,font=\sffamily\scriptsize,below=7mm of sw] (ant) {MMCX};
+\draw[rf] (si) -- (pad); \draw[rf] (pad) -- (pa); \draw[rf] (pa) -- (lpf);
+\draw[rf] (lpf.east) -| node[pos=0.75,right,font=\sffamily\scriptsize]{RF2} ($(sw.north)+(3mm,0)$);
+\draw[rf] ($(sw.west)+(0,-2mm)$) -- node[above,font=\sffamily\scriptsize]{RF1} (lna);
+\draw[rf] (lna) -- (frx);
+\draw[rf] (frx.west) -| node[pos=0.8,left,font=\sffamily\scriptsize]{RX} ($(si.south)+(6mm,0)$);
+\draw[very thick,sborange] (sw.south) -- (ant);
+\draw[ctl] (ctl.east) -| ($(sw.west)+(-3mm,4mm)$) -- ($(sw.west)+(0,4mm)$);
+\draw[ctl] (ctl.north east) ++(-3mm,0) |- ($(pa.south)+(0,-4mm)$) -- (pa.south);
+\draw[ctl] (ctl.south) |- ($(lna.south)+(0,-4mm)$) -- (lna.south);
+% ---- sotto: alimentazione e interfacce
+\node[blk,minimum width=30mm,anchor=north] (pmux) at ($(mcu.south)+(-36mm,-16mm)$) {IC4 TPS2121\\power mux};
+\node[blk,minimum width=30mm,right=10mm of pmux] (buck) {IC3 TPSM863257\\buck \SI{3.3}{\volt}};
+\node[blk,minimum width=26mm,below=12mm of pmux,xshift=-18mm] (dock) {J708 dock\\(5V, EN\_DOCK, CAN, I2C1)};
+\node[blk,minimum width=22mm,below=12mm of pmux,xshift=18mm] (usb) {J15 USB-C};
+\node[blk,minimum width=20mm,right=6mm of usb] (ch) {U402\\CH340E};
+\node[blk,minimum width=20mm,right=6mm of ch] (can) {IC501\\TCAN3414};
+\node[blk,minimum width=18mm,right=6mm of can] (j202) {J202\\CAN};
+\node[blk,minimum width=18mm,right=6mm of j202] (j203) {J203\\I2C1};
+\draw[pwr] (dock) -- node[lab]{5V (IN1)} (pmux);
+\draw[pwr] (usb) -- node[lab]{VBUS (IN2)} (pmux);
+\draw[pwr] (pmux) -- node[lab]{5V0} (buck);
+\draw[ctl] (dock.east) -- ++(4mm,0) |- node[pos=0.25,right,font=\sffamily\scriptsize]{EN\_DOCK} (buck.west);
+\draw[pwr] (buck.north) -- node[lab]{3V3} (buck.north|-mcu.south);
+\draw[bus] (usb) -- node[lab]{D+/D$-$} (ch);
+\draw[bus] (ch.north) -- node[lab]{USART1 PA9/PA10} (ch.north|-mcu.south);
+\draw[bus] (can.north) -- node[lab]{FDCAN1 PA11/PA12} (can.north|-mcu.south);
+\draw[bus] (can) -- (j202);
+\draw[bus] (j203.north) |- node[pos=0.2,right,font=\sffamily\scriptsize]{I2C1 PB6/PB7} ($(mcu.south east)+(0,6mm)$);
+\draw[pwr] (pmux.east) ++(0,3mm) -- ++(5mm,0) |- node[pos=0.8,font=\sffamily\scriptsize,above]{5V0 (VDD switch)} (sw.west|-mcu.south) -- ++(0,0);
+\end{tikzpicture}}
+\caption{Schema a blocchi di SYMPHONY V2. Blu: bus dati; arancio: RF; rosso: alimentazione; verde tratteggiato: segnali di controllo.}
+\label{fig:blocchi}
+\end{figure}
+
+\section{Componenti principali}
+\begin{xltabular}{\linewidth}{@{}L{17mm}L{37mm}Y@{}}
+\tabhead\hd{Rif.}&\hd{Parte}&\hd{Funzione per il firmware}\\
+\endhead
+U301 & STM32L562RET6P & MCU Cortex-M33, LQFP64 variante \enquote{P} (SMPS esterno non usato: pin VDD12 non collegati) \fonte{REV-1104 §2.3}.\\
+IC204 & Si4464-B1B-FMR & Transceiver sub-GHz, comandato via SPI1. Clock da TCXO \SI{32}{\mega\hertz}.\\
+Y201 & ECS-TXO-20CSMV4-320-AY & TCXO \SI{32}{\mega\hertz}, \SI{\pm0.5}{\ppm}, \SIrange{-30}{85}{\celsius} \fonte{DS-ECS p.\,1}.\\
+IC2 & Qorvo QPA9510 & PA. Abilitato da Q701 (P-MOS) sull'APC.\\
+IC202 & ADI HMC349A & Deviatore RF SPDT tra antenna, ramo TX (RF2) e ramo RX (RF1).\\
+Q201 & Qorvo TQP3M9036 & LNA di ricezione con pin di shutdown.\\
+U701 & 74AUP2G14 & Invertitore a trigger di Schmitt: genera \net{EN\_RX\_LNA} da PC2.\\
+IC205 & TI TPS3825-33 & Supervisore: tiene il Si4464 in shutdown se il 3V3 è basso o se PC4 è basso.\\
+IC4 & TI TPS2121 & Power mux: priorità al 5\,V del dock (IN1) sul VBUS USB-C (IN2).\\
+IC3 & TI TPSM863257 & Buck 5V0 $\to$ 3V3, abilitato da \net{EN\_DOCK}.\\
+U403 & ST STWD100NYWY3F & Watchdog esterno sul reset dell'MCU, \SI{1.6}{\second} tipico.\\
+U404 & Maxim DS3231M & RTC su I2C2, backup su supercondensatori.\\
+U401 & Infineon FM25V10 & FRAM \SI{1}{Mbit} su SPI2.\\
+IC501 & TI TCAN3414 & Transceiver CAN FD su FDCAN1.\\
+U402 & WCH CH340E & Ponte USB-UART su USART1 (console e bootloader).\\
+IC1, IC5 & TI TLV9051 & Amplificatori delle due PT1000 (temperatura PA e buck).\\
+\bottomrule
+\end{xltabular}
+
+\section{Fatti essenziali da ricordare}
+\begin{itemize}
+\item La radio lavora a \SI{435}{\mega\hertz}, dentro la banda \SIrange{353}{479}{\mega\hertz} del Si4464 \fonte{DS-Si4464 p.\,9}.
+\item Un solo GPIO, \textbf{PC2}, comanda insieme switch RF, APC del PA e shutdown dell'LNA \fonte{LOG §41, R-04}. PC2 basso = TX, PC2 alto = RX.
+\item Il 3V3 esiste solo se il dock alza \net{EN\_DOCK}. Con la sola USB-C l'MCU resta spenta (capitolo~\ref{ch:power}).
+\item Il watchdog esterno è \textbf{sempre attivo} in volo: il primo impulso su PC6 va dato entro \SI{1.12}{\second} dall'accensione \fonte{LOG F-12}.
+\item Nessun LED è comandato dall'MCU. D203 mostra lo stato di reset della radio, D9 la presenza del 3V3 (solo con JP1 chiuso).
+\end{itemize}

@@ -106,7 +106,7 @@
 % collegamenti e metadati PDF
 \usepackage[colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,
   bookmarksnumbered=false,bookmarksopen=true,bookmarksopenlevel=1,bookmarksdepth=2,
-  pdftitle={SYMPHONY V2 -- registro hardware (version log), rev. 1.43},
+  pdftitle={SYMPHONY V2 -- registro hardware (version log), rev. 1.45},
   pdfauthor={Brik81},
   pdfsubject={Registro delle modifiche hardware, decisioni e verifiche di progetto},
   pdfkeywords={SYMPHONY V2, CubeSat, UHF 435 MHz, KiCad 10},
@@ -116,7 +116,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\sffamily\color{accent}SYMPHONY V2 -- registro hardware}
-\fancyhead[R]{\small\sffamily rev.\ 1.43}
+\fancyhead[R]{\small\sffamily rev.\ 1.45}
 \fancyfoot[C]{\small\sffamily pag.\ \thepage\ di \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\headrule}{\hbox to\headwidth{\color{rulec}\leaders\hrule height \headrulewidth\hfill}}
@@ -133,9 +133,9 @@
 {\large\color{tagnote} Revisioni, modifiche approvate, decisioni e verifiche di progetto}\\[10mm]
 {\color{rulec}\rule{\linewidth}{0.4pt}}\\[4mm]
 \begin{tabularx}{\linewidth}{@{}>{\hsize=0.45\hsize\raggedright\arraybackslash}X>{\hsize=1.55\hsize\raggedright\arraybackslash}X@{}}
-\textbf{Revisione corrente} & \textbf{1.43} del 03/11/2026 \textendash{} Revisione finale indipendente: decisioni su P-02, P-03, P-05, P-06\\[4pt]
+\textbf{Revisione corrente} & \textbf{1.45} del 04/11/2026 \textendash{} Revisione indipendente del 04/11: R243 a \SI{220}{\ohm}, R409/R410 rimosse, note POWER cancellate, nota di layout L-01\\[4pt]
 \textbf{Progetto} & SYMPHONY\_V2, branch SYM\_V2, KiCad 10.0 (CubeSat, UHF 435 MHz)\\[4pt]
-\textbf{Data} & 03/11/2026\\[4pt]
+\textbf{Data} & 04/11/2026\\[4pt]
 \textbf{Redatto da} & Claudio Codazzi\\[4pt]
 \textbf{Approvazioni} & Brik81\\
 \end{tabularx}\\[3mm]
@@ -191,5 +191,7 @@
 \input{entries/039_watchdog-stwd100-u403}
 \input{entries/040_watchdog-disattivazione-hw-r413}
 \input{entries/041_revisione-finale-p02-p03-p05-p06}
+\input{entries/042_p08-r29-1pct-chiusura-p10-p12-p15}
+\input{entries/043_revisione-0411-r243-220-note-power-l01}
 
 \end{document}

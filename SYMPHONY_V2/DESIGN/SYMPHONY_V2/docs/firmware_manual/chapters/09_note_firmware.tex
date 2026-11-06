@@ -1,0 +1,105 @@
+\chapter{Note firmware e checklist}
+\label{ch:notefw}
+
+\section{Elenco consolidato F-01\ldots F-16}
+Priorità: \textbf{\textcolor{sbred}{Critica}} = rischio di danno all'hardware o di perdita del satellite; \textbf{\textcolor{sborange}{Alta}} = malfunzionamento sicuro se non rispettata; \textbf{\textcolor{sbgreen}{Media}} = qualità, consumi, diagnostica.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{11mm}L{56mm}Y L{20mm}L{14mm}@{}}
+\caption{Note per il firmwarista dal log hardware.}\label{tab:notefw}\\
+\tabhead\hd{ID}&\hd{Regola}&\hd{Motivo}&\hd{Fonte}&\hd{Priorità}\\
+\endfirsthead
+\tabhead\hd{ID}&\hd{Regola}&\hd{Motivo}&\hd{Fonte}&\hd{Priorità}\\
+\endhead
+\multicolumn{5}{r}{\footnotesize\itshape continua nella pagina seguente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+F-01 & PA\_PWR\_LVL del Si4464 è una costante tarata con M-01 per avere $\leq$\SI{31}{\dBm} all'antenna; non modificabile da telecomando; mai +20 dBm. & Con il Si4464 al massimo il PA satura e lo switch riceve $\approx$\SI{32.5}{\dBm} contro \SI{33.5}{\dBm} abs.\ max. & LOG R-04, rev.\ 1.29 & \textcolor{sbred}{Critica}\\
+F-02 & Entrata in TX: Si4464 non in TX $\to$ PC2 = L $\to$ attesa $\to$ START\_TX. Uscita: Si4464 fuori da TX $\to$ solo dopo PC2 = H. Mai cambiare PC2 mentre il Si4464 trasmette. & Hot switching dell'HMC349A, limite \SI{30}{\dBm}. & LOG R-04, rev.\ 1.29 & \textcolor{sbred}{Critica}\\
+F-03 & Trasmissioni a impulsi o con duty cycle limitato; se serve TX continuo ridurre F-01. & L242 e FL201 scaldano in TX continuo. & LOG rev.\ 1.25, R-04 & \textcolor{sborange}{Alta}\\
+F-04 & POWER\_UP con opzione TCXO (\SI{32}{\mega\hertz} su XIN) e GLOBAL\_XO\_TUNE = 0. & Clock esterno: il banco di capacità va azzerato. & LOG §2; DS-Si4464 p.\,38 & \textcolor{sborange}{Alta}\\
+F-05 & Costante MODO\_A / MODO\_B. Modo A: PC4 L = reset; dopo il rilascio attendere il ritardo di IC205 (fino a \SI{300}{\milli\second}) e il POR, poi CTS. Modo B: logica invertita, SDN alto $\geq$\SI{10}{\micro\second}. & Supervisore IC205 escludibile (R204/R205). & LOG R-19, rev.\ 1.34 & \textcolor{sborange}{Alta}\\
+F-06 & HSE\_VALUE = 24000000. & Quarzo Y1 da \SI{24}{\mega\hertz}: altrimenti UART, CAN e timer sbagliati. & LOG S-04, rev.\ 1.15 & \textcolor{sborange}{Alta}\\
+F-07 & Console su USART1 PA9/PA10 (AF7) verso il CH340E, non UART4. Bootloader: BOOT0 (TP1) alto al reset, STM32CubeProgrammer in UART. & Collegamento hardware della console. & LOG rev.\ 1.8 & \textcolor{sbgreen}{Media}\\
+F-08 & ADC1 canale 16 (PB1, PA) e canale 2 (PC1, buck), misura raziometrica su VDDA; calibrazione a un punto per canale. & Offset del TLV9051 $\approx$\SI{\pm0.9}{\celsius}. & LOG S-06, R-18 & \textcolor{sbgreen}{Media}\\
+F-09 & All'avvio EN32KHZ = 0 (\code{0Fh} bit 3); dopo un'interruzione lunga controllare OSF e risincronizzare l'ora. & Uscita 32\,kHz non usata; ora non valida dopo lo stop dell'oscillatore. & LOG S-09, rev.\ 1.20 & \textcolor{sbgreen}{Media}\\
+F-10 & Dopo ogni TX controllare che il Si4464 risponda (CTS, PART\_INFO, stato); se resettato reinizializzare, contare, segnalare in telemetria. & Possibile reset da calo del 3V3 in TX (IC205). & LOG R-19, rev.\ 1.34 & \textcolor{sborange}{Alta}\\
+F-11 & Commutare PC6 (WDI) almeno ogni $\approx$\SI{1}{\second}, dal ciclo principale; mai con timer/PWM o interrupt autonomo. & $t_{WD}$ min \SI{1.12}{\second}; un timer girerebbe anche con la CPU bloccata. & LOG rev.\ 1.41--1.42 & \textcolor{sbred}{Critica}\\
+F-12 & Primo impulso su WDI entro \SI{1.12}{\second} dall'accensione, prima delle inizializzazioni lente. & Altrimenti reset ciclico all'avvio. & LOG rev.\ 1.41 & \textcolor{sbred}{Critica}\\
+F-13 & All'avvio leggere RCC\_CSR (causa del reset) e riportarla in telemetria. & Diagnosi dei reset del watchdog esterno. & LOG rev.\ 1.41 & \textcolor{sbgreen}{Media}\\
+F-14 & TX$\to$RX: prima fermare la TX (Si4464 fuori da TX), attendere $\geq$\SI{10}{\micro\second}, solo dopo PC2 verso RX. Mai commutare PC2 durante o subito dopo la TX. & Porta terminata dell'HMC349A: \SI{26.5}{\dBm} abs.\ max; l'APC si scarica in alcuni \si{\micro\second}. & LOG P-02, rev.\ 1.43 & \textcolor{sbred}{Critica}\\
+F-15 & All'avvio PB12 (CS FRAM) e PA8 (NSEL Si4464) uscite alte prima di ogni inizializzazione SPI. & Nessun pull-up esterno sui CS. & LOG P-12, rev.\ 1.44 & \textcolor{sbred}{Critica}\\
+F-16 & All'avvio EN32kHz = 0 nel DS3231M. & Risparmio sulla carica di backup. & LOG P03, rev.\ 1.45 & \textcolor{sbgreen}{Media}\\
+\end{xltabular}}
+
+\section{Checklist di avvio del firmware}
+L'ordine è importante: le prime voci proteggono l'hardware e il watchdog.
+
+\newcommand{\chk}{\item[$\square$]}
+\begin{enumerate}[label=\arabic*.,leftmargin=*]
+\item \textbf{Prime istruzioni dopo il reset} (prima di \code{SystemInit} lunghe o di copie di memoria lente)
+ \begin{itemize}[leftmargin=8mm]
+ \chk PA8 (NSEL) e PB12 (CS FRAM) uscite push-pull a livello alto (F-15).
+ \chk PC2 uscita push-pull a livello \textbf{alto}: switch su RX, PA spento.
+ \chk PC4 uscita a livello alto in entrambi i modi: nel modo A la radio esce dal reset dopo $t_d$, nel modo B resta spenta.
+ \chk PC6 uscita e primo fronte su WDI (F-12). Annotare l'istante.
+ \end{itemize}
+\item \textbf{Diagnostica del reset}
+ \begin{itemize}[leftmargin=8mm]
+ \chk Leggere e salvare \code{RCC\_CSR}, poi azzerare i flag (F-13).
+ \end{itemize}
+\item \textbf{Clock}
+ \begin{itemize}[leftmargin=8mm]
+ \chk HSE \SI{24}{\mega\hertz} (\code{HSE\_VALUE = 24000000}) e PLL (F-06). Gestire il guasto dell'HSE (CSS) con un ripiego su MSI/HSI.
+ \end{itemize}
+\item \textbf{GPIO}
+ \begin{itemize}[leftmargin=8mm]
+ \chk Pin liberi in modo analogico (tabella del paragrafo~\ref{sec:pin-liberi}).
+ \chk PC0 ingresso con pull-up, EXTI0 sul fronte di discesa (non ancora abilitato).
+ \chk PB9 ingresso senza pull. PC13--PC15 ingressi (in attesa di decisione, §\ref{sec:pc13}).
+ \end{itemize}
+\item \textbf{Periferiche}
+ \begin{itemize}[leftmargin=8mm]
+ \chk USART1 (console), FDCAN1, ADC (canali 2 e 16, VREFINT).
+ \chk SPI2 e FRAM: RDID, lettura della configurazione e degli offset di calibrazione (F-08).
+ \chk I2C2 e DS3231M: EN32KHZ = 0 (F-16), controllo di OSF (F-09), \code{0Eh} = INTCN 1, allarmi off.
+ \end{itemize}
+\item \textbf{Radio} (refresh di WDI durante le attese)
+ \begin{itemize}[leftmargin=8mm]
+ \chk Attendere almeno \SI{300}{\milli\second} dal rilascio di PC4 (modo A), polling di CTS con timeout (F-05).
+ \chk SPI1 modo 0, $\leq$\SI{10}{\mega\hertz}.
+ \chk POWER\_UP con TCXO, XO\_FREQ \SI{32}{\mega\hertz}; GLOBAL\_XO\_TUNE = 0 (F-04).
+ \chk PART\_INFO; configurazione WDS; \textbf{PA\_PWR\_LVL = costante F-01} (F-01).
+ \chk Abilitare EXTI0 (nIRQ) e passare in RX o READY.
+ \end{itemize}
+\item \textbf{Ciclo principale}
+ \begin{itemize}[leftmargin=8mm]
+ \chk Refresh di WDI condizionato allo stato dei task (F-11).
+ \chk Telemetria: causa del reset, contatore F-10, temperature, VDDA.
+ \end{itemize}
+\end{enumerate}
+
+\section{Checklist per ogni trasmissione}
+\begin{itemize}[leftmargin=8mm]
+\chk Antenna o carico da \SI{50}{\ohm} presenti (al banco).
+\chk Temperatura del PA (PB1) entro i limiti scelti dalla missione; duty cycle limitato (F-03).
+\chk Si4464 in READY, PA\_PWR\_LVL = F-01.
+\chk PC2 = L, attesa $\geq$\SI{10}{\micro\second}, START\_TX (F-02).
+\chk Fine pacchetto, Si4464 fuori da TX, attesa $\geq$\SI{10}{\micro\second}, PC2 = H (F-14).
+\chk Verifica che il Si4464 risponda; se no reinizializzare e contare l'evento (F-10).
+\end{itemize}
+
+\section{Errori da non fare}
+\begin{attenzione}[riepilogo]
+\begin{itemize}
+\item Commutare PC2 mentre il Si4464 trasmette o subito dopo (F-02, F-14).
+\item Lasciare PA\_PWR\_LVL al valore di default o renderlo modificabile da terra (F-01).
+\item Generare WDI con un timer o con DMA (F-11).
+\item Inizializzare SPI1 o SPI2 prima di aver portato alti PA8 e PB12 (F-15).
+\item Configurare PB9 (RST del DS3231M) come uscita push-pull.
+\item Collegare un generatore all'MMCX senza attenuatori (paragrafo~\ref{sec:rx-protezione}).
+\item Tenere PC2 basso fuori dalla trasmissione: il PA assorbe la corrente di riposo e scalda.
+\end{itemize}
+\end{attenzione}

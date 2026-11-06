@@ -1,0 +1,406 @@
+\chapter{Parte RF}
+\label{ch:rf}
+
+Questo è il capitolo più importante. La catena RF non ha protezioni hardware contro alcuni errori di sequenza: \textbf{la protezione del commutatore e del PA è affidata al firmware} \fonte{LOG P-02, R-04}.
+
+\section{Architettura TX e RX}
+\label{sec:rf-arch}
+
+\subsection{Catena di trasmissione}
+Si4464 (IC204, uscita TX in classe E, match AN648) $\to$ attenuatore a $\pi$ R245/R246/R247+R248 ($\approx$\SI{10.8}{dB}) $\to$ PA QPA9510 (IC2) $\to$ rete d'uscita del PA $\to$ filtro passa-basso FL201 (LFCG-490+) $\to$ porta RF2 dello switch HMC349A (IC202) $\to$ porta comune RFC $\to$ MMCX J201 \fonte{SCH; LOG §41; REV-1104 §2.2}.
+
+\subsection{Catena di ricezione}
+MMCX $\to$ RFC $\to$ porta RF1 dello switch $\to$ filtro passa-basso C209--L201--C210 $\to$ LNA TQP3M9036 (Q201) $\to$ match RX (AN643, 4 elementi) $\to$ ingressi differenziali RXp/RXn del Si4464 \fonte{SCH; LOG rev.\ 1.45, P11}.
+
+\begin{nota}[nota sullo schematico]
+Vicino al filtro RX lo schematico dice \enquote{435MHz filtro passa banda}, ma il filtro è un passa-basso. Il satellite è solo UHF: la nota va ignorata \fonte{LOG rev.\ 1.45, P11}.
+\end{nota}
+
+\subsection{Il comando unico PC2}
+PC2 (net \net{/MCU/UHF.EN\_TX\_ANT\_SW}) pilota contemporaneamente tre cose \fonte{LOG §41; SCH}:
+\begin{enumerate}
+\item il pin CTRL dello switch HMC349A (EN dello switch è a GND);
+\item il gate del P-MOS Q701 (FDN308P) tramite R703 \SI{0}{\ohm}. Il source di Q701 è sul 3V3, il pull-up R702 \SI{100}{\kilo\ohm} tiene il gate alto. Il drain alimenta APC1/APC2 del PA tramite il partitore R242 \SI{33}{\ohm} / R243 \SI{220}{\ohm}, con C252 \SI{10}{\nano\farad};
+\item l'ingresso dell'invertitore U701 (74AUP2G14), la cui uscita \net{EN\_RX\_LNA} va al pin Shut Down dell'LNA tramite R202 \SI{0}{\ohm}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{circuitikz}[scale=0.82,transform shape,font=\small]
+ % PC2
+ \draw (0,0) node[left]{PC2 (U301 pin 10)} to[short,o-*] (1.5,0) coordinate(n);
+ \draw (n) -- (1.5,-0.0) node[below right,font=\scriptsize]{TP702};
+ % verso switch
+ \draw (n) |- (3,2.5) node[right]{CTRL HMC349A (IC202): H = RF1/RX, L = RF2/TX};
+ % verso Q701
+ \draw (n) to[R,l=R703 \SI{0}{\ohm},-*] (4.5,0) coordinate(g);
+ \draw (g) to[R,l_=R702 \SI{100}{\kilo\ohm}] (4.5,2) node[above]{3V3};
+ \draw (g) -- (5.4,0) node[pmos,anchor=G,xscale=1] (q) {};
+ \node[right,font=\scriptsize] at ($(q.center)+(0.3,0.0)$) {Q701};
+ \draw (q.S) -- ++(0,0.5) node[above]{3V3};
+ \draw (q.D) to[R,l=R242 \SI{33}{\ohm},-*] ++(0,-2) coordinate(apc);
+ \draw (apc) to[R,l=R243 \SI{220}{\ohm}] ++(0,-2) node[ground]{};
+ \draw (apc) -- ++(1.8,0) coordinate(c1) to[C,l=C252 \SI{10}{\nano\farad}] ++(0,-2) node[ground]{};
+ \draw (c1) -- ++(1.4,0) node[right]{APC1/APC2 del PA (IC2)};
+ % verso U701
+ \draw (n) |- (3,-3.2) node[not port,anchor=in 1,scale=0.9] (inv) {};
+ \node[below,font=\scriptsize] at (inv.south) {U701 (74AUP2G14)};
+ \draw (inv.out) to[R,l=R202 \SI{0}{\ohm}] ++(2.2,0) node[right]{Shut Down LNA (Q201): H = spento};
+\end{circuitikz}
+\caption{Il comando PC2 e i tre carichi. Schema semplificato dalla netlist.}
+\label{fig:pc2}
+\end{figure}
+
+\textbf{Conseguenze.} PC2 \textbf{basso} = switch su TX, APC alimentata (PA acceso), LNA spento. PC2 \textbf{alto} (o in alta impedenza, grazie a R702) = switch su RX, APC a zero, LNA acceso \fonte{REV-1104 §2.2}.
+
+I livelli logici sono compatibili: HMC349A $V_\text{INH}$ \SI{2}{\volt} min, TQP3M9036 spento da \SI{2.5}{\volt} a VDD e acceso da \SIrange{0}{0.4}{\volt} \fonte{REV-1104 §2.2; DS-TQP3M9036 p.\,2}. Il percorso dello switch segue la tabella di verità del datasheet: con EN = L, CTRL = H collega RF1 (RX), CTRL = L collega RF2 (TX) \fonte{DS-HMC349A p.\,8, tab.\,4}.
+
+\section{Tabelle di verità}
+\label{sec:verita}
+
+\subsection{Stati della catena RF}
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{21mm}C{13mm}L{15mm}L{11mm}L{16mm}L{15mm}L{13mm}Y@{}}
+\caption{Stati della catena RF in funzione di PC2 e dello stato del Si4464.}\label{tab:verita}\\
+\tabhead\hd{Stato}&\hd{PC2}&\hd{Switch}&\hd{Q701}&\hd{APC}&\hd{PA}&\hd{LNA}&\hd{Si4464}\\
+\endfirsthead
+\tabhead\hd{Stato}&\hd{PC2}&\hd{Switch}&\hd{Q701}&\hd{APC}&\hd{PA}&\hd{LNA}&\hd{Si4464}\\
+\endhead
+Reset / boot MCU & Hi-Z $\to$ H (R702) & RF1 (RX) & OFF & \SI{0}{\volt} & standby & acceso & controllato da IC205 (modo A)\\
+OFF (radio spenta) & H & RF1 (RX) & OFF & \SI{0}{\volt} & standby & acceso & shutdown (SDN = H)\\
+IDLE / READY & H & RF1 (RX) & OFF & \SI{0}{\volt} & standby & acceso & READY o SLEEP\\
+RX & H & RF1 (RX) & OFF & \SI{0}{\volt} & standby & acceso & RX\\
+TX armato & L & RF2 (TX) & ON & \SIrange{2.7}{2.87}{\volt} & acceso, senza pilotaggio & spento & READY (\textbf{non} in TX)\\
+TX & L & RF2 (TX) & ON & \SIrange{2.7}{2.87}{\volt} & acceso & spento & TX\\
+\rowcolor{sbredbg}\textbf{VIETATO} & commuta & \textendash & \textendash & \textendash & \textendash & \textendash & in TX o appena uscito da TX\\
+\bottomrule
+\end{xltabular}}
+\fonte{SCH; LOG §41, F-02, F-14; REV-1104 §2.2; APC: LOG rev.\ 1.45}
+
+\begin{nota}[consumi da ricordare]
+\begin{itemize}
+\item L'LNA non si può spegnere da solo: con PC2 alto è sempre acceso, anche con la radio in shutdown. Assorbe circa \SI{45}{\milli\ampere} a \SI{3.3}{\volt} \fonte{REV-1104 §2.2, DS-TQP3M9036 p.\,7}.
+\item Con PC2 basso il PA, anche senza segnale, assorbe la corrente di riposo: \SI{208}{\milli\ampere} tipici a \SI{3.6}{\volt} \fonte{DS-QPA9510 p.\,3}. Tenere PC2 basso solo per la durata della trasmissione.
+\end{itemize}
+\end{nota}
+
+\subsection{Shutdown e reset del Si4464 (SDN, \texorpdfstring{$\overline{\text{MR}}$}{MR})}
+\label{sec:sdn}
+Il pin SDN del Si4464 è alto = radio spenta \fonte{DS-Si4464 p.\,46}. È pilotato dal supervisore IC205 (TPS3825-33, uscita RESET push-pull attiva alta) tramite R204 \SI{0}{\ohm}. PC4 (net \net{RF\_MR\_N}) va all'ingresso \(\overline{\mathrm{MR}}\) di IC205, con pull-up R208 \SI{10}{\kilo\ohm}. In laboratorio si può escludere IC205 (modo B): si toglie R204 e si monta R205 \SI{0}{\ohm}, che collega PC4 direttamente a SDN \fonte{LOG §46, R-19}.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{30mm}L{30mm}L{32mm}Y@{}}
+\caption{Comando della radio con PC4 nei due modi di montaggio \fonte{LOG §46}.}\label{tab:sdn}\\
+\tabhead\hd{Condizione}&\hd{PC4}&\hd{SDN Si4464}&\hd{Effetto}\\
+\endfirsthead
+\tabhead\hd{Condizione}&\hd{PC4}&\hd{SDN Si4464}&\hd{Effetto}\\
+\endhead
+\multicolumn{4}{@{}l}{\textbf{Modo A (di serie): R204 montata, R205 DNP}}\\
+3V3 sotto soglia & qualsiasi & H & radio spenta (soglia \SI{2.88}{}/\SI{2.93}{}/\SI{3.00}{\volt})\\
+reset radio & L (almeno \SI{1}{\micro\second}) & H, poi per $t_d$ dopo il rilascio & radio spenta, registri persi\\
+normale & H o Hi-Z (R208) & L dopo $t_d$ = \SIrange{120}{300}{\milli\second} & radio attiva; D203 acceso\\
+\multicolumn{4}{@{}l}{\textbf{Modo B (ripiego): R204 rimossa, R205 = \SI{0}{\ohm}}}\\
+reset / boot MCU & Hi-Z (R208 $\to$ H) & H & radio spenta\\
+radio spenta & H & H & radio spenta\\
+radio attiva & L & L & radio attiva; D203 non indica più lo stato della radio\\
+\bottomrule
+\end{xltabular}}
+\fonte{tempi: DS-TPS3825 pp.\,6--8; DS-Si4464 p.\,21}
+
+\begin{regola}[F-05: reset del Si4464]
+\begin{itemize}
+\item Il firmware deve sapere com'è montata la scheda: costante di compilazione \code{MODO\_A} / \code{MODO\_B} \fonte{LOG F-05}.
+\item \textbf{Modo A}: PC4 basso = reset. Dopo il rilascio di PC4 (o all'accensione) aspettare il ritardo del supervisore, poi il POR del Si4464, poi controllare CTS prima di mandare POWER\_UP.
+\item \textbf{Modo B}: tenere SDN (= PC4) alto almeno \SI{10}{\micro\second} \fonte{DS-Si4464 p.\,21}, poi PC4 basso, attendere il POR, controllare CTS.
+\end{itemize}
+\end{regola}
+
+\begin{verifica}[ritardo del supervisore]
+La nota F-05 e la nota sullo schematico indicano \SI{200}{\milli\second}. È il valore tipico: il datasheet dà $t_d$ = \SI{120}{\milli\second} min, \SI{200}{\milli\second} tip., \SI{300}{\milli\second} max \fonte{DS-TPS3825 p.\,8}. Il firmware deve aspettare almeno \SI{300}{\milli\second}, oppure fare polling di CTS con un timeout di almeno \SI{300}{\milli\second} più il POR. Il tempo esatto del POR del Si4464 dopo SDN basso non è stato trovato nel datasheet (riferimento indicativo: shutdown$\to$TX/RX \SI{15}{\milli\second} \fonte{DS-Si4464 p.\,20}): \DV{} su AN625/API.
+\end{verifica}
+
+\section{Sequenze di commutazione}
+\label{sec:sequenze}
+
+\subsection{Tempi dei componenti}
+\begin{xltabular}{\linewidth}{@{}L{55mm}L{34mm}Y@{}}
+\tabhead\hd{Grandezza}&\hd{Valore}&\hd{Fonte}\\
+Commutazione dello switch HMC349A ($t_\text{ON}$, $t_\text{OFF}$) & \SI{160}{\nano\second} & \fonte{DS-HMC349A p.\,3}\\
+Accensione/spegnimento del PA da APC & \SI{175}{\nano\second} \DV & \fonte{DS-QPA9510 p.\,3}; la revisione del 04/11 riporta \SI{1.7}{\micro\second} \fonte{REV-1104 P04}\\
+Salita dell'APC (Q701 ON) & $\tau = C_{252}\,(R_{242}\parallel R_{243}) = \SI{10}{\nano\farad}\times\SI{28.7}{\ohm} = \SI{0.29}{\micro\second}$ & calcolo\\
+Discesa dell'APC (Q701 OFF) & $\tau \leq C_{252}R_{243} = \SI{2.2}{\micro\second}$; sotto \SI{0.5}{\volt} (\enquote{OFF}) dopo $\tau\ln(2{,}87/0{,}5) = \SI{3.8}{\micro\second}$ & calcolo; soglia OFF \fonte{DS-QPA9510 p.\,3}\\
+LNA: accensione / spegnimento & \SI{1}{\micro\second} / \SI{0.5}{\micro\second} & \fonte{DS-TQP3M9036 p.\,2}\\
+Invertitore U701 & $t_\text{pd}\leq$ \SI{4.3}{\nano\second} & \fonte{DS-SN74AUP2G14 p.\,1}\\
+\bottomrule
+\end{xltabular}
+L'APC si scarica più lentamente di quanto lo switch commuti: se PC2 sale mentre il PA è ancora pilotato, per alcuni microsecondi il PA spinge circa \SI{+31}{\dBm} su una porta ormai terminata, oltre il massimo assoluto di \SI{26.5}{\dBm} \fonte{LOG P-02}.
+
+\subsection{Sequenza RX\texorpdfstring{$\to$}{->}TX}
+\begin{enumerate}
+\item Verificare che il Si4464 \textbf{non} sia in TX (stato READY o RX). Se è in RX, portarlo in READY con \code{CHANGE\_STATE}.
+\item Verificare che PA\_PWR\_LVL sia al valore F-01 (paragrafo~\ref{sec:limiti}).
+\item Portare PC2 \textbf{basso}.
+\item Attendere \textbf{almeno \SI{10}{\micro\second}}: switch, APC e LNA si assestano \fonte{REV-1104 P04; LOG F-02}.
+\item Inviare \code{START\_TX}. Il Si4464 fa la sua rampa di potenza interna.
+\item Attendere la fine del pacchetto (interrupt PACKET\_SENT su nIRQ). Impostare lo stato finale del TX a READY.
+\end{enumerate}
+
+\subsection{Sequenza TX\texorpdfstring{$\to$}{->}RX}
+\begin{enumerate}
+\item Attendere la fine del pacchetto (o forzare l'uscita da TX con \code{CHANGE\_STATE} a READY).
+\item Controllare che il Si4464 sia davvero fuori da TX (stato del chip o registro Fast Response).
+\item Attendere \textbf{almeno \SI{10}{\micro\second}} \fonte{LOG F-14}.
+\item Solo ora portare PC2 \textbf{alto}.
+\item Attendere che l'LNA si accenda (\SI{1}{\micro\second}) e l'APC si scarichi (\SI{3.8}{\micro\second}); per uniformità usare ancora \SI{10}{\micro\second}.
+\item \code{START\_RX}.
+\item Controllare che il Si4464 risponda ancora (F-10, paragrafo~\ref{sec:rf-supervisore}).
+\end{enumerate}
+
+\begin{attenzione}[F-14: mai commutare PC2 durante la trasmissione]
+Prima si ferma la trasmissione (Si4464 fuori da TX), si attendono almeno \SI{10}{\micro\second}, solo dopo si commuta PC2 verso RX. \textbf{Mai commutare PC2 durante la trasmissione o subito dopo} \fonte{LOG F-14}. Senza questa regola il commutatore può superare il massimo assoluto di \SI{26.5}{\dBm} sulla porta terminata a ogni commutazione \fonte{LOG P-02; DS-HMC349A p.\,4}. Il limite in hot switching è \SI{30}{\dBm}.
+\end{attenzione}
+
+\begin{verifica}[testo della nota F-14]
+La nota F-14 chiede di avere \enquote{PA spento/APC a zero} prima di commutare PC2. Con l'hardware attuale l'APC è comandata proprio da PC2: non si può azzerare l'APC prima di commutare PC2. L'unica cosa che il firmware può fare prima è togliere il pilotaggio al PA, cioè portare il Si4464 fuori da TX. Questo manuale interpreta F-14 in questo modo; l'interpretazione va confermata dal team.
+\end{verifica}
+
+\subsection{Diagrammi temporali}
+\begin{figure}[htbp]
+\centering
+\begin{tikztimingtable}[timing/slope=0.12,timing/coldist=2pt,xscale=1.3,yscale=1.0,
+   timing/d/background/.style={fill=sblight},font=\sffamily\scriptsize]
+ Stato Si4464 & 3D{READY} 6D{READY} 2D{TX tune} 7D{TX (pacchetto)} 2D{READY}\\
+ PC2          & 3H 17L \\
+ Switch       & 3.1D{RF1 (RX)} 16.9D{RF2 (TX)}\\
+ APC          & 3L 0.5U 16.5H\\
+ LNA          & 3.1H 0.4U 16.5L\\
+ RF all'MMCX  & 11L 1U 6H 1U 1L\\
+ nIRQ (PC0)   & 19H 0.5L 0.5H\\
+\extracode
+ \tablerules
+ \begin{pgfonlayer}{background}
+  \vertlines[sbgray!60,densely dashed]{3,9,19}
+ \end{pgfonlayer}
+ \node[anchor=south,font=\sffamily\scriptsize] at (3,0.6) {PC2 $\downarrow$};
+ \node[anchor=south,font=\sffamily\scriptsize] at (9,0.6) {START\_TX};
+ \node[anchor=south,font=\sffamily\scriptsize] at (19,0.6) {PACKET\_SENT};
+ \draw[{Stealth}-{Stealth},sbred,thick] (3,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$} (9,-10.8);
+\end{tikztimingtable}
+\caption{Sequenza RX$\to$TX. Non in scala. U = transitorio (switch \SI{160}{\nano\second}, APC $\tau$ \SI{0.29}{\micro\second}, LNA OFF \SI{0.5}{\micro\second}).}
+\label{fig:rx2tx}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikztimingtable}[timing/slope=0.12,timing/coldist=2pt,xscale=1.3,yscale=1.0,
+   timing/d/background/.style={fill=sblight},font=\sffamily\scriptsize]
+ Stato Si4464 & 4D{TX (fine pacchetto)} 7D{READY} 3D{READY} 6D{RX}\\
+ RF all'MMCX  & 3H 1U 16L\\
+ nIRQ (PC0)   & 4H 0.5L 15.5H\\
+ PC2          & 11L 9H\\
+ Switch       & 11.1D{RF2 (TX)} 8.9D{RF1 (RX)}\\
+ APC          & 11H 2U 7L\\
+ LNA          & 11L 0.8U 8.2H\\
+\extracode
+ \tablerules
+ \begin{pgfonlayer}{background}
+  \vertlines[sbgray!60,densely dashed]{4,11,14}
+ \end{pgfonlayer}
+ \node[anchor=south,font=\sffamily\scriptsize] at (4,0.6) {PACKET\_SENT};
+ \node[anchor=south,font=\sffamily\scriptsize] at (11,0.6) {PC2 $\uparrow$};
+ \node[anchor=south,font=\sffamily\scriptsize] at (14,0.6) {START\_RX};
+ \draw[{Stealth}-{Stealth},sbred,thick] (4,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$ (F-14)} (11,-10.8);
+ \draw[{Stealth}-{Stealth},sbgreen,thick] (11,-10.8) -- node[below,font=\sffamily\scriptsize]{$\geq\SI{10}{\micro\second}$} (14,-10.8);
+\end{tikztimingtable}
+\caption{Sequenza TX$\to$RX. Non in scala. La discesa dell'APC ($\tau\leq\SI{2.2}{\micro\second}$) avviene quando il PA non è più pilotato.}
+\label{fig:tx2rx}
+\end{figure}
+
+\subsection{Macchina a stati consigliata}
+\begin{center}
+\begin{tikzpicture}[node distance=12mm and 22mm,font=\sffamily\footnotesize,
+   st/.style={draw=sbblue,thick,fill=sblight,rounded corners=3pt,minimum width=26mm,minimum height=9mm,align=center},
+   ar/.style={-{Stealth},thick,sbblue2},lb/.style={font=\sffamily\scriptsize,align=center,fill=white,inner sep=1pt}]
+ \node[st] (off) {OFF\\SDN = H, PC2 = H};
+ \node[st,right=of off] (rdy) {READY\\PC2 = H};
+ \node[st,right=of rdy] (rx) {RX\\PC2 = H};
+ \node[st,below=of rdy] (arm) {TX ARMATO\\PC2 = L, Si4464 READY};
+ \node[st,draw=sbred,fill=sbredbg,below=of arm] (tx) {TX\\PC2 = L};
+ \node[st,right=of tx] (end) {FINE TX\\Si4464 READY, PC2 = L};
+ \draw[ar] (off) -- node[lb,above]{reset, $t_d$,\\POWER\_UP, config} (rdy);
+ \draw[ar] (rdy.20) -- node[lb,above]{START\_RX} (rx.160);
+ \draw[ar] (rx.200) -- node[lb,below]{CHANGE\_STATE} (rdy.340);
+ \draw[ar] (rdy) -- node[lb,right]{PC2 = L} (arm);
+ \draw[ar] (arm) -- node[lb,right]{$\geq\SI{10}{\micro\second}$, START\_TX} (tx);
+ \draw[ar] (tx) -- node[lb,above]{PACKET\_SENT} (end);
+ \draw[ar] (end) |- node[lb,pos=0.25,right]{$\geq\SI{10}{\micro\second}$, PC2 = H,\\verifica F-10} ($(rdy.east)+(0,-3mm)$);
+\end{tikzpicture}
+\end{center}
+PC2 cambia solo nelle transizioni READY$\leftrightarrow$TX ARMATO e FINE TX$\to$READY, mai negli stati TX.
+
+\section{Limiti di potenza}
+\label{sec:limiti}
+
+\subsection{Tabella dei limiti}
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{42mm}L{30mm}L{30mm}Y@{}}
+\caption{Limiti di potenza e tensione della catena TX/RX.}\label{tab:limiti}\\
+\tabhead\hd{Punto}&\hd{Limite}&\hd{Valore atteso}&\hd{Fonte e note}\\
+\endfirsthead
+\tabhead\hd{Punto}&\hd{Limite}&\hd{Valore atteso}&\hd{Fonte e note}\\
+\endhead
+Uscita del Si4464 (PA\_PWR\_LVL) & \textbf{mai +20 dBm} & circa \SI{0}{\dBm}, da tarare (M-01) & \fonte{LOG F-01; REV-1104 §2.2}\\
+Attenuatore Si4464$\to$PA & \textendash & \SI{10.76}{dB} & \fonte{REV-1104 §2.2, calcolo del revisore}\\
+Ingresso del PA & \SI{+13}{\dBm} abs.\ max & \SI{-10.8}{\dBm}; \SI{+9.2}{\dBm} con Si4464 a +20 dBm & \fonte{DS-QPA9510 p.\,2; REV-1104 §2.2}\\
+Guadagno / compressione del PA & \textendash & $\approx$\SI{42.5}{dB}, P1dB $\approx$\SI{32}{\dBm} a \SI{430}{\mega\hertz} (a \SI{3.6}{\volt}; a \SI{3.3}{\volt} un po' meno) & \fonte{EVB Qorvo pp.\,6--7; REV-1104 §4}\\
+Tensione APC & \SI{3.0}{\volt} abs.\ max & \SI{2.87}{\volt} a vuoto (3V3 = \SI{3.3}{\volt}); \SI{2.96}{\volt} max (3V3 = \SI{3.405}{\volt}); \SIrange{2.7}{2.8}{\volt} sotto carico & \fonte{DS-QPA9510 p.\,2; LOG rev.\ 1.45, P09}\\
+Filtro FL201 & \SI{2}{\watt} fino a circa \SI{83}{\celsius} (\SI{3.5}{\watt} a \SI{25}{\celsius}) & perdita \SI{1.15}{dB} & \fonte{REV-1104 §2.2}\\
+Switch, percorso passante & \SI{33.5}{\dBm} (VDD \SI{5}{\volt}, \SI{85}{\celsius}) & \SIrange{30.3}{30.7}{\dBm}; \SI{32.5}{\dBm} con Si4464 a +20 dBm & \fonte{DS-HMC349A p.\,4; LOG 1.29-01, P-03}\\
+Switch, hot switching & \SI{30}{\dBm} (\SI{85}{\celsius}) & \textbf{0}: PC2 si commuta senza RF & \fonte{DS-HMC349A p.\,4; LOG F-02}\\
+Switch, porta terminata & \SI{26.5}{\dBm} (\SI{85}{\celsius}) & \textbf{0}: vedi F-14 & \fonte{DS-HMC349A p.\,4; LOG P-02}\\
+Uscita d'antenna (MMCX) & \textbf{$\leq$ \SI{31}{\dBm}} & \SIrange{29}{30}{\dBm} & \fonte{LOG F-01, M-06}\\
+LNA in TX (perdita dello switch) & \SI{+22}{\dBm} & $\approx$\SI{-14.5}{\dBm} & \fonte{DS-TQP3M9036 p.\,2; REV-1104 §2.2}\\
+Ingresso RX del Si4464 & \SI{+10}{\dBm} abs.\ max & dipende dal segnale in antenna & \fonte{DS-Si4464 p.\,13}\\
+\bottomrule
+\end{xltabular}}
+
+Calcolo della tensione APC a vuoto: $V_\text{APC} = V_\text{3V3}\cdot R_{243}/(R_{242}+R_{243}) = 3{,}3\cdot 220/253 = \SI{2.870}{\volt}$; con $V_\text{3V3} = \SI{3.405}{\volt}$ si ottiene \SI{2.961}{\volt}. La resistenza di Thevenin è \SI{28.7}{\ohm}: con la corrente APC di \SI{4.6}{\milli\ampere} \fonte{DS-QPA9510 p.\,3} la tensione scende di circa \SI{0.13}{\volt}. Il firmware non può regolare l'APC: è fissa. La potenza si regola solo con PA\_PWR\_LVL.
+
+\subsection{Diagramma dei livelli}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=0.92\linewidth,height=7.2cm,
+  symbolic x coords={Si4464,ingresso PA,uscita PA,dopo FL201,MMCX},xtick=data,
+  ylabel={Potenza [\si{\dBm}]},ymin=-15,ymax=38,grid=major,grid style={gray!20},
+  tick label style={font=\footnotesize\sffamily},label style={font=\small\sffamily},
+  legend style={font=\scriptsize\sffamily,at={(0.02,0.98)},anchor=north west},
+  enlarge x limits=0.08]
+\addplot[very thick,sbgreen,mark=*] coordinates {(Si4464,0) (ingresso PA,-10.8) (uscita PA,31.5) (dopo FL201,30.3) (MMCX,29.5)};
+\addlegendentry{obiettivo (Si4464 $\approx$ \SI{0}{\dBm}, stima)}
+\addplot[very thick,sbred,mark=square*,dashed] coordinates {(Si4464,20) (ingresso PA,9.2) (uscita PA,33.7) (dopo FL201,32.5) (MMCX,31.7)};
+\addlegendentry{Si4464 a +20 dBm (vietato, stima)}
+\addplot[thick,sborange,densely dotted,domain=0:4] coordinates {(Si4464,33.5) (MMCX,33.5)};
+\addlegendentry{switch passante \SI{33.5}{\dBm}}
+\addplot[thick,sbblue,densely dashdotted] coordinates {(Si4464,31) (MMCX,31)};
+\addlegendentry{F-01: antenna $\leq$ \SI{31}{\dBm}}
+\addplot[thick,sbgray,dashed] coordinates {(Si4464,13) (MMCX,13)};
+\addlegendentry{ingresso PA \SI{13}{\dBm} abs.\ max}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+{\footnotesize Stime ricavate dai valori della tabella~\ref{tab:limiti}: obiettivo costruito a ritroso da \SI{29.5}{\dBm} all'MMCX (M-06) con \SI{0.8}{dB} di perdita dello switch \fonte{REV-1104 §4} e \SI{1.15}{dB} di FL201; caso a +20 dBm da \SI{32.5}{\dBm} al commutatore \fonte{LOG 1.29-01}. In saturazione la potenza d'uscita resta vicina alla Psat qualunque sia il pilotaggio \fonte{LOG R-04}.}
+
+\begin{regola}[F-01: limite rigido di potenza]
+\begin{itemize}
+\item PA\_PWR\_LVL del Si4464 è una \textbf{costante} tarata sul prototipo con la misura M-01, per avere \textbf{$\leq$ \SI{31}{\dBm}} all'uscita d'antenna. Non deve essere modificabile da telecomando; al massimo il firmware satura il valore richiesto \fonte{LOG F-01}.
+\item Il Si4464 non deve mai trasmettere a +20 dBm.
+\item Scrivere PA\_PWR\_LVL dopo ogni POWER\_UP e dopo ogni caricamento della configurazione WDS, prima del primo START\_TX. Secondo la documentazione API il valore di default è \code{0x7F}, cioè il massimo dei 128 passi: \DV{} sulla API della revisione B1.
+\item Se M-05 (armoniche) non passa, ridurre la potenza di \SIrange{2}{3}{dB} \fonte{LOG M-05}.
+\end{itemize}
+\end{regola}
+
+\begin{regola}[F-03: durata della trasmissione]
+Preferire trasmissioni a impulsi o con duty cycle limitato. L242 e FL201 scaldano in trasmissione continua alla massima potenza. Se serve un TX continuo, ridurre il valore F-01 \fonte{LOG F-03}. La temperatura del PA si legge su PB1.
+\end{regola}
+
+\begin{attenzione}[carico in uscita]
+Non trasmettere mai senza antenna o senza un carico da \SI{50}{\ohm} adatto alla potenza sull'MMCX. Il datasheet del Si4464 avverte che il PA si può danneggiare se acceso senza carico \fonte{DS-Si4464 p.\,13}; il QPA9510 garantisce l'assenza di danni fino a VSWR 10:1 solo nelle condizioni di prova del datasheet \fonte{DS-QPA9510 p.\,3}.
+\end{attenzione}
+
+\section{TCXO e configurazione base del Si4464}
+\label{sec:si-config}
+
+\subsection{Clock di riferimento}
+\begin{itemize}
+\item TCXO Y201 ECS-TXO-20CSMV4-320-AY: \SI{32.000}{\mega\hertz}, onda sinusoidale troncata, stabilità codice A = \SI{\pm0.5}{\ppm}, temperatura codice Y = \SIrange{-30}{85}{\celsius} \fonte{DS-ECS pp.\,1--2}.
+\item Accoppiato in AC a XIN tramite C204 \SI{10}{\nano\farad} e R201 \SI{33}{\ohm}; XOUT è flottante; test point TP701 su XIN \fonte{SCH}. Il Si4464 consiglia \SIrange{0.6}{1.4}{\volt} picco-picco in AC, massimo \SI{1.8}{\volt} \fonte{DS-Si4464 p.\,38}.
+\item Errore di frequenza dovuto alla stabilità: $435\cdot10^6\times0{,}5\cdot10^{-6} = \SI{\pm217.5}{\hertz}$ (calcolo). La tolleranza iniziale a \SI{25}{\celsius} va letta sul datasheet ECS: \DV.
+\end{itemize}
+
+\begin{verifica}[campo di temperatura del TCXO]
+La versione \code{-AY} è specificata da \SI{-30}{\celsius}; per \SI{-40}{\celsius} servirebbe la \code{-AN} \fonte{REV-1104 P07; LOG R-07}. Sotto \SI{-30}{\celsius} la frequenza non è garantita.
+\end{verifica}
+
+\subsection{Configurazione}
+\begin{regola}[F-04: clock del Si4464]
+POWER\_UP con l'opzione TCXO (TCXO a \SI{32}{\mega\hertz} su XIN, XOUT flottante) e banco di capacità del quarzo GLOBAL\_XO\_TUNE = 0 \fonte{LOG F-04; DS-Si4464 p.\,38}.
+\end{regola}
+
+\begin{xltabular}{\linewidth}{@{}L{40mm}L{40mm}Y@{}}
+\caption{Parametri e comandi principali. I codici vengono dalla documentazione API Silicon Labs consultata in rete (revisione C2A); per la Si4464-B1B vanno confermati con WDS: \DV.}\\
+\tabhead\hd{Elemento}&\hd{Valore}&\hd{Note}\\
+\endfirsthead
+\tabhead\hd{Elemento}&\hd{Valore}&\hd{Note}\\
+\endhead
+Frequenza portante & \SI{435}{\mega\hertz} & banda Si4464 \SIrange{353}{479}{\mega\hertz} \fonte{DS-Si4464 p.\,9}\\
+\code{POWER\_UP} & comando \code{0x02} & BOOT\_OPTIONS: modo PRO; XTAL\_OPTIONS: bit TCXO = 1\\
+XO\_FREQ & \num{32000000} = \code{0x01E84800} & 4 byte, MSB per primo (conversione decimale/esadecimale: calcolo)\\
+\code{GLOBAL\_XO\_TUNE} & 0 (gruppo \code{0x00}, indice \code{0x00}) & default \code{0x40}: va scritto a 0 (F-04)\\
+\code{PA\_PWR\_LVL} & gruppo \code{0x22}, indice \code{0x01} & 128 passi \fonte{DS-Si4464 p.\,35}; valore = costante F-01\\
+\code{PART\_INFO} & comando \code{0x01} & risposta PART = \code{0x4464} attesa\\
+\code{GET\_INT\_STATUS} & comando \code{0x20} & nella ISR di nIRQ\\
+\code{START\_TX} / \code{START\_RX} & \code{0x31} / \code{0x32} & stato finale configurabile (READY)\\
+\code{CHANGE\_STATE} & \code{0x34} & per forzare READY\\
+\code{READ\_CMD\_BUFF} & \code{0x44} & CTS = \code{0xFF} \fonte{DS-Si4464 p.\,17}\\
+\bottomrule
+\end{xltabular}
+
+\subsection{Procedura di inizializzazione della radio}
+\begin{enumerate}
+\item PC2 alto (RX, PA spento) e NSEL (PA8) alto.
+\item Modo A: PC4 alto; attendere almeno \SI{300}{\milli\second} ($t_d$ max). Modo B: PC4 alto per almeno \SI{10}{\micro\second}, poi basso.
+\item Polling di CTS (\code{0xFF}) con timeout.
+\item \code{POWER\_UP} con opzione TCXO e XO\_FREQ = \SI{32}{\mega\hertz}; attendere CTS.
+\item \code{PART\_INFO}: controllare che il chip sia un Si4464. In caso contrario segnalare l'errore in telemetria e non trasmettere.
+\item Caricare la configurazione generata da WDS (\code{radio\_config.h}: Si4464, TCXO \SI{32}{\mega\hertz}, \SI{435}{\mega\hertz}, modulazione e data rate della missione, PA a +20 dBm classe E come da match AN648 \fonte{SCH nota UHF}).
+\item Scrivere GLOBAL\_XO\_TUNE = 0 e PA\_PWR\_LVL = costante F-01 (sovrascrivono i valori di WDS).
+\item Configurare nIRQ (interrupt PACKET\_SENT, PACKET\_RX, errori CRC) e passare in RX o READY.
+\end{enumerate}
+
+\section{Protezione della ricezione}
+\label{sec:rx-protezione}
+Il massimo assoluto all'ingresso RX del Si4464 è \SI{+10}{\dBm} \fonte{DS-Si4464 p.\,13}. Davanti c'è un LNA da circa \SI{21}{dB} \fonte{REV-1104 §4}. Il segnale massimo ammesso all'MMCX è quindi circa $10 - 21 + 0{,}8 + 0{,}17 \approx \SI{-10}{\dBm}$ (calcolo: guadagno LNA, perdite di switch e filtro RX \fonte{REV-1104 §4, P11}).
+
+\begin{attenzione}[al banco]
+\begin{itemize}
+\item Non collegare mai un generatore o un altro trasmettitore direttamente all'MMCX senza attenuatori. Tenere il segnale all'MMCX sotto \SI{-20}{\dBm} (\SI{10}{dB} di margine sul calcolo sopra).
+\item Prova tra due schede SYMPHONY: con \SI{30}{\dBm} in uscita servono almeno \SI{50}{dB} di attenuazione ($30 - 50 = \SI{-20}{\dBm}$; calcolo).
+\item La revisione indica che l'abs max si supera già con segnali in antenna oltre circa \SI{-5}{\dBm} \fonte{REV-1104 §2.2}.
+\end{itemize}
+\end{attenzione}
+
+\section{Supervisore e verifica dopo la trasmissione}
+\label{sec:rf-supervisore}
+In TX il PA assorbe circa \SI{1.7}{\ampere} dal 3V3. Se il rail scende sotto la soglia di IC205 (\SI{2.88}{\volt} min, \SI{3.00}{\volt} max), il supervisore spegne il Si4464 per circa $t_d$ e la trasmissione si interrompe \fonte{LOG §46}. Il danno non c'è, ma il Si4464 perde la configurazione.
+
+\begin{regola}[F-10: controllo dopo ogni TX]
+Dopo ogni trasmissione controllare che il Si4464 risponda ancora (CTS, PART\_INFO o stato del chip). Se è stato resettato: reinizializzarlo (procedura del paragrafo~\ref{sec:si-config}), contare l'evento e segnalarlo in telemetria \fonte{LOG F-10}. Utile anche registrare VDDA (VREFINT) subito dopo la TX.
+\end{regola}
+
+\section{Collaudo RF}
+\label{sec:collaudo}
+Il firmware di collaudo deve permettere di: trasmettere a PA\_PWR\_LVL fisso e noto, ripetere la trasmissione a impulsi o in continuo per un tempo limitato, ricevere in continuo, leggere temperature e VDDA dalla console.
+
+{\small
+\rowcolors{2}{white}{sbrow}
+\begin{xltabular}{\linewidth}{@{}L{10mm}L{42mm}L{40mm}Y@{}}
+\caption{Misure di collaudo collegate al firmware \fonte{LOG M-01\ldots M-06}.}\label{tab:collaudo}\\
+\tabhead\hd{ID}&\hd{Misura}&\hd{Criterio}&\hd{Cosa serve dal firmware}\\
+\endfirsthead
+\tabhead\hd{ID}&\hd{Misura}&\hd{Criterio}&\hd{Cosa serve dal firmware}\\
+\endhead
+M-01 & Pout all'uscita d'antenna su \SI{50}{\ohm} (attenuatore di potenza), a temperatura ambiente e se possibile a caldo, con il Si4464 al valore F-01 e al massimo & $\leq$ \SI{31}{\dBm} con il valore F-01; altrimenti ridurre la VAPC con R242/R243 & build di collaudo con PA\_PWR\_LVL impostabile da console; fissa il valore definitivo di F-01\\
+M-02 & Adattamento d'uscita del PA (S22 o potenza in banda \SIrange{430}{440}{\mega\hertz}) & \textendash & TX a frequenza programmabile\\
+M-03 & 3V3 al pin 5 di IC205 durante una TX a piena potenza (valore F-01) & minimo $\geq$ \SI{3.05}{\volt}; altrimenti modo B e aggiornamento di F-05 & TX ripetuta; costante \code{MODO\_A/B}\\
+M-04 & NRST con R413 DNP e firmware bloccato & impulso basso \SIrange{140}{280}{\milli\second} ogni \SIrange{1.12}{2.24}{\second}; con R413 montata nessun reset & comando che blocca il refresh di WDI\\
+M-05 & Armoniche H2 e H3 al connettore d'antenna, TX alla potenza massima & entro la specifica di missione; altrimenti \SIrange{-2}{-3}{dB} via firmware & TX continua limitata nel tempo\\
+M-06 & Potenza all'MMCX e corrente del PA a pilotaggio fisso & attesa \SIrange{29}{30}{\dBm}; se più bassa, accordare C260/C262 e ripetere M-05 & PA\_PWR\_LVL fisso\\
+\bottomrule
+\end{xltabular}}
+
+\begin{nota}[set-up consigliato]
+MMCX $\to$ attenuatore di potenza da \SI{50}{\ohm} dimensionato per almeno \SI{2}{\watt} continui $\to$ misuratore di potenza o analizzatore di spettro. Sonde dell'oscilloscopio: TP702 (PC2), TP703 (EN\_RX\_LNA), TP701 (XIN del Si4464) per verificare le sequenze dei paragrafi~\ref{sec:sequenze}. Le misure M-01, M-03 e M-06 vanno ripetute con il firmware definitivo.
+\end{nota}

@@ -1,0 +1,81 @@
+\clearpage
+\section[Rev. 1.44 -- P-08: R29 a 22k 1 \%; P-10, P-12, P-15 chiusi]{Rev. 1.44 \textendash{} P-08: R29 a 22k 1\,\%; P-10, P-12 e P-15 chiusi senza modifiche}
+
+\subsection{Data e revisione}
+04/11/2026, revisione 1.44.
+
+\subsection{Titolo}
+P-08: R29 a 22k 1\,\%; P-10, P-12 e P-15 chiusi senza modifiche.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Origine: punti ancora aperti della revisione finale indipendente del 03/11/2026 (documento \code{SYMPHONY\_V2\_review\_finale\_2026-11-03.pdf}, cartella DESIGN), elencati come \emph{ancora aperti} nella rev.\ 1.43.
+\item P-08: foglio POWER (\code{POWER.kicad\_sch}), R29 (\SI{22}{\kilo\ohm} 0402), partitore OV1 del TPS2121 (IC4), tra la rete \code{5V} e il pin OV1; con R30 (\SI{4.7}{\kilo\ohm}) verso GND.
+\item P-10: foglio UHF, PA IC2 QPA9510, rete \code{APC}/\code{VCC1}, C252.
+\item P-12: foglio MCU, U401 FM25V10 (/CS su PB12); foglio UHF, IC204 Si4464 (NSEL su PA8).
+\item P-15: BOM, riferimenti J1 (TC2030, solo footprint), \code{TP*}, \code{JP*}, \code{H*}.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Una sola modifica allo schema (P-08, codice d'acquisto di R29); P-10, P-12 e P-15 chiusi senza modifiche.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}lXX@{}}
+\toprule
+\textbf{Punto} & \textbf{Prima} & \textbf{Dopo}\\
+\midrule
+P-08 (R29) & Campo \emph{JLCPCB Parts} = C25547 (\code{0402WGJ0223TCE}, \SI{22}{\kilo\ohm} $\pm$\SI{5}{\percent}, \SI{62.5}{\milli\watt}, 0402) & Campo \emph{JLCPCB Parts} = C25768 (UNI-ROYAL \code{0402WGF2202TCE}, \SI{22}{\kilo\ohm} $\pm$\SI{1}{\percent}, \SI{62.5}{\milli\watt}, 0402, thick film)\\
+P-10 & C252 sull'APC, nessun 10 nF su \code{PA\_VCC1} & Invariato (\emph{Lascia com'è})\\
+P-12 & CS di U401 e NSEL di IC204 senza pull-up & Invariato (\emph{Lascia com'è})\\
+P-15 & J1, \code{TP*}, \code{JP*}, \code{H*} in BOM senza codice né MPN & Invariato (\emph{Lascia com'è})\\
+\bottomrule
+\end{tabularx}}
+
+\subsubsection{P-08 -- R29 a 22k 1\,\%}
+Invariati: valore \SI{22}{\kilo\ohm}, footprint \code{Resistor\_SMD:R\_0402\_1005Metric}, collegamenti. Il C25768 è in libreria JLC \emph{base}; stock JLC 1\,133\,702 al 04/11/2026, stock LCSC 470\,300.
+
+Eseguito da Claude Code il 04/11/2026 con l'Editor schemi di KiCad chiuso. Copia precedente in \code{report\_src/bak\_pre144/POWER.kicad\_sch}. Verifica: netlist esportata con kicad-cli 10 (formato kicadxml) prima e dopo; 0 reti diverse; unica differenza tra i componenti il campo \emph{JLCPCB Parts} di R29 (C25547 $\rightarrow$ C25768). File salvato con a capo CRLF preservati.
+
+\subsubsection{P-10 -- Condensatore sull'APC/VCC1 del PA}
+La EVB Qorvo ha due \SI{10}{\nano\farad} (C16 e C17) vicino a VAPC/VCC1; qui c'è solo C252 sull'APC. La posizione di C17 nella EVB non è verificata (NV). Proposta valutata: aggiungere \SI{10}{\nano\farad} 0402 Murata \code{GRM155R71E103KA01D} (C77013) su \code{PA\_VCC1}, oppure come DNP. Nessuna modifica.
+
+\subsubsection{P-12 -- CS flottanti durante reset/boot}
+U401 FM25V10 (/CS su PB12) e IC204 Si4464 (NSEL su PA8) non hanno pull-up: durante reset/boot dell'MCU i due CS restano flottanti. Proposta valutata: pull-up \SI{10}{\kilo\ohm} 0402 (C71617) verso 3V3 su entrambi. Nessuna modifica.
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxokbg,colframe=boxok,boxrule=0.8pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Nota firmware F-15 \textendash{} per il firmwarista (CS all'avvio)},fonttitle=\small,coltitle=white,colbacktitle=boxok]
+All'avvio configurare il prima possibile PB12 (CS FRAM) e PA8 (NSEL Si4464) come uscite a livello alto, \textbf{prima di qualsiasi altra inizializzazione SPI}. (Continua la serie F-01\ldots F-14.)
+\end{tcolorbox}
+
+\subsubsection{P-15 -- Riferimenti senza codice in BOM}
+J1 (TC2030, solo footprint), test point \code{TP*}, jumper \code{JP*} e fori \code{H*} sono in BOM senza codice né MPN. Proposta valutata: flag \emph{Exclude from BOM}. Nessuna modifica.
+
+\subsection{Motivazione}
+\textbf{P-08.} Con R29 al \SI{5}{\percent} e VREF minimo \SI{1.01}{V} (datasheet TPS2121 SLVSEA3F \S7.5: VREF \SI{1.01}{V}/\SI{1.06}{V}/\SI{1.10}{V}) la soglia OV1 nel caso peggiore scende a $1{,}01\cdot(20{,}9\,\mathrm{k}+4{,}7\,\mathrm{k})/4{,}7\,\mathrm{k} = \SI{5.50}{V}$: un dock a 5\,V $+10\,\%$ poteva far scattare la protezione. La soglia nominale resta invariata: $1{,}06\cdot(22\,\mathrm{k}+4{,}7\,\mathrm{k})/4{,}7\,\mathrm{k} = \SI{6.02}{V}$. Con l'1\,\% il caso peggiore migliora (il calcolo esatto con l'1\,\% non è stato rifatto). Il punto coincide con la vecchia proposta P6 della Parte A (\emph{R29 da 22k 5\,\% a 22k 1\,\%}), che risulta quindi chiusa anch'essa.
+
+Scelta di Brik81 (04/11/2026), risposta alla domanda su P-08: \emph{``Passa a C25768 (Recommended)''}.
+
+\textbf{P-10.} Scelta di Brik81 (04/11/2026): \emph{``Lascia com'è''}.
+
+\textbf{P-12.} Scelta di Brik81 (04/11/2026): \emph{``Lascia com'è''}. La protezione dei CS durante il reset è quindi affidata al firmware (F-15).
+
+\textbf{P-15.} Scelta di Brik81 (04/11/2026): \emph{``Lascia com'è''}.
+
+Con questa revisione tutti i punti P-01\ldots P-15 della revisione finale del 03/11/2026 sono decisi.
+
+\subsection{Impatti e criticità}
+\begin{tcolorbox}[enhanced,breakable,colback=boxokbg,colframe=boxok,boxrule=0.8pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Impatti},fonttitle=\small,coltitle=white,colbacktitle=boxok]
+\begin{itemize}
+\item P-08: nessun impatto sul circuito, cambia solo il codice d'acquisto.
+\item P-12: la protezione dei CS durante il reset è affidata al firmware (F-15).
+\item P-15: la pulizia della BOM è solo procedurale; in fase d'ordine J1, \code{TP*}, \code{JP*}, \code{H*} vanno tolti a mano dalla BOM/CPL (stesso controllo già previsto per R413 e R205 in P-06).
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item Al prossimo \emph{Update PCB from Schematic} nessuna modifica di footprint attesa per R29.
+\item In fase d'ordine: togliere J1, \code{TP*}, \code{JP*}, \code{H*} dalla BOM/CPL; controllare R413 e R205 (P-06).
+\item Aggiungere F-15 alle note per il firmwarista.
+\end{itemize}

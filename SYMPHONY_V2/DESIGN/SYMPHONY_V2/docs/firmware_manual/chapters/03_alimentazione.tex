@@ -1,0 +1,105 @@
+\chapter{Alimentazioni e accensione}
+\label{ch:power}
+
+\section{Rail di alimentazione}
+\begin{xltabular}{\linewidth}{@{}L{24mm}L{30mm}L{30mm}Y@{}}
+\tabhead\hd{Rail}&\hd{Generato da}&\hd{Valore}&\hd{Carichi principali}\\
+\endhead
+\net{5V} & dock J708 pin 1 e 3 & \SI{5}{\volt} nominali & ingresso IN1 di IC4 (priorità)\\
+\net{/POWER/VBUS} & USB-C J15 & \SI{5}{\volt} (USB 2.0, Rd = \SI{5.1}{\kilo\ohm} su CC1/CC2) & ingresso IN2 di IC4\\
+\net{5V0} & IC4 TPS2121 (OUT) & uguale all'ingresso scelto & IC3 (buck), VDD di IC202 (switch RF)\\
+\net{3V3} & IC3 TPSM863257 & \SI{3.30}{\volt} nominali, \SIrange{3.25}{3.405}{\volt} \fonte{REV-1104 §2.1} & tutta la logica, Si4464, TCXO, PA, LNA, sensori\\
+\net{RTC\_VBAT} & 3V3 via D401 (BAT54WS) e R412 \SI{1}{\kilo\ohm} & $\approx$\SI{3.15}{\volt} \fonte{SCH nota MCU} & VBAT di U404, 10 supercondensatori CPH3225A (\SI{110}{\milli\farad})\\
+\bottomrule
+\end{xltabular}
+
+Il pin VBAT dell'MCU (pin 1) e VDDUSB (pin 48) sono collegati direttamente al 3V3 \fonte{SCH}. Il dominio di backup dell'STM32 non ha una batteria propria: l'RTC interno dell'MCU perde l'ora quando il 3V3 si spegne. Il riferimento di tempo è il DS3231M (capitolo~\ref{ch:supervisione}).
+
+I pin \net{+12V}, \net{+3V3\_CONN}, \net{RS485.A1/B1} del dock non sono usati su questa scheda \fonte{LOG R-12; SCH nota IF}.
+
+\section{Power mux TPS2121: priorità al dock}
+\begin{itemize}
+\item \textbf{Priorità IN1 (dock).} PR1 = $5 \times 4{,}7/(10+4{,}7) = \SI{1.60}{\volt}$, sopra $V_\text{REF} = \SI{1.06}{\volt}$: con il dock presente vince sempre il dock \fonte{LOG D1; REV-1104 §2.1}. Il dock perde la priorità quando scende sotto $1{,}06 \times 14{,}7/4{,}7 = \SI{3.32}{\volt}$.
+\item \textbf{Sovratensione IN1.} Soglia OV1 = $1{,}06 \times (22+4{,}7)/4{,}7 = \SI{6.02}{\volt}$ nominali \fonte{LOG rev.\ 1.44, P-08}. OV2 (USB) è disattivata (a GND).
+\item \textbf{Limite di corrente.} ILIM con R44 = \SI{33}{\kilo\ohm}: \SI{3.21}{\ampere} \fonte{REV-1104 §2.1}.
+\item \textbf{Stato.} Il pin ST è a GND: \textbf{il firmware non sa quale ingresso è attivo}.
+\end{itemize}
+
+\section{Buck TPSM863257 e segnale EN\_DOCK}
+L'ingresso EN di IC3 è pilotato da \net{/IF/EN\_DOCK} (J708 pin 15) attraverso R46 \SI{10}{\kilo\ohm}. EN ha un pull-down interno da \SI{2}{\mega\ohm}: \textbf{senza EN\_DOCK alto il 3V3 resta spento} \fonte{LOG Parte B; REV-1104 §2.1}. È una scelta di progetto confermata \fonte{LOG D1}.
+
+Il soft-start interno dura \SI{1.6}{\milli\second} tipici \fonte{DS-TPSM863257 p.\,7}. L'uscita PG non è collegata.
+
+\begin{attenzione}[alimentazione al banco]
+Con la sola USB-C il 5V0 c'è, ma il 3V3 no: l'MCU, il CH340E e la console sono spenti. Al banco bisogna fornire anche EN\_DOCK (EN max raccomandato \SI{5.5}{\volt}) \fonte{REV-1104 §2.1}. In trasmissione il 5V0 assorbe circa \SI{1}{\ampere}: una porta USB 2.0 di default dà \SI{500}{\milli\ampere}. Usare il dock o un alimentatore da almeno \SI{1.5}{\ampere} \fonte{REV-1104 P22}.
+\end{attenzione}
+
+\section{Che cosa vede il firmware}
+L'hardware non porta all'MCU nessun segnale di stato dell'alimentazione (né ST del TPS2121, né PG del buck, né una misura del 5\,V). Il firmware ha a disposizione:
+\begin{itemize}
+\item \textbf{VDDA tramite VREFINT} (ADC1 canale 0):
+\[ V_\text{DDA} = \SI{3.0}{\volt}\times\frac{\text{VREFINT\_CAL}}{\text{VREFINT\_DATA}} \]
+VREFINT\_CAL si legge all'indirizzo \code{0x0BFA05AA}; è misurato in fabbrica a \SI{3.0}{\volt} e \SI{30}{\celsius} \fonte{DS-STM32L562 p.\,65}. Il 3V3 è anche VDDA, quindi questa è la misura del rail 3V3.
+\item \textbf{Causa del reset} in \code{RCC\_CSR} (BOR, pin NRST, IWDG\ldots) \fonte{LOG F-13}.
+\item \textbf{Pin RST del DS3231M} su PB9: va basso quando il VCC dell'RTC scende sotto la soglia di power-fail $V_\text{PF}$ \fonte{DS-DS3231M p.\,7}. Il valore numerico di $V_\text{PF}$ non è stato estratto dal datasheet: \DV.
+\item \textbf{Temperatura del buck} (PT1000 su PC1) e del PA (PT1000 su PB1).
+\item \textbf{Risposta del Si4464} dopo ogni TX: se ha perso la configurazione c'è stato un calo del 3V3 (nota F-10, paragrafo~\ref{sec:rf-supervisore}).
+\end{itemize}
+
+\section{Sequenza di accensione}
+\label{sec:powerup}
+La figura~\ref{fig:powerup} riassume cosa succede dal momento in cui il dock alza EN\_DOCK. I tempi sono tipici; i valori minimi e massimi sono nella tabella~\ref{tab:powerup}.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\linewidth}{!}{\begin{tikzpicture}[x=1mm,y=1mm,font=\sffamily\scriptsize]
+  % assi
+  \def\rows{7}
+  \foreach \i/\name in {0/5V0 e EN\_DOCK,1/3V3,2/NRST MCU,3/SDN Si4464 (modo A),4/RST DS3231M (PB9),5/WDI PC6 (firmware),6/WDO STWD100}{
+     \node[anchor=east] at (0,-\i*9) {\name};
+     \draw[sbgray!40] (2,-\i*9-3) -- (148,-\i*9-3);}
+  % 5V0
+  \draw[thick,sbred] (2,-3) -- (8,-3) -- (8,3) -- (148,3);
+  % 3V3 soft start
+  \draw[thick,sbred] (2,-12) -- (10,-12) -- (14,-6) -- (148,-6);
+  \draw[densely dotted] (10,-12) -- (10,-70); \node[below] at (10,-70) {$t_0$};
+  % NRST
+  \draw[thick,sbblue] (2,-21) -- (16,-21) -- (16,-15) -- (148,-15);
+  % SDN alto fino a td
+  \draw[thick,sborange] (2,-30) -- (12,-30) -- (12,-24) -- (60,-24) -- (60,-30) -- (148,-30);
+  \draw[{Stealth}-{Stealth}] (12,-27) -- node[fill=white,inner sep=1pt]{$t_d$ = \SIrange{120}{300}{\milli\second}} (60,-27);
+  % RST DS3231M
+  \draw[thick,sbgreen] (2,-39) -- (66,-39) -- (66,-33) -- (148,-33);
+  \node[right] at (67,-36) {$t_\text{REC}\approx\SI{250}{\milli\second}$};
+  % WDI
+  \draw[thick,sbblue] (2,-48) -- (30,-48) -- (30,-42) -- (70,-42) -- (70,-48) -- (110,-48) -- (110,-42) -- (148,-42);
+  \draw[{Stealth}-{Stealth}] (10,-45) -- node[fill=white,inner sep=1pt]{$<\SI{1.12}{\second}$} (30,-45);
+  % WDO
+  \draw[thick,sbgreen] (2,-57) -- (14,-57) -- (14,-51) -- (148,-51);
+  \node[right] at (40,-54) {nessun reset se WDI commuta};
+\end{tikzpicture}}
+\caption{Sequenza di accensione (schema qualitativo, non in scala).}
+\label{fig:powerup}
+\end{figure}
+
+\begin{xltabular}{\linewidth}{@{}L{8mm}L{48mm}L{36mm}Y@{}}
+\caption{Eventi all'accensione e tempi con fonte.}\label{tab:powerup}\\
+\tabhead\hd{\#}&\hd{Evento}&\hd{Tempo}&\hd{Fonte e conseguenza per il firmware}\\
+\endfirsthead
+\tabhead\hd{\#}&\hd{Evento}&\hd{Tempo}&\hd{Fonte e conseguenza per il firmware}\\
+\endhead
+1 & Soft-start del buck, 3V3 sale & \SI{1.6}{\milli\second} tipici & \fonte{DS-TPSM863257 p.\,7}\\
+2 & POR/BOR dell'MCU, boot da flash (BOOT0 = L tramite R3 \SI{10}{\kilo\ohm} a GND) & \textendash & \fonte{SCH}\\
+3 & IC205 tiene SDN del Si4464 alto dopo che il 3V3 supera la soglia & $t_d$ = \SI{120}{}/\SI{200}{}/\SI{300}{\milli\second} (min/tip/max) & \fonte{DS-TPS3825 p.\,8}. Non usare il Si4464 prima di $t_d$ max: vedi F-05.\\
+4 & Soglia del supervisore IC205 & \SI{2.88}{}/\SI{2.93}{}/\SI{3.00}{\volt} & \fonte{LOG §46; DS-TPS3825 p.\,6}\\
+5 & Il Si4464 esce dallo shutdown: POR e calibrazioni interne, poi serve POWER\_UP & Shutdown$\to$TX o RX: \SI{15}{\milli\second} (indicativo) & \fonte{DS-Si4464 p.\,20--21}\\
+6 & RST del DS3231M basso dopo il power-up & $t_\text{REC}$ = \SI{250}{\milli\second} tip., \SI{300}{\milli\second} max & \fonte{DS-DS3231M p.\,3}. Non influisce su I2C e RTC \fonte{DS-DS3231M p.\,4}.\\
+7 & Prima scrittura possibile sulla FRAM & $t_\text{PU}$ $\geq$ \SI{250}{\micro\second} & \fonte{DS-FM25V10 p.\,19}\\
+8 & Primo impulso su WDI (PC6) & entro \SI{1.12}{\second} ($t_{WD}$ min) & \fonte{LOG F-12; DS-STWD100}\\
+9 & Il 5V0 arriva al VDD dello switch prima dei comandi a 3V3 & sequenza rispettata dall'hardware & \fonte{DS-HMC349A p.\,8; REV-1104 §2.2}\\
+\bottomrule
+\end{xltabular}
+
+\begin{nota}[stato sicuro durante il boot]
+Durante il reset e il boot dell'MCU i GPIO sono in alta impedenza. Il pull-up R702 tiene alto il gate di Q701 e la net di PC2: switch su RX, APC a zero (PA spento), LNA acceso. La radio è sotto il controllo di IC205 (modo A) \fonte{LOG rev.\ 1.41; REV-1104 §3}. Lo stato di default è quindi sicuro anche senza firmware.
+\end{nota}

@@ -1,0 +1,179 @@
+\clearpage
+\section[Rev. 1.45 -- Revisione del 04/11: R243 a 220 ohm, R409/R410 rimosse, nota L-01]{Rev. 1.45 \textendash{} Revisione indipendente del 04/11: R243 a \SI{220}{\ohm}, R409/R410 rimosse, note POWER cancellate, nota di layout L-01}
+
+\subsection{Data e revisione}
+04/11/2026, revisione 1.45.
+
+\subsection{Titolo}
+Revisione indipendente del 04/11/2026 (punti P01\ldots P23): R243 a \SI{220}{\ohm}, R409/R410 rimosse, note POWER cancellate, nota di layout L-01.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+\item Origine: revisione indipendente del 04/11/2026, documento \code{DESIGN/SYMPHONY\_V2\_review\_finale\_2026-11-04.pdf} (10 pagine), punti P01\ldots P23. La numerazione è nuova e diversa dai P-01\ldots P-15 della revisione del 03/11. Giudizio del revisore: \emph{``La scheda dovrebbe funzionare''} (accensione, TX, RX), senza errori di schema bloccanti.
+\item P03: foglio MCU, U404 DS3231M (RTC); R409 e R410 (\SI{10}{\kilo\ohm}); net \code{/MCU/RTC\_RSTn}, pin 32kHz di U404.
+\item P09: foglio UHF, partitore APC del PA IC2 QPA9510: R242 (\SI{33}{\ohm}) / R243.
+\item P20: foglio POWER, due note di testo.
+\item P08: foglio UHF, rete d'uscita del PA: IC2 (pin RF\_OUT), C260, L243, C261, C262, C230, L242; net \code{RF\_PA\_OUT}, \code{RF\_PA\_MATCH}; FL201.
+\item Decisioni senza modifica: P11 (C209, L201, C210), P12 (Q201 TQP3M9036), P14 (D203, R209, IC205), P18 (Q701), P19 (IC2 pin 7 e pin 8).
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Quattro interventi sullo schema (P03, P09, P20, P08); una nuova nota firmware (F-16), una nuova misura di collaudo (M-06), la prima nota di layout (L-01).
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}lXX@{}}
+\toprule
+\textbf{Punto} & \textbf{Prima} & \textbf{Dopo}\\
+\midrule
+P03 (R409) & \SI{10}{\kilo\ohm}, pull-up di \code{/MCU/RTC\_RSTn} verso 3V3 & Rimossa; \code{RTC\_RSTn} resta collegata MCU--U404\\
+P03 (R410) & \SI{10}{\kilo\ohm}, pull-up del pin 32kHz di U404 verso 3V3 & Rimossa; pin 32kHz scollegato (net \code{unconnected-(U404-32khz-Pad1)})\\
+P09 (R243) & \SI{240}{\ohm}, \emph{JLCPCB Parts} = C114755 & \SI{220}{\ohm}, \emph{JLCPCB Parts} = C25091 (UNI-ROYAL \code{0402WGF2200TCE}, \SI{220}{\ohm} $\pm$\SI{1}{\percent}, \SI{62.5}{\milli\watt}, 0402; stock LCSC 1\,173\,800 al 04/11/2026)\\
+P09 (R242, campo \emph{Note}) & \code{partitore APC: 2.90V a vuoto, \textasciitilde{}2.6-2.77V con I\_APC 4.6mA; \textless{}3.0V abs max anche a 3V3=3.4V} & \code{partitore APC 33/220: 2.87V a vuoto (3V3=3.3V), max 2.96V a 3V3=3.405V; \textasciitilde{}2.7-2.8V con I\_APC 4.6mA; \textless{}3.0V abs max}\\
+P20 (POWER) & Note di testo \code{TODO / add r 22 ohm} e \code{Nota: IC4 laciare / IC9 lasciare} & Cancellate (solo testo, nessun componente)\\
+P08 (UHF, testo vicino a C260) & \code{Match uscita PA (C260-L243-C261/C262-C230): replicare il layout dell'EVB Qorvo 410-470MHz (posizioni e lunghezze piste sono parte del match, nodo \textasciitilde{}5 ohm). Prevedere tuning in laboratorio.} & \code{Match uscita PA (C260-L243-C261/C262-C230): vedi nota di layout L-01 nel log. Copiare il layout EVB Qorvo 410-470MHz, masse dirette, spazio per tarare C260/C262.}\\
+\bottomrule
+\end{tabularx}}
+
+\subsubsection{P03 -- Pull-up esterni del DS3231M (U404)}
+Modifica fatta da Brik81 nell'editor, verificata da Claude Code con netlist kicad-cli (confronto con la netlist della rev.\ 1.44): rimosse R409 e R410, nessun'altra differenza.
+
+Datasheet DS3231 (Maxim, Pin Description p.\ 9): RST \emph{``has an internal 50k$\Omega$ nominal value pullup resistor to VCC. No external pullup resistors should be connected.''}; 32kHz: \emph{``This open-drain pin requires an external pullup resistor. [\ldots] It may be left open if not used.''}
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxokbg,colframe=boxok,boxrule=0.8pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Nota firmware F-16 \textendash{} per il firmwarista (uscita 32 kHz del DS3231M)},fonttitle=\small,coltitle=white,colbacktitle=boxok]
+All'avvio il DS3231M ha l'uscita 32\,kHz abilitata (bit \code{EN32kHz} = 1, registro \code{0Fh}, POR). Il pin non è usato: il firmware scrive \code{EN32kHz} = 0. Risparmio sulla batteria di backup: I\textsubscript{BAT} da circa \SI{0.85}{\micro\ampere} a circa \SI{0.75}{\micro\ampere} a \SI{3}{V} (DS3231 Typical Operating Characteristics p.\ 7). Nota proposta da Claude Code. (Continua la serie F-01\ldots F-15.)
+\end{tcolorbox}
+
+\subsubsection{P09 -- R243 a \texorpdfstring{\SI{220}{\ohm}}{220 ohm}}
+Footprint invariato (\code{R\_0402\_1005Metric\_Pad0.72x0.64mm\_HandSolder}). Con \SI{240}{\ohm} e 3V3 al massimo (\SI{3.405}{V}) l'APC a vuoto arrivava a \SI{3.00}{V}, cioè al massimo assoluto (sotto carico \SI{2.87}{V}). Con \SI{220}{\ohm}: \SI{2.87}{V} a vuoto a \SI{3.3}{V}, \SI{2.96}{V} massimi a \SI{3.405}{V}; sotto carico (\SI{4.6}{\milli\ampere}, Thevenin $\approx$ \SI{28.7}{\ohm}) circa \SIrange{2.7}{2.8}{V}. Effetto: potenza massima del PA leggermente inferiore (frazione di dB).
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}Xccc@{}}
+\toprule
+\textbf{R243} & \textbf{APC a vuoto, 3V3 = \SI{3.3}{V}} & \textbf{APC a vuoto, 3V3 = \SI{3.405}{V}} & \textbf{Sotto carico (\SI{4.6}{\milli\ampere})}\\
+\midrule
+\SI{240}{\ohm} (prima) & \SI{2.90}{\volt} & \SI{3.00}{V} (= abs max) & \SI{2.87}{V} (a \SI{3.405}{V})\\
+\SI{220}{\ohm} (dopo) & \SI{2.87}{V} & \SI{2.96}{V} & circa \SIrange{2.7}{2.8}{V}\\
+\bottomrule
+\end{tabularx}}
+
+\subsubsection{P20 -- Note obsolete sul foglio POWER}
+Cancellate le note \code{TODO / add r 22 ohm} e \code{Nota: IC4 laciare / IC9 lasciare}. Solo testo, nessun componente.
+
+\subsubsection{P08 -- Rete d'uscita del PA}
+Sostituito il testo vicino a C260 (vedi tabella). Nessun componente aggiunto, niente piazzole DNP: la rete ha già C260 e C262, quest'ultimo è il condensatore di taratura della EVB.
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxcritbg,colframe=boxcrit,boxrule=1.2pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Nota di layout L-01 \textendash{} Rete d'uscita del PA QPA9510 (IC2)},fonttitle=\normalsize,coltitle=white,colbacktitle=boxcrit]
+\textbf{Componenti.} IC2 pin RF\_OUT, C260, L243, C261, C262, C230, L242. Net: \code{RF\_PA\_OUT} (pin PA, C260, L243, L242), \code{RF\_PA\_MATCH} (L243, C261/C262, C230); dopo C230 linea \SI{50}{\ohm} verso FL201.
+
+\textbf{Perché.} Al pin del PA l'impedenza è circa \SI{5}{\ohm}: le piste contano quanto i componenti. I valori sono quelli della EVB Qorvo 410-470\,MHz, ma con componenti ideali la rete dà $1{,}78 - j4{,}60\,\Omega$ invece dell'obiettivo Qorvo $4{,}47 + j0{,}65\,\Omega$ a \SI{430}{\mega\hertz} ($4{,}86 + j1{,}62\,\Omega$ a \SI{450}{\mega\hertz}; Qorvo QPA9510 410-470\,MHz EVB Test Summary p.\ 12): il match torna solo con le linee della EVB.
+
+\textbf{Regole.}
+\begin{enumerate}
+\item Copiare la EVB: stesso ordine, stesse distanze, lunghezze e larghezze di pista tra pin RF\_OUT, C260, L243 e C261/C262 (misure dal layout/Gerber EVB Qorvo QPA9510 410-470\,MHz).
+\item Se lo stackup è diverso, si ricalcola solo la larghezza della linea \SI{50}{\ohm} dopo C230; nel tratto pin--C261/C262 restano lunghezze e posizioni della EVB.
+\item Tutto sul top, lato PA, nessuna via nel percorso RF, nessun cambio layer.
+\item C260, C261, C262: ognuno con la propria via di massa sul pad o subito accanto (almeno 2 vie per C260 e C261), non in comune con una pista; piano di massa continuo sotto la rete, senza piste né tagli.
+\item Pad esposto del PA: matrice di vie come da datasheet/EVB (massa RF e calore).
+\item L242 (\SI{1}{\micro\henry}) al nodo \code{RF\_PA\_OUT} nella stessa posizione della EVB; lato 3V3 disaccoppiato subito con vie sul pad; pista larga per circa \SI{1.7}{A} di picco, separata da MCU e radio.
+\item Circa \SI{1}{\milli\metre} libero intorno a C260 e C262 per sostituirli a mano al banco.
+\item L243 e L242 lontane dalle induttanze del match TX del Si4464 e da FL201.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced,breakable,colback=boxwarnbg,colframe=boxwarn,boxrule=0.8pt,left=7pt,right=6pt,top=3pt,bottom=3pt,
+  title={\sffamily\bfseries Misura M-06 al collaudo},fonttitle=\small,coltitle=white,colbacktitle=boxwarn]
+In TX a pilotaggio fisso misurare potenza all'MMCX e corrente del PA (attesa circa \SIrange{29}{30}{dBm}). Se sotto le attese, accordare cambiando C260 e C262 e ripetere M-05 (armoniche).
+\end{tcolorbox}
+
+\subsubsection{Verifica dell'esecuzione}
+Claude Code, kicad-cli 10.0. Backup in \code{report\_src/bak\_pre145/} (tutti i \code{.kicad\_sch}, \code{SYMPHONY.kicad\_pro} e i file agenti). Netlist prima/dopo: le uniche differenze sono R243 valore 240$\rightarrow$220, \emph{JLCPCB Parts} C114755$\rightarrow$C25091 e il campo \emph{Note} di R242; nessuna net cambiata. File CRLF preservati. ERC: 127 messaggi (7 errori, 120 avvisi), identico al conteggio precedente; nessun nuovo errore.
+
+\subsection{Decisioni senza modifica}
+
+\subsubsection{P11 -- Filtro RX C209--L201--C210}
+C209 (\SI{6.8}{\pico\farad}) -- L201 (\SI{22}{\nano\henry}) -- C210 (\SI{6.8}{\pico\farad}) è un passa-basso $\pi$ (perdita \SI{0.17}{dB} a \SI{435}{\mega\hertz}, \SI{2.9}{dB} a \SI{600}{\mega\hertz}, \SI{11.5}{dB} a \SI{870}{\mega\hertz}, $\approx$\,\SI{0}{dB} a \SI{300}{\mega\hertz}; calcolo del revisore); la nota sullo schema dice \code{435MHz filtro passa banda}. Il satellite è solo UHF \SI{435}{\mega\hertz}, nessuna VHF a bordo: nessuna modifica, la nota resta e va ignorata anche nelle revisioni future.
+
+Citazione di Brik81: \emph{``noi trasmettiamo a 435Mhz è solo UHF fregatenen della nota fai finta non ci sia anche per ilfuturo''}
+
+\subsubsection{P12 -- Alimentazione LNA TQP3M9036 (Q201)}
+Minimo raccomandato \SI{3.3}{V}; il 3V3 può scendere a \SI{3.25}{V}. Accettato.
+
+Citazione di Brik81: \emph{``P12 va bene cosi''}
+
+\subsubsection{P14 -- LED D203 su \textasciitilde{}RESET di IC205}
+D203 (rosso, 0402) con R209 \SI{1.5}{\kilo\ohm} su \textasciitilde{}RESET di IC205 (TPS3825-33, uscite push-pull): acceso quando il Si4464 è fuori reset (\code{RF\_SDN} basso), spento durante reset/power-fail; \textasciitilde{}RESET non ha altri carichi; \SI{0.93}{\milli\ampere} continui. Accettato sull'engineering model.
+
+\begin{notebox}
+\textbf{Regola:} sul flight model i LED di debug (D203, D9 e gli altri) non si montano: D203 e R209 esclusi dalla BOM di volo; controllo sulla BOM del flight model.
+\end{notebox}
+
+Citazione di Brik81: \emph{``Ah scusa ho confuso il led, beh vabbe easy nei flight model si cava prorpio dalla rpodzuine tanto questa è una engineering model e i led servono pèer feedback visivi questo  èu nosservatore e doverbbe stare alto quadno resetta o viceversa''}
+
+\subsubsection{P18 -- Q701, descrizione e codice}
+La descrizione dice onsemi ma il codice è un clone TECH PUBLIC. Lasciato così.
+
+Citazione di Brik81: \emph{``p18 va bene cosi''}
+
+\subsubsection{P19 -- QPA9510 (IC2) pin 7 e pin 8}
+Il pin 7 (NC) collegato a VCC2 è identico allo schema della EVB Qorvo 410-470\,MHz (Test Summary p.\ 2-3: pin 5, 6, 7 uniti; pin 13 NC lasciato libero). Pin 8 \code{2F0} (trappola di seconda armonica, internamente collegato a RF OUT; con il bonding e un condensatore esterno verso massa forma un risonatore serie a $2\cdot f_0$, datasheet QPA9510 Pad Description): sulla EVB è C8, DNP nella versione 410-470\,MHz; anche da noi è flottante. Proposta di aggiungere un C8 DNP non accettata. Nessuna modifica.
+
+Citazione di Brik81: \emph{``no lascia cosi abbiamo fintio tutti i punti?''}
+
+\subsection{Punti già coperti da decisioni precedenti}
+Solo elencati, nessuna modifica.
+
+{\small\arrayrulecolor{rulec}
+\begin{tabularx}{\linewidth}{@{}lXl@{}}
+\toprule
+\textbf{Punto} & \textbf{Argomento} & \textbf{Riferimento}\\
+\midrule
+P01 & Stock 0 su JLC per U301, IC204, IC2, J708 & R-21 / acquisti\\
+P02 & R413 senza \emph{Exclude from BOM} & P-06 (rev.\ 1.43)\\
+P04 & Comando unico PC2 per switch/APC/LNA & F-02 / F-14\\
+P05 & J201 MMCX & R-23 / P-05\\
+P06 & J15 USB-C: codice/footprint e linguette THT & R-09 / P-04\\
+P07 & TCXO \code{-AY} \SIrange{-30}{85}{\celsius} & R-07\\
+P10 & Armoniche dello switch dopo il LPF & P-03 / M-05\\
+P13 & D9 poco luminoso & S-13\\
+P15 & INT/SQW e \code{GPIO\_PPS} non collegati & R-12 / S-09\\
+P16 & Pull-up sulle linee CS & P-12 (rev.\ 1.44)\\
+P17 & C39: perdita di capacità con DC bias & R-14\\
+P21 & Stock basso su vari codici & R-21\\
+P22 & TX da sola USB $\approx$ \SI{1}{A} su \SI{5}{V} & Già noto\\
+P23 & JP201 aperto di default & R-13\\
+\bottomrule
+\end{tabularx}}
+
+\subsection{Motivazione}
+\textbf{P03.} Datasheet DS3231 (vedi sopra): il pull-up esterno su RST non va messo; il pin 32kHz non usato può restare aperto. Citazione di Brik81: \emph{``P03, DOAMNDA MIA, ho rimossoo il PU A RST anche il datasheet non lo mette, domanda, io non uso il pin32khz devo pulluapplarlo lo stesso?''}
+
+\textbf{P09 e P20.} Margine sul massimo assoluto dell'APC (P09); note obsolete (P20). Citazione di Brik81: \emph{``P09 metti 220, P20 cancella le note''}
+
+\textbf{P08 / L-01.} Il match d'uscita del PA dipende dalle piste. Citazione di Brik81: \emph{``fammi la nota di layout''}
+
+Approvazione per l'esecuzione: \emph{``chiuso, procedi.''}
+
+Stato finale: tutti i punti P01\ldots P23 della revisione del 04/11/2026 sono decisi. Note firmware ora F-01\ldots F-16; misure di collaudo M-01\ldots M-06; note di layout L-01.
+
+\subsection{Impatti e criticità}
+\begin{tcolorbox}[enhanced,breakable,colback=boxwarnbg,colframe=boxwarn,boxrule=0.8pt,left=7pt,right=6pt,top=4pt,bottom=4pt,
+  title={\sffamily\bfseries Impatti},fonttitle=\small,coltitle=white,colbacktitle=boxwarn]
+\begin{itemize}
+\item L-01 è vincolante per il layout: il match del PA dipende dalle piste.
+\item M-06 da eseguire al collaudo.
+\item F-16 da implementare nel firmware.
+\item P09: potenza massima del PA leggermente inferiore (frazione di dB).
+\item La regola \emph{LED non montati sul flight model} è solo procedurale (controllo BOM del FM).
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item Rispettare L-01 nel layout.
+\item M-06 e M-05 al collaudo.
+\item Implementare F-14 e F-16 nel firmware.
+\item BOM del flight model senza LED di debug (D203, R209, D9 e gli altri).
+\item Al prossimo \emph{Update PCB from Schematic} verificare R243 = \SI{220}{\ohm} C25091 e assenza di R409/R410.
+\end{itemize}

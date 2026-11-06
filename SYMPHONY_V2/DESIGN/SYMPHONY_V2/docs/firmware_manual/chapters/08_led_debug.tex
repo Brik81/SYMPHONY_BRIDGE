@@ -1,0 +1,40 @@
+\chapter{LED e debug}
+\label{ch:led}
+
+\section{LED dell'Engineering Model}
+Nessun LED è collegato a un GPIO dell'MCU \fonte{SCH}. I due LED danno un riscontro visivo indipendente dal firmware.
+
+\begin{xltabular}{\linewidth}{@{}L{14mm}L{30mm}L{38mm}Y@{}}
+\tabhead\hd{LED}&\hd{Pilotato da}&\hd{Acceso quando}&\hd{Note}\\
+D203 (rosso) & \(\overline{\mathrm{RESET}}\) di IC205, tramite R209 \SI{1.5}{\kilo\ohm} & il Si4464 è fuori reset (SDN basso, modo A) & \SI{0.93}{\milli\ampere} continui. Spento durante il reset della radio o con il 3V3 sotto soglia. Nel modo B non indica più lo stato della radio \fonte{LOG rev.\ 1.45, P14; §46}.\\
+D9 (verde) & 3V3 tramite R49 \SI{10}{\kilo\ohm} e JP1 & 3V3 presente \textbf{e} JP1 chiuso & JP1 aperto di serie. Luce molto debole (circa \SI{0.09}{\milli\ampere}), voluto: serve solo per il debug iniziale \fonte{LOG S-13}.\\
+\bottomrule
+\end{xltabular}
+
+\begin{nota}[come usare D203 al banco]
+D203 è il modo più rapido per vedere un reset della radio durante la trasmissione (calo del 3V3, misura M-03): se si spegne per circa \SI{200}{\milli\second} durante una TX, IC205 è intervenuto. In parallelo il firmware deve rilevare l'evento con F-10.
+\end{nota}
+
+\section{Flight Model}
+\begin{regola}[LED sul Flight Model]
+Sul Flight Model i LED di debug non si montano: D203 e R209 (e D9) vanno esclusi dalla BOM di volo \fonte{LOG rev.\ 1.45, P14}. Il firmware non deve dipendere dai LED. Ogni informazione utile che oggi si legge dai LED va anche in telemetria (stato della radio, reset, eventi F-10).
+\end{regola}
+
+Altre differenze tra configurazione di sviluppo e di volo:
+\begin{xltabular}{\linewidth}{@{}L{30mm}L{46mm}Y@{}}
+\tabhead\hd{Elemento}&\hd{Sviluppo (banco)}&\hd{Volo}\\
+R413 (EN watchdog) & montata: watchdog spento & \textbf{non montata}: watchdog attivo\\
+R205 / R204 & modo A di serie; modo B solo se M-03 fallisce & secondo l'esito di M-03 (costante \code{MODO\_A/B})\\
+LED D203, D9 & montati & non montati\\
+JP201, JP6 & secondo il banco & secondo l'architettura del bus del satellite\\
+Firmware & build di collaudo con comandi di test & build di volo: PA\_PWR\_LVL fisso (F-01), nessun comando di test RF\\
+\bottomrule
+\end{xltabular}
+
+\section{Strumenti di debug}
+\begin{itemize}
+\item \textbf{SWD} su J1 (TC2030): SWDIO, SWCLK, NRST, SWO, 3V3 e GND. Serve R413 montata per lavorare con i breakpoint.
+\item \textbf{Console} su USART1 tramite CH340E e USB-C. La scheda deve avere il 3V3 (EN\_DOCK).
+\item \textbf{Bootloader di sistema}: TP1 (BOOT0) alto al reset, STM32CubeProgrammer in UART \fonte{LOG F-07}.
+\item \textbf{Test point}: TP701 (XIN Si4464, clock del TCXO), TP702 (PC2), TP703 (EN\_RX\_LNA), TP1 (BOOT0) \fonte{SCH}.
+\end{itemize}

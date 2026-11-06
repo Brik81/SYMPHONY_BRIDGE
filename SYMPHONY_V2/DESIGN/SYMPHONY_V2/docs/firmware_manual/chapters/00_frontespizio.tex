@@ -1,0 +1,64 @@
+% ---------------------------------------------------------------- frontespizio
+\begin{titlepage}
+\newgeometry{margin=0mm}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[sbblue] (current page.north west) rectangle ([yshift=-95mm]current page.north east);
+  \fill[sbblue2] ([yshift=-95mm]current page.north west) rectangle ([yshift=-99mm]current page.north east);
+  \node[anchor=north west,text=white,font=\sffamily\bfseries\fontsize{40}{44}\selectfont]
+     at ([xshift=25mm,yshift=-30mm]current page.north west) {SYMPHONY V2};
+  \node[anchor=north west,text=white,font=\sffamily\Large]
+     at ([xshift=25mm,yshift=-50mm]current page.north west) {Ricetrasmettitore UHF \SI{435}{\mega\hertz} per CubeSat};
+  \node[anchor=north west,text=white!85!sbblue,font=\sffamily\large]
+     at ([xshift=25mm,yshift=-62mm]current page.north west) {Engineering Model};
+  % motivo grafico: catena RF stilizzata
+  \begin{scope}[shift={([xshift=25mm,yshift=-150mm]current page.north west)},
+     every node/.style={font=\sffamily\small}]
+    \node[blk,minimum width=24mm] (a) at (0,0) {MCU\\STM32L562};
+    \node[blk,minimum width=24mm] (b) at (34mm,0) {Si4464\\+ TCXO};
+    \node[blkr,minimum width=24mm] (c) at (68mm,0) {PA\\QPA9510};
+    \node[blk,minimum width=24mm] (d) at (102mm,0) {LPF\\FL201};
+    \node[blko,minimum width=24mm] (e) at (136mm,0) {Switch\\HMC349A};
+    \draw[-{Stealth},thick,sbblue] (a)--(b); \draw[-{Stealth},thick,sbblue] (b)--(c);
+    \draw[-{Stealth},thick,sbblue] (c)--(d); \draw[-{Stealth},thick,sbblue] (d)--(e);
+    \draw[thick,sbblue] (e.east)--++(6mm,0) node[right]{MMCX};
+  \end{scope}
+  \node[anchor=north west,font=\sffamily\bfseries\fontsize{30}{34}\selectfont,text=sbblue]
+     at ([xshift=25mm,yshift=-185mm]current page.north west) {Manuale per il firmwarista};
+  \node[anchor=north west,font=\sffamily\large,text=sbgray,text width=160mm]
+     at ([xshift=25mm,yshift=-205mm]current page.north west)
+     {Interfaccia hardware/firmware, mappa dei pin, sequenze RF, limiti di potenza e checklist di avvio};
+  \node[anchor=south west,font=\sffamily\small,text=sbgray,text width=165mm,align=left]
+     at ([xshift=25mm,yshift=22mm]current page.south west) {%
+     \begin{tabular}{@{}ll@{}}
+     \textbf{Versione del documento} & 1.0 del 04/11/2026\\
+     \textbf{Riferimento hardware} & schematico KiCad 10, revisione \textbf{1.45} del log hardware (04/11/2026)\\
+     \textbf{Netlist} & esportata con \code{kicad-cli 10.0} dallo schematico salvato il 04/11/2026 15:22\\
+     \textbf{Stato} & Engineering Model \textendash{} con LED di debug montati\\
+     \textbf{Lingua} & italiano
+     \end{tabular}};
+\end{tikzpicture}
+\restoregeometry
+\end{titlepage}
+
+% ---------------------------------------------------------------- storico
+\cleardoublepage
+\begingroup\rowcolors{2}{white}{sbrow}
+\thispagestyle{plain}
+{\sffamily\Large\bfseries\color{sbblue} Storia del documento\par}
+\vspace{4mm}
+\begin{xltabular}{\linewidth}{@{}L{18mm}L{24mm}L{34mm}Y@{}}
+\tabhead\hd{Versione}&\hd{Data}&\hd{Hardware}&\hd{Descrizione}\\
+1.0 & 04/11/2026 & rev.\ 1.45 del log & Prima emissione. Ricavata dalla netlist dello schematico, dal log hardware (entry 000\ldots043), dalle revisioni indipendenti del 03/11 e del 04/11/2026 e dai datasheet dei componenti.\\
+\bottomrule
+\end{xltabular}\endgroup
+
+\vspace{8mm}
+{\sffamily\Large\bfseries\color{sbblue} Fonti usate\par}
+\vspace{2mm}
+\begin{itemize}
+\item \textbf{[SCH]} Schematico KiCad 10 \code{SYMPHONY.kicad\_sch} con i fogli POWER, UHF, MCU, IF, CONNECTORS (= SENSORS), MOUNTING\_HOLES. Netlist \code{net.xml} e BOM \code{bom.csv} esportate nella cartella di questo manuale.
+\item \textbf{[LOG]} Log hardware \code{report/simphony\_v2\_log} (entry 000\ldots043, fino alla rev.\ 1.45). Le note firmware F-01\ldots F-16 e le misure M-01\ldots M-06 vengono da qui.
+\item \textbf{[REV-1103]}, \textbf{[REV-1104]} Revisioni indipendenti dello schematico del 03/11/2026 e del 04/11/2026 (\code{SYMPHONY\_V2\_review\_finale\_*.pdf}).
+\item \textbf{[DS-xxx]} Datasheet dei componenti (elenco e pagine chiave in appendice~\ref{app:componenti}). Le pagine indicate sono le pagine del PDF.
+\end{itemize}
+Ogni valore numerico ha accanto la sua fonte tra parentesi quadre. Se un valore non è stato verificato sulla fonte è marcato \DV{} ed è raccolto nell'appendice~\ref{app:daverificare}.
