@@ -4066,12 +4066,6 @@
 		(uuid "5560da63-7a19-4e67-81ca-f1664d73123c")
 	)
 	(junction
-		(at 132.08 68.58)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5a098380-a55d-43ea-b14d-4cbf5c0a554e")
-	)
-	(junction
 		(at 125.73 21.59)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4214,12 +4208,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d0c51016-6c62-4e21-b0d5-26aee90fad37")
-	)
-	(junction
-		(at 170.18 90.17)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d42266d2-23d6-422e-a382-f05e49ce6c9e")
 	)
 	(junction
 		(at 148.59 26.67)
@@ -4378,6 +4366,10 @@
 	(no_connect
 		(at 40.64 106.68)
 		(uuid "e02c7955-62f7-49a3-938a-4a29873ffb7b")
+	)
+	(no_connect
+		(at 139.7 80.01)
+		(uuid "e0e9773b-0bec-4a16-9fc6-e0960bd48ad6")
 	)
 	(no_connect
 		(at 40.64 104.14)
@@ -4836,16 +4828,6 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 66.04) (xy 132.08 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2d129b69-6c43-49a6-a885-bb52f56b3d6c")
-	)
-	(wire
-		(pts
 			(xy 260.35 27.94) (xy 275.59 27.94)
 		)
 		(stroke
@@ -4886,7 +4868,7 @@
 	)
 	(wire
 		(pts
-			(xy 165.1 90.17) (xy 170.18 90.17)
+			(xy 165.1 90.17) (xy 175.26 90.17)
 		)
 		(stroke
 			(width 0)
@@ -5006,16 +4988,6 @@
 	)
 	(wire
 		(pts
-			(xy 128.27 68.58) (xy 132.08 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4c12f744-4c5d-49fa-b731-4fce91dff7ca")
-	)
-	(wire
-		(pts
 			(xy 74.93 31.75) (xy 74.93 33.02)
 		)
 		(stroke
@@ -5023,16 +4995,6 @@
 			(type default)
 		)
 		(uuid "4d22d20a-0b3b-4ca8-9dc5-4110684fbf38")
-	)
-	(wire
-		(pts
-			(xy 170.18 90.17) (xy 175.26 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4debdee7-ec4e-42f2-8e02-5b0404f758dd")
 	)
 	(wire
 		(pts
@@ -5263,16 +5225,6 @@
 			(type default)
 		)
 		(uuid "75c2663a-44dd-447b-8eba-29938b3c6d74")
-	)
-	(wire
-		(pts
-			(xy 170.18 69.85) (xy 176.53 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "75c5c498-850a-4284-ade4-22a9f0e014db")
 	)
 	(wire
 		(pts
@@ -5576,23 +5528,13 @@
 	)
 	(wire
 		(pts
-			(xy 128.27 71.12) (xy 128.27 68.58)
+			(xy 128.27 67.31) (xy 128.27 71.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "9f092d92-bc6e-445d-aa20-9ed3439224f8")
-	)
-	(wire
-		(pts
-			(xy 170.18 77.47) (xy 170.18 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a07c4f68-f111-4184-ae90-3e6e185896af")
 	)
 	(bus
 		(pts
@@ -5917,16 +5859,6 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 68.58) (xy 135.89 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cd4ccfad-2123-43f7-9d11-c1a7ea505f6b")
-	)
-	(wire
-		(pts
 			(xy 60.96 161.29) (xy 62.23 161.29)
 		)
 		(stroke
@@ -6048,26 +5980,6 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 68.58) (xy 135.89 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dd81dfd3-620b-453e-ae22-78bf7503dad4")
-	)
-	(wire
-		(pts
-			(xy 135.89 80.01) (xy 139.7 80.01)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "de349545-eb3e-43c9-be55-324a2c3ae076")
-	)
-	(wire
-		(pts
 			(xy 222.25 45.72) (xy 231.14 45.72)
 		)
 		(stroke
@@ -6185,16 +6097,6 @@
 			(type default)
 		)
 		(uuid "e4f6655d-d2d9-4ebc-adfd-ac00849cb566")
-	)
-	(wire
-		(pts
-			(xy 135.89 78.74) (xy 135.89 80.01)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e8b5871e-b9b9-4a34-8998-45f82c23e017")
 	)
 	(wire
 		(pts
@@ -13527,99 +13429,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 170.18 73.66 0)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "39b883db-b633-439a-ac7a-32a9407894e6")
-		(property "Reference" "R409"
-			(at 169.164 73.152 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "10k"
-			(at 168.656 74.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder"
-			(at 168.402 73.66 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 170.18 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 170.18 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Parts" "C71617"
-			(at 170.18 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "4924ffa0-5fed-4a85-8809-082915491fa7")
-		)
-		(pin "1"
-			(uuid "593ca313-01de-445f-b668-73b35d6b1c94")
-		)
-		(instances
-			(project "SYMPHONY"
-				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
-					(reference "R409")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 250.19 123.19 0)
 		(unit 1)
@@ -16626,7 +16435,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 132.08 66.04 0)
+		(at 128.27 67.31 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16636,7 +16445,7 @@
 		(dnp no)
 		(uuid "a5328799-4be3-47a5-887f-6af530800ba2")
 		(property "Reference" "#PWR0308"
-			(at 132.08 69.85 0)
+			(at 128.27 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16647,7 +16456,7 @@
 			)
 		)
 		(property "Value" "3V3"
-			(at 132.08 62.992 0)
+			(at 128.016 63.246 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16657,7 +16466,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 132.08 66.04 0)
+			(at 128.27 67.31 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16668,7 +16477,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 66.04 0)
+			(at 128.27 67.31 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16679,7 +16488,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 132.08 66.04 0)
+			(at 128.27 67.31 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18744,99 +18553,6 @@
 			(project "SYMPHONY"
 				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
 					(reference "#PWR0422")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 135.89 74.93 0)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp yes)
-		(uuid "fa0853d7-da04-4923-a23c-fabf72afd4e9")
-		(property "Reference" "R410"
-			(at 134.874 74.422 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "10k"
-			(at 134.366 76.2 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder"
-			(at 134.112 74.93 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 135.89 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 135.89 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Parts" "C71617"
-			(at 135.89 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "ca1c1b52-545d-46df-8bab-f32a8e7fa00c")
-		)
-		(pin "1"
-			(uuid "bb42c183-8bdd-4990-a7a9-b070d33c6997")
-		)
-		(instances
-			(project "SYMPHONY"
-				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
-					(reference "R410")
 					(unit 1)
 				)
 			)
