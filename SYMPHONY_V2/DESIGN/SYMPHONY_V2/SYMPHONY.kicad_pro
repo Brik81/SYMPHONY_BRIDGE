@@ -571,6 +571,120 @@
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.2,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF_DIFF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.3,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF_CLK",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.25,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF_PA_OUT",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "PA_BIAS",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 3,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF_50R",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 4,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "PWR",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 5,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
       }
     ],
     "meta": {
@@ -578,7 +692,136 @@
     },
     "net_colors": {},
     "netclass_assignments": {},
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "RF_DIFF",
+        "pattern": "/UHF/RF_RX_P"
+      },
+      {
+        "netclass": "RF_DIFF",
+        "pattern": "/UHF/RF_RX_N"
+      },
+      {
+        "netclass": "RF_CLK",
+        "pattern": "/UHF/RF_TCXO_OUT"
+      },
+      {
+        "netclass": "RF_CLK",
+        "pattern": "/UHF/RF_TCXO_AC"
+      },
+      {
+        "netclass": "RF_CLK",
+        "pattern": "/UHF/RF_XIN"
+      },
+      {
+        "netclass": "RF_PA_OUT",
+        "pattern": "/UHF/RF_PA_OUT"
+      },
+      {
+        "netclass": "PA_BIAS",
+        "pattern": "/UHF/PA_VCC1"
+      },
+      {
+        "netclass": "PA_BIAS",
+        "pattern": "/UHF/PA_VCC1_F"
+      },
+      {
+        "netclass": "PA_BIAS",
+        "pattern": "/UHF/PA_VCC2"
+      },
+      {
+        "netclass": "PA_BIAS",
+        "pattern": "/UHF/PA_VCC2_F"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_ANT"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_SW_COM"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_SW_RX"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_SW_TX"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_RX_F1"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_RX_F2"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_LNA_IN"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_LNA_OUT"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_RX_F3"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_RX_F4"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_RX_MATCH"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_SI_TX"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_TX_M1"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_TX_M2"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_ATT_IN"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_ATT_OUT"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_PA_IN"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_PA_MATCH"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_LPF_IN"
+      },
+      {
+        "netclass": "RF_50R",
+        "pattern": "/UHF/RF_LPF_OUT"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "3V3"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "5V0"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
