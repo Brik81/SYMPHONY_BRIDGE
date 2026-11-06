@@ -2253,16 +2253,6 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "TODO\nadd r 22 ohm\n"
-		(exclude_from_sim no)
-		(at 90.932 127.762 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "062ed85b-63a6-40fc-8ea9-ab04fe6fe8b1")
-	)
 	(text "POWER_SUPPLY\n"
 		(exclude_from_sim no)
 		(at 89.662 65.786 0)
@@ -2276,16 +2266,6 @@
 			(justify left bottom)
 		)
 		(uuid "aa4f3524-c25c-4c77-baaf-cbee8cd5c5d5")
-	)
-	(text "Nota: IC4 laciare \n\nIC9 lasciare "
-		(exclude_from_sim no)
-		(at 248.412 125.222 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "deb7b516-42be-4aa0-b2d7-c8de8ebb5ac7")
 	)
 	(junction
 		(at 90.17 81.28)
@@ -6560,7 +6540,7 @@
 				)
 			)
 		)
-		(property "JLCPCB Parts" "C25547"
+		(property "JLCPCB Parts" "C25768"
 			(at 83.82 90.17 0)
 			(hide yes)
 			(show_name no)

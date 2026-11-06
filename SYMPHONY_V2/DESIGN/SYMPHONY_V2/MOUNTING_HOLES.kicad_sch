@@ -425,26 +425,44 @@
 		(uuid "672e2dd5-cf15-4b3a-82e2-af8d4392adf3")
 	)
 	(junction
-		(at 62.23 50.8)
+		(at 41.91 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "04ca67dd-475c-41b3-b147-a8928f0d4706")
 	)
 	(junction
-		(at 54.61 50.8)
+		(at 34.29 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "279b72af-065e-46ff-886a-c4fba30be4cd")
 	)
 	(junction
-		(at 69.85 50.8)
+		(at 73.66 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "5342a6d1-81cc-495b-bd5a-7a7a2f0d2890")
+	)
+	(junction
+		(at 81.28 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bae55019-2271-40ea-93c7-069d27194096")
+	)
+	(junction
+		(at 66.04 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e949ef6a-6511-4605-92c4-3a7b55178c1e")
+	)
+	(junction
+		(at 49.53 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ee309c35-adf1-460c-a59a-04ad23bb9eac")
 	)
 	(wire
 		(pts
-			(xy 69.85 48.26) (xy 69.85 50.8)
+			(xy 49.53 48.26) (xy 49.53 50.8)
 		)
 		(stroke
 			(width 0)
@@ -454,7 +472,7 @@
 	)
 	(wire
 		(pts
-			(xy 54.61 50.8) (xy 54.61 53.34)
+			(xy 34.29 50.8) (xy 34.29 53.34)
 		)
 		(stroke
 			(width 0)
@@ -464,7 +482,7 @@
 	)
 	(wire
 		(pts
-			(xy 54.61 48.26) (xy 54.61 50.8)
+			(xy 34.29 48.26) (xy 34.29 50.8)
 		)
 		(stroke
 			(width 0)
@@ -474,7 +492,27 @@
 	)
 	(wire
 		(pts
-			(xy 62.23 50.8) (xy 69.85 50.8)
+			(xy 66.04 50.8) (xy 73.66 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "392037d9-0e0e-4824-aef2-8f0fe2c42336")
+	)
+	(wire
+		(pts
+			(xy 88.9 48.26) (xy 88.9 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42cba0f1-8ef1-41c3-9239-fd990914e2b2")
+	)
+	(wire
+		(pts
+			(xy 41.91 50.8) (xy 49.53 50.8)
 		)
 		(stroke
 			(width 0)
@@ -484,7 +522,7 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 48.26) (xy 77.47 50.8)
+			(xy 57.15 48.26) (xy 57.15 50.8)
 		)
 		(stroke
 			(width 0)
@@ -494,7 +532,27 @@
 	)
 	(wire
 		(pts
-			(xy 62.23 48.26) (xy 62.23 50.8)
+			(xy 81.28 50.8) (xy 88.9 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7149ab56-2f62-49a1-bb15-cc9a777b3863")
+	)
+	(wire
+		(pts
+			(xy 66.04 50.8) (xy 66.04 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "88658997-b82c-4eb7-a9e2-8b31f944d655")
+	)
+	(wire
+		(pts
+			(xy 41.91 48.26) (xy 41.91 50.8)
 		)
 		(stroke
 			(width 0)
@@ -504,7 +562,7 @@
 	)
 	(wire
 		(pts
-			(xy 54.61 50.8) (xy 62.23 50.8)
+			(xy 34.29 50.8) (xy 41.91 50.8)
 		)
 		(stroke
 			(width 0)
@@ -514,7 +572,37 @@
 	)
 	(wire
 		(pts
-			(xy 69.85 50.8) (xy 77.47 50.8)
+			(xy 81.28 48.26) (xy 81.28 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a875c17a-ce0b-4178-9a95-c8f4565caec4")
+	)
+	(wire
+		(pts
+			(xy 66.04 48.26) (xy 66.04 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4d09bde-255a-49d8-946c-30e884bd8fce")
+	)
+	(wire
+		(pts
+			(xy 73.66 50.8) (xy 81.28 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dc8e3fb2-4f82-4f3e-b753-ab706f574d09")
+	)
+	(wire
+		(pts
+			(xy 49.53 50.8) (xy 57.15 50.8)
 		)
 		(stroke
 			(width 0)
@@ -522,9 +610,19 @@
 		)
 		(uuid "e6ad417b-7723-40d4-9eac-b1e54d1f7b7e")
 	)
+	(wire
+		(pts
+			(xy 73.66 48.26) (xy 73.66 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f17c1640-74ba-4cf2-b29c-330c6ef2cc0f")
+	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 62.23 45.72 0)
+		(at 41.91 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -534,7 +632,7 @@
 		(dnp no)
 		(uuid "35481db8-c48c-4d42-b7a7-caa19ea6864c")
 		(property "Reference" "H302"
-			(at 59.69 40.64 0)
+			(at 39.37 40.64 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -545,7 +643,7 @@
 			)
 		)
 		(property "Value" "MountingHole_Pad"
-			(at 64.77 45.7199 0)
+			(at 44.45 45.7199 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -557,7 +655,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -568,7 +666,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -579,7 +677,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -590,7 +688,7 @@
 			)
 		)
 		(property "Arrow Part Number" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -601,7 +699,7 @@
 			)
 		)
 		(property "Arrow Price/Stock" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -612,7 +710,7 @@
 			)
 		)
 		(property "Height" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -623,7 +721,7 @@
 			)
 		)
 		(property "Manufacturer_Name" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -634,7 +732,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -645,7 +743,7 @@
 			)
 		)
 		(property "Mouser Part Number" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -656,7 +754,7 @@
 			)
 		)
 		(property "Mouser Price/Stock" ""
-			(at 62.23 45.72 0)
+			(at 41.91 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -673,6 +771,162 @@
 			(project "SYMPHONY"
 				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
 					(reference "H302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 73.66 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "472e1d5b-dc0c-469b-b687-b06d4c311dc1")
+		(property "Reference" "H306"
+			(at 71.12 40.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 76.2 45.7199 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Part Number" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Price/Stock" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Height" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 73.66 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e1d266ce-7371-486f-89b0-032ffe5035f1")
+		)
+		(instances
+			(project "SYMPHONY"
+				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
+					(reference "H306")
 					(unit 1)
 				)
 			)
@@ -756,7 +1010,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 77.47 45.72 0)
+		(at 57.15 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -766,7 +1020,7 @@
 		(dnp no)
 		(uuid "5068c7bb-ef03-4435-8f25-4e1c2ba3b37b")
 		(property "Reference" "H304"
-			(at 74.93 40.64 0)
+			(at 54.61 40.64 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -777,7 +1031,7 @@
 			)
 		)
 		(property "Value" "MountingHole_Pad"
-			(at 80.01 45.7199 0)
+			(at 59.69 45.7199 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -789,7 +1043,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -800,7 +1054,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -811,7 +1065,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -822,7 +1076,7 @@
 			)
 		)
 		(property "Arrow Part Number" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -833,7 +1087,7 @@
 			)
 		)
 		(property "Arrow Price/Stock" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -844,7 +1098,7 @@
 			)
 		)
 		(property "Height" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -855,7 +1109,7 @@
 			)
 		)
 		(property "Manufacturer_Name" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -866,7 +1120,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -877,7 +1131,7 @@
 			)
 		)
 		(property "Mouser Part Number" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -888,7 +1142,7 @@
 			)
 		)
 		(property "Mouser Price/Stock" ""
-			(at 77.47 45.72 0)
+			(at 57.15 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -911,8 +1165,86 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 66.04 53.34 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "85842b33-1e32-451f-89c7-722f26354a5d")
+		(property "Reference" "#PWR0313"
+			(at 66.04 59.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 66.04 58.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 66.04 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 66.04 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 66.04 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bfcd07cb-eb2c-484a-b365-4e5c219bbf26")
+		)
+		(instances
+			(project "SYMPHONY"
+				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
+					(reference "#PWR0313")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 69.85 45.72 0)
+		(at 49.53 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -922,7 +1254,7 @@
 		(dnp no)
 		(uuid "ad1c6be6-d569-4a22-9a76-9775178b2ffe")
 		(property "Reference" "H303"
-			(at 67.31 40.64 0)
+			(at 46.99 40.64 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -933,7 +1265,7 @@
 			)
 		)
 		(property "Value" "MountingHole_Pad"
-			(at 72.39 45.7199 0)
+			(at 52.07 45.7199 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -945,7 +1277,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -956,7 +1288,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -967,7 +1299,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -978,7 +1310,7 @@
 			)
 		)
 		(property "Arrow Part Number" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -989,7 +1321,7 @@
 			)
 		)
 		(property "Arrow Price/Stock" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1000,7 +1332,7 @@
 			)
 		)
 		(property "Height" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1011,7 +1343,7 @@
 			)
 		)
 		(property "Manufacturer_Name" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1022,7 +1354,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1033,7 +1365,7 @@
 			)
 		)
 		(property "Mouser Part Number" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1044,7 +1376,7 @@
 			)
 		)
 		(property "Mouser Price/Stock" ""
-			(at 69.85 45.72 0)
+			(at 49.53 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1067,8 +1399,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 54.61 53.34 0)
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 81.28 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1076,10 +1408,20 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "beb54b31-d61b-4798-b746-42169e1a8573")
-		(property "Reference" "#PWR0307"
-			(at 54.61 59.69 0)
+		(uuid "b46a1335-4afa-4793-9107-1404636eb5d7")
+		(property "Reference" "H307"
+			(at 78.74 40.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 83.82 45.7199 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1087,20 +1429,11 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
-		(property "Value" "GND"
-			(at 54.61 58.42 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 54.61 53.34 0)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
+			(at 81.28 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1111,7 +1444,318 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 53.34 0)
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Part Number" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Price/Stock" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Height" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 81.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "69f3f8de-4aaf-45e4-b818-35f76cd118ce")
+		)
+		(instances
+			(project "SYMPHONY"
+				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
+					(reference "H307")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 88.9 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "beb1abb9-6e11-4145-9532-05bbf7d498e8")
+		(property "Reference" "H308"
+			(at 86.36 40.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 91.44 45.7199 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Part Number" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Price/Stock" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Height" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 88.9 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8599aa09-e14f-419e-9161-18194f0e6a14")
+		)
+		(instances
+			(project "SYMPHONY"
+				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
+					(reference "H308")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 34.29 53.34 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "beb54b31-d61b-4798-b746-42169e1a8573")
+		(property "Reference" "#PWR0307"
+			(at 34.29 59.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 58.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1122,7 +1766,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 54.61 53.34 0)
+			(at 34.29 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1146,7 +1790,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 54.61 45.72 0)
+		(at 34.29 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1156,7 +1800,7 @@
 		(dnp no)
 		(uuid "c95cb894-0ec7-4281-ae1c-4c19745536e2")
 		(property "Reference" "H301"
-			(at 52.07 40.64 0)
+			(at 31.75 40.64 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1167,7 +1811,7 @@
 			)
 		)
 		(property "Value" "MountingHole_Pad"
-			(at 57.15 45.7199 0)
+			(at 36.83 45.7199 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1179,7 +1823,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1190,7 +1834,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1201,7 +1845,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1212,7 +1856,7 @@
 			)
 		)
 		(property "Arrow Part Number" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1223,7 +1867,7 @@
 			)
 		)
 		(property "Arrow Price/Stock" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1234,7 +1878,7 @@
 			)
 		)
 		(property "Height" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1245,7 +1889,7 @@
 			)
 		)
 		(property "Manufacturer_Name" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1256,7 +1900,7 @@
 			)
 		)
 		(property "Manufacturer_Part_Number" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1267,7 +1911,7 @@
 			)
 		)
 		(property "Mouser Part Number" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1278,7 +1922,7 @@
 			)
 		)
 		(property "Mouser Price/Stock" ""
-			(at 54.61 45.72 0)
+			(at 34.29 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1295,6 +1939,162 @@
 			(project "SYMPHONY"
 				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
 					(reference "H301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 66.04 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f13e53d1-7efb-4063-9d92-b988dc000703")
+		(property "Reference" "H305"
+			(at 63.5 40.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 68.58 45.7199 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Part Number" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Arrow Price/Stock" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Height" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Name" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer_Part_Number" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Part Number" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Mouser Price/Stock" ""
+			(at 66.04 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c9b1a1c5-ea55-4a13-b366-fb28e383bd43")
+		)
+		(instances
+			(project "SYMPHONY"
+				(path "/071989b5-e01f-46b9-99db-912cb901eec9/10516302-012a-4dec-8e08-8f89eb7810f0"
+					(reference "H305")
 					(unit 1)
 				)
 			)

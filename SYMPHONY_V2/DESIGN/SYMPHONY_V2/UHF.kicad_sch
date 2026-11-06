@@ -4172,6 +4172,18 @@
 		)
 		(uuid "ae12da5c-af0f-4132-ac65-f6ccaf14f2ba")
 	)
+	(rectangle
+		(start 228.6 133.35)
+		(end 254 144.78)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "c1637f24-6585-4328-b25b-c2100a9ab4d2")
+	)
 	(text "435MHz Filtro passa basso"
 		(exclude_from_sim no)
 		(at 309.626 69.596 0)
@@ -4203,6 +4215,16 @@
 			(justify left bottom)
 		)
 		(uuid "191c1f97-8b35-4be5-8639-9976695e1c9d")
+	)
+	(text "debug visivo, rimuovere in versione finale \n"
+		(exclude_from_sim no)
+		(at 248.412 146.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "28e9d239-43cc-46f0-95f6-a26915431678")
 	)
 	(text "PA"
 		(exclude_from_sim no)
@@ -4265,7 +4287,7 @@
 		)
 		(uuid "bd476154-84e4-4662-b3e2-3429792fcba9")
 	)
-	(text "Match uscita PA (C260-L243-C261/C262-C230): replicare il layout dell'EVB Qorvo 410-470MHz\n(posizioni e lunghezze piste sono parte del match, nodo ~5 ohm). Prevedere tuning in laboratorio."
+	(text "Match uscita PA (C260-L243-C261/C262-C230): vedi nota di layout L-01 nel log.\nCopiare il layout EVB Qorvo 410-470MHz, masse dirette, spazio per tarare C260/C262."
 		(exclude_from_sim no)
 		(at 293.878 235.966 0)
 		(effects
@@ -34971,7 +34993,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "240"
+		(property "Value" "220"
 			(at 184.78 192.41 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -35026,7 +35048,7 @@
 				)
 			)
 		)
-		(property "JLCPCB Parts" "C114755"
+		(property "JLCPCB Parts" "C25091"
 			(at 182.88 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -36975,7 +36997,7 @@
 				)
 			)
 		)
-		(property "Note" "partitore APC: 2.90V a vuoto, ~2.6-2.77V con I_APC 4.6mA; <3.0V abs max anche a 3V3=3.4V"
+		(property "Note" "partitore APC 33/220: 2.87V a vuoto (3V3=3.3V), max 2.96V a 3V3=3.405V; ~2.7-2.8V con I_APC 4.6mA; <3.0V abs max"
 			(at 177.8 187.96 0)
 			(hide yes)
 			(show_name no)
