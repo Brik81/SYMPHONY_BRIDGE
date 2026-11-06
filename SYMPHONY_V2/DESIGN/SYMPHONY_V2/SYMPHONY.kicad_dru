@@ -117,8 +117,9 @@
 # 7) NET CLASS RF  (stackup JLC04161H-3313A, L1 riferito a L2 = GND)
 # ---------------------------------------------------------------------
 # CPWG 50 ohm: w = 0.32 mm, gap = 0.25 mm (verificare su calcolatore JLC prima dell'ordine)
+# Solo piste (A.Type == 'Track'): i pad interni dei componenti RF (FL201, IC202, Q201...) hanno passo fisso < 0.25
 (rule "RF CPWG gap 0.25"
-    (condition "A.NetClass == 'RF_50R_CPWG' && B.Net != A.Net")
+    (condition "A.NetClass == 'RF_50R_CPWG' && A.Type == 'Track' && B.Net != A.Net")
     (constraint clearance (min 0.25mm)))
 
 # Microstrip 50 ohm: w = 0.35 mm, rame vicino >= 3h ~ 0.65 mm (non deve diventare CPW)

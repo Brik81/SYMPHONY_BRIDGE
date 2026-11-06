@@ -637,14 +637,14 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.2,
+        "clearance": 0.25,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
-        "name": "RF_50R",
+        "name": "RF_50R_CPWG",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 4,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -721,83 +721,83 @@
         "pattern": "/UHF/PA_VCC2_F"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_ANT"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_SW_COM"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_SW_RX"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_SW_TX"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_RX_F1"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_RX_F2"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_LNA_IN"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_LNA_OUT"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_RX_F3"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_RX_F4"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_RX_MATCH"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_SI_TX"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_TX_M1"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_TX_M2"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_ATT_IN"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_ATT_OUT"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_PA_IN"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_PA_MATCH"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_LPF_IN"
       },
       {
-        "netclass": "RF_50R",
+        "netclass": "RF_50R_CPWG",
         "pattern": "/UHF/RF_LPF_OUT"
       },
       {
