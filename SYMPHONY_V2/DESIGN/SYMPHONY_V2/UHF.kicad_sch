@@ -5877,7 +5877,7 @@
 	)
 	(wire
 		(pts
-			(xy 331.47 124.46) (xy 339.09 124.46)
+			(xy 332.74 124.46) (xy 339.09 124.46)
 		)
 		(stroke
 			(width 0)
@@ -6287,7 +6287,7 @@
 	)
 	(wire
 		(pts
-			(xy 323.85 124.46) (xy 326.39 124.46)
+			(xy 323.85 124.46) (xy 327.66 124.46)
 		)
 		(stroke
 			(width 0)
@@ -34737,7 +34737,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 328.93 124.46 90)
+		(at 330.2 124.46 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -34748,7 +34748,7 @@
 		(fields_autoplaced yes)
 		(uuid "4629cf9f-b5cb-4315-a69e-8ec2d848cb47")
 		(property "Reference" "C207"
-			(at 328.9363 118.11 90)
+			(at 330.2063 118.11 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -34758,7 +34758,7 @@
 			)
 		)
 		(property "Value" "100p"
-			(at 328.9363 120.65 90)
+			(at 330.2063 120.65 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -34768,7 +34768,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 328.93 124.46 0)
+			(at 330.2 124.46 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -34779,7 +34779,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 328.93 124.46 0)
+			(at 330.2 124.46 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -34790,7 +34790,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 328.93 124.46 0)
+			(at 330.2 124.46 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -34801,7 +34801,7 @@
 			)
 		)
 		(property "JLCPCB Parts" "C17308632"
-			(at 328.93 124.46 90)
+			(at 330.2 124.46 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
