@@ -5307,7 +5307,7 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 80.01) (xy 200.66 78.74)
+			(xy 200.66 74.93) (xy 200.66 80.01)
 		)
 		(stroke
 			(width 0)
@@ -5864,6 +5864,16 @@
 			(type default)
 		)
 		(uuid "80d010a7-0164-4415-bb5a-21f12217c801")
+	)
+	(wire
+		(pts
+			(xy 213.36 74.93) (xy 213.36 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8306c2a0-a04a-4318-9e41-df9e86137f39")
 	)
 	(wire
 		(pts
@@ -7034,16 +7044,6 @@
 			(type default)
 		)
 		(uuid "e348899f-8313-44e5-91bc-333c2a28e356")
-	)
-	(wire
-		(pts
-			(xy 213.36 80.01) (xy 213.36 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e362e464-020d-4af2-b5a2-6a82a64f9ed8")
 	)
 	(wire
 		(pts
@@ -30728,6 +30728,16 @@
 		)
 		(uuid "42ef4dd0-fd1d-4cae-a600-a899b042f487")
 	)
+	(label "TQP_SD"
+		(at 247.65 81.28 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "430564ef-5c22-4c79-81e5-ea0388d1415a")
+	)
 	(label "RF_SW_RX"
 		(at 336.55 124.46 90)
 		(effects
@@ -30929,7 +30939,7 @@
 		(uuid "94319280-7363-4d2c-98dd-ea9878bd3af8")
 	)
 	(label "RF_RX_MATCH"
-		(at 200.66 80.01 0)
+		(at 200.66 74.93 90)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -31059,7 +31069,7 @@
 		(uuid "e05fb63a-917a-4cf6-8544-b6f848027da8")
 	)
 	(label "RF_RX_F4"
-		(at 213.36 80.01 0)
+		(at 213.36 74.93 90)
 		(effects
 			(font
 				(size 1.27 1.27)
