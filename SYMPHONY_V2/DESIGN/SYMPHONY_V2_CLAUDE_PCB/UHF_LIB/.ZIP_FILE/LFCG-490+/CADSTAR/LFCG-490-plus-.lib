@@ -1,0 +1,16 @@
+.LFCG-490-plus- :1 ;Signal Conditioning LTCC Low Pass Filter, DC - 490 MHz, 50O
+LFCG490
+*STM FL
+*NGS
+*PLB 1="GROUND_1" 2="GROUND_2" 3="GROUND_3" 4="OUTPUT" 5="GROUND_4" 6="GROUND_5" 7="GROUND_6" 8="INPUT"
+*MXP 8
+*DFN LFCG-490-plus-
+~!Mouser Part Number (139-LFCG-490+)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Mini-Circuits/LFCG-490%2b?qs=vmHwEFxEFR%252BNH1d71kamjA%3D%3D)
+~!Manufacturer_Name (Mini-Circuits)
+~!Manufacturer_Part_Number (LFCG-490+)
+~!Link Datasheet (https://www.minicircuits.com/pdfs/LFCG-490+.pdf)
+~!Height (0.95mm)
+~!3D_Model (LFCG-490+)
+LFCG-490-plus-
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 6.1!U 7.1!U 8.1!U 

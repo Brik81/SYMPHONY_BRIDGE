@@ -1,0 +1,16 @@
+.S2-LPCBQTR :1 ;Ultra-low power, high performance, sub-1GHz transceiver
+QFN50P400X400X105-25N-D
+*STM IC
+*NGS
+*PLB 1="VDD SMPS" 2="SMPS1" 3="SMPS2" 4="XOUT" 5="XIN" 6="SDN" 7="VDD ANA/ SYNTH" 8="VR SYNTH" 9="VREF VCO" 10="VDD VCO/TX" 11="TX" 12="VR RF" 13="RXN" 14="RXP" 15="VDD RX/DIG" 16="SDO" 17="SDI" 18="SCLK" 19="CSN" 20="GPIO0" 21="GPIO1" 22="GPIO2" 23="GPIO3" 24="VR DIG" 25="GND"
+*MXP 25
+*DFN S2-LPCBQTR
+~!Mouser Part Number (511-S2-LPCBQTR)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/STMicroelectronics/S2-LPCBQTR?qs=W0yvOO0ixfES%2FSAqpeZX6Q%3D%3D)
+~!Manufacturer_Name (STMicroelectronics)
+~!Manufacturer_Part_Number (S2-LPCBQTR)
+~!Link Datasheet (https://www.st.com/resource/en/datasheet/s2-lp.pdf)
+~!Height (1.05mm)
+~!3D_Model (S2-LPCBQTR)
+S2-LPCBQTR
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 6.1!U 7.1!U 8.1!U 9.1!U 10.1!U 11.1!U 12.1!U 18.1!U 17.1!U 16.1!U 15.1!U 14.1!U 13.1!U 25.1!U 24.1!U 23.1!U 22.1!U 21.1!U 20.1!U 19.1!U 

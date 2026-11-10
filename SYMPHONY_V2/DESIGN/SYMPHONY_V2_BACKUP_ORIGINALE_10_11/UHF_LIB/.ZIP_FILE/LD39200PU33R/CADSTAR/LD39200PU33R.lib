@@ -1,0 +1,16 @@
+.LD39200PU33R :1 ;LDO Voltage Regulators 2 A high PSRR ultra low drop linear regulator with reverse current protection
+SON95P300X300X100-7N-D
+*STM IC
+*NGS
+*PLB 1="OUT" 2="ADJ/SENSE" 3="GND" 4="PG" 5="EN" 6="IN" 7="EPAD"
+*MXP 7
+*DFN LD39200PU33R
+~!Mouser Part Number (511-LD39200PU33R)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/STMicroelectronics/LD39200PU33R?qs=WHlX%252B%252B9%2FRwAl6%2FJDqRS1uw%3D%3D)
+~!Manufacturer_Name (STMicroelectronics)
+~!Manufacturer_Part_Number (LD39200PU33R)
+~!Link Datasheet (https://www.st.com/resource/en/datasheet/ld39200.pdf)
+~!Height (1mm)
+~!3D_Model (LD39200PU33R)
+LD39200PU33R
+1.1!U 2.1!U 3.1!U 7.1!U 6.1!U 5.1!U 4.1!U 

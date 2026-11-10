@@ -1,0 +1,16 @@
+.SPIRIT1QTR :1
+QFN55P400X400X100-21N-D
+*STM IC
+*NGS
+*PLB 1="GPIO_0" 2="MISO" 3="MOSI" 4="SCLK" 5="CSN" 6="XOUT" 7="XIN" 8="VABT" 9="RXP" 10="RXN" 11="GND_PA" 12="TX" 13="SMPS_EXT2" 14="SMPS_EXT1" 15="SDN" 16="VBAT" 17="VREG" 18="GPIO3" 19="GPIO2" 20="GPIO1" 21="GND_(EP)"
+*MXP 21
+*DFN SPIRIT1QTR
+~!Mouser Part Number (511-SPIRIT1QTR)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/STMicroelectronics/SPIRIT1QTR?qs=TAo1I7FhABuyeu4sKj1BKQ%3D%3D)
+~!Manufacturer_Name (STMicroelectronics)
+~!Manufacturer_Part_Number (SPIRIT1QTR)
+~!Link Datasheet (http://www.st.com/web/en/resource/technical/document/datasheet/DM00047607.pdf)
+~!Height (1mm)
+~!3D_Model (SPIRIT1QTR)
+SPIRIT1QTR
+1.1!U 2.1!U 3.1!U 4.1!I 5.1!I 6.1!Y 7.1!I 8.1!U 9.1!U 10.1!U 15.1!U 14.1!U 13.1!U 12.1!U 11.1!G 21.1!G 20.1!U 19.1!U 18.1!U 17.1!U 16.1!U 

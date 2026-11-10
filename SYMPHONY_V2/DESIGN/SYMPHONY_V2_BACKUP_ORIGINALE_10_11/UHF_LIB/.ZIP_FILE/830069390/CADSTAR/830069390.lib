@@ -1,0 +1,16 @@
+.830069390 :1 ;32 MHz +/-20ppm Crystal 10pF 70 Ohms 4-SMD, No Lead
+"830069390"
+*STM Y
+*NGS
+*PLB 1="CRYSTAL_1" 2="GND_1" 3="CRYSTAL_2" 4="GND_2"
+*MXP 4
+*DFN 830069390
+~!Mouser Part Number (710-830069390)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Wurth-Elektronik/830069390?qs=2WXlatMagcFUz20BwCFW%252BQ%3D%3D)
+~!Manufacturer_Name (Wurth Elektronik)
+~!Manufacturer_Part_Number (830069390)
+~!Link Datasheet (https://www.we-online.com/catalog/datasheet/830069390.pdf)
+~!Height (0.6mm)
+~!3D_Model (830069390)
+"830069390"
+1.1!U 2.1!U 3.1!U 4.1!U 

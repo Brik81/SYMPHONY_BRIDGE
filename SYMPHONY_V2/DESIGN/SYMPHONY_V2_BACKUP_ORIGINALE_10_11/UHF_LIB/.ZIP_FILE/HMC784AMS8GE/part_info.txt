@@ -1,0 +1,9 @@
+Manufacturer=Analog Devices
+PartNumber=HMC784AMS8GE
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=9
+Version=1.1
+Released=2020-10-30 04:52:00
+Downloaded=2025-10-15 18:37:20
+3D=Y

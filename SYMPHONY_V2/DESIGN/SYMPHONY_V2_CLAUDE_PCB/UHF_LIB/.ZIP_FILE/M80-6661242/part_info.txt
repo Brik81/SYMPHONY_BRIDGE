@@ -1,0 +1,9 @@
+Manufacturer=Harwin
+PartNumber=M80-6661242
+PartCategory=Connector
+PackageCategory=Other
+PinCount=12
+Version=3.1
+Released=2020-04-01 12:34:05
+Downloaded=2026-06-11 13:57:29
+3D=Y

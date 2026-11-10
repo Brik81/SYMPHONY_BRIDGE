@@ -1,0 +1,9 @@
+Manufacturer=Harwin
+PartNumber=G125-MH11605M4P
+PartCategory=Connector
+PackageCategory=Other
+PinCount=16
+Version=7.1
+Released=2020-06-08 14:21:40
+Downloaded=2026-06-10 16:07:11
+3D=Y

@@ -1,0 +1,42 @@
+*PADS-LIBRARY-PART-TYPES-V9*
+
+TQP7M9106 QFN50P400X400X90-25N-D I ANA 7 1 0 0 0
+TIMESTAMP 2026.06.11.08.53.02
+"Mouser Part Number" 772-TQP7M9106
+"Mouser Price/Stock" https://www.mouser.co.uk/ProductDetail/Qorvo/TQP7M9106?qs=ZyJ8JrQCoIZWZMWEw%252BwsMg%3D%3D
+"Manufacturer_Name" Qorvo
+"Manufacturer_Part_Number" TQP7M9106
+"Description" RF Amplifier IC CDMA, LTE, W-CDMA 50MHz ~ 1.5GHz 24-QFN (4x4), 4.75V ~ 5.25V
+"Datasheet Link" https://www.qorvo.com/products/p/TQP7M9106#documents
+"Geometry.Height" 0.9mm
+GATE 1 25 0
+TQP7M9106
+1 0 U VBIAS
+2 0 U GND/NC_1
+3 0 U GND/NC_2
+4 0 U RFIN_1
+5 0 U RFIN_2
+6 0 U GND/NC_3
+7 0 U GND/NC_4
+8 0 U GND/NC_5
+9 0 U GND/NC_6
+10 0 U GND/NC_7
+11 0 U GND/NC_8
+12 0 U GND/NC_9
+18 0 U IREF
+17 0 U GND/NC_11
+16 0 U RFOUT/VCC_3
+15 0 U RFOUT/VCC_2
+14 0 U RFOUT/VCC_1
+13 0 U GND/NC_10
+25 0 U GND
+24 0 U GND/NC_17
+23 0 U GND/NC_16
+22 0 U GND/NC_15
+21 0 U GND/NC_14
+20 0 U GND/NC_13
+19 0 U GND/NC_12
+
+*END*
+*REMARK* SamacSys ECAD Model
+722520/1290185/2.50/25/3/Integrated Circuit

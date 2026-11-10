@@ -1,0 +1,9 @@
+Manufacturer=Silicon Labs
+PartNumber=SI4464-B1B-FMR
+PartCategory=Integrated Circuit
+PackageCategory=Quad Flat No-Lead
+PinCount=21
+Version=1.1
+Released=2019-04-28 17:29:08
+Downloaded=2026-06-11 09:30:28
+3D=Y

@@ -1,0 +1,16 @@
+.HMC784AMS8GE :1 ;RF Switch SPDT 0MHz to 4GHz 24dB Automotive 8-Pin MSOP EP T/R
+SOP65P488X110-9N
+*STM IC
+*NGS
+*PLB 1="A" 2="B" 3="RFC" 4="VDD" 5="RF1" 6="GND_1" 7="GND_2" 8="RF2" 9="EP"
+*MXP 9
+*DFN HMC784AMS8GE
+~!Mouser Part Number (584-HMC784AMS8GE)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Analog-Devices/HMC784AMS8GE?qs=AZz8fAaf6P%2Fj9bffWbFAng%3D%3D)
+~!Manufacturer_Name (Analog Devices)
+~!Manufacturer_Part_Number (HMC784AMS8GE)
+~!Link Datasheet (https://www.analog.com/media/en/technical-documentation/data-sheets/hmc784a.pdf)
+~!Height (1.1mm)
+~!3D_Model (HMC784AMS8GE)
+HMC784AMS8GE
+1.1!U 2.1!U 3.1!U 4.1!U 9.1!U 8.1!U 7.1!U 6.1!U 5.1!U 

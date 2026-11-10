@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "SI4464-B1B-FMR"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2019-04-28-17:29:08)
+    (mountForm default
+        (footprintRef "QFN50P400X400X90-21N-D")
+        (spec "System")
+    )
+)

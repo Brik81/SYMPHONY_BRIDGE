@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'TQP7M9106'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Qorvo", "TQP7M9106" (!) = "", "QFN50P400X400X90-25N-D", "Quad Flat No-Lead", "772-TQP7M9106", "https://www.mouser.co.uk/ProductDetail/Qorvo/TQP7M9106?qs=ZyJ8JrQCoIZWZMWEw%252BwsMg%3D%3D", "RF Amplifier IC CDMA, LTE, W-CDMA 50MHz ~ 1.5GHz 24-QFN (4x4), 4.75V ~ 5.25V", "https://www.qorvo.com/products/p/TQP7M9106#documents", "0.9 mm"
+END_PART
+
+END.

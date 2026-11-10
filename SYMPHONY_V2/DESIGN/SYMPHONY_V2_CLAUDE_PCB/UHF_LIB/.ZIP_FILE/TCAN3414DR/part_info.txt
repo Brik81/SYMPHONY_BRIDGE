@@ -1,0 +1,9 @@
+Manufacturer=Texas Instruments
+PartNumber=TCAN3414DR
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=8
+Version=1.1
+Released=2024-04-22 03:14:07
+Downloaded=2026-06-10 15:30:06
+3D=Y

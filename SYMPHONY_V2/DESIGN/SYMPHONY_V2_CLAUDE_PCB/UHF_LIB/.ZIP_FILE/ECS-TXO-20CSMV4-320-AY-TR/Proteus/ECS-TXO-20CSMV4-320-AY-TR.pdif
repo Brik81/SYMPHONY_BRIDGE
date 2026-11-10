@@ -1,0 +1,122 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "ECS-TXO-20CSMV4-320-AY-TR"
+   (description "XTAL OSC TCXO 32.0000MHZ CLPSW")
+   (family "OSC")
+   (package "ECSTXO20CSMV4320AYTR")
+   (attribute "Datasheet Link" "")
+   (attribute "Geometry.Height" "0.8mm")
+   (attribute "Farnell Part Number" "")
+   (attribute "Farnell Price/Stock" "")
+   (attribute "Manufacturer_Name" "ECS")
+   (attribute "Manufacturer_Part_Number" "ECS-TXO-20CSMV4-320-AY-TR")
+   (gate
+    (symbol "ECS-TXO-20CSMV4-320-AY-TR")
+    (pin "GROUND_1" 1 PS)
+    (pin "GROUND_2" 2 PS)
+    (pin "OUTPUT" 3 PS)
+    (pin "VDD" 4 PS)
+   )
+  )
+  (symbol "ECS-TXO-20CSMV4-320-AY-TR"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 1300 100) (pt 1300 -200) (pt 200 -200) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1500 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1500 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "ECSTXO20CSMV4320AYTR"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -1 -0.8)
+      (pt 1 -0.8)
+      (pt 1 0.8)
+      (pt -1 0.8)
+      (pt -1 -0.8))))
+   (layer OCCA
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -2.225 2.025)
+      (pt 2.225 2.025)
+      (pt 2.225 -2.025)
+      (pt -2.225 -2.025)
+      (pt -2.225 2.025))))
+   (layer TSLK
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -1 -1.5)
+      (arc (pt -1.000 -1.500) (pt -1.050 -1.500) (pt -0.950 -1.400) (start 180.0) (sweep -90.0))
+      (pt -1 -1.4)
+      (arc (pt -1.000 -1.400) (pt -1.050 -1.500) (pt -0.950 -1.400) (start 180.0) (sweep 90.0))
+      (pt -1 -1.5)
+      (arc (pt -1.000 -1.500) (pt -1.050 -1.500) (pt -0.950 -1.400) (start 180.0) (sweep -90.0))
+      (pt -1 -1.4))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -0.2 0.8)
+      (pt 0.2 0.8))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -0.2 -0.8)
+      (pt 0.2 -0.8))))
+   (leg 1 (pt -0.910 -0.613) (padstack 0))
+   (leg 2 (pt 0.910 -0.613) (padstack 0))
+   (leg 3 (pt 0.910 0.613) (padstack 0))
+   (leg 4 (pt -0.910 0.613) (padstack 0))
+   (padstack 0
+    (plated false)
+    (pad (layer TCOP) (rectf 0.630 0.825 0 0 90.000))
+   )
+   (model "ECS-TXO-20CSMV4-320-AY-TR.stp"
+    (euler 90 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

@@ -1,0 +1,90 @@
+\clearpage
+\section{045 -- Backup alimentazione scheda: soluzione respinta, nessuna modifica hardware}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 10/11/2026\\
+Revisione & non indicata (decisione senza modifica hardware)\\
+Collegata a & entry 044 (backup alimentazione scheda, requisito)\\
+Stato & \tg{tagnote}{DECISIONE} \quad \tg{tagdone}{NESSUNA MODIFICA}\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item Pacco supercondensatori CPH3225A (\code{C415}\ldots\code{C424}) sulla net \code{RTC\_VBAT}, che alimenta solo \code{U404} (DS3231M).
+  \item Diodo \code{D401} (BAT54), che blocca la scarica del pacco verso \code{3V3}.
+  \item Rail \code{3V3} e \code{5V0}: condensatori esistenti \code{C36}, \code{C245}, \code{C256}, \code{C307}, \code{C202}, \code{C215}, \code{C231}, \code{C309}, \code{C33}.
+  \item Supervisore \code{IC205} (TPS3825-33) e net \code{RF\_SDN} (Si4464 in shutdown).
+  \item MCU STM32 (PVD, BOR), FRAM \code{U401} (FM25V10), PA \code{IC2} con \code{Q701}/APC.
+  \item Carichi residui: \code{TCAN3414}, \code{CH340E}, TCXO \code{Y201}, \code{TLV9051}.
+  \item Fogli: non indicati.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Nessuna modifica hardware. La soluzione proposta nell'entry 044 è \textbf{respinta}.
+
+\begin{center}
+\begin{tabular}{@{}p{3.2cm}p{5.8cm}p{5.8cm}@{}}
+\toprule
+Aspetto & Proposta 044 (respinta) & Stato 045 (confermato)\\
+\midrule
+Bulk su \code{5V0} & \SIrange{2.2}{3.3}{\milli\farad} aggiuntivi & Nessuna aggiunta; \code{C33} \SI{22}{\micro\farad} invariato\\
+Power-fail & Partitore dedicato & Nessuno; solo PVD interno STM32\\
+Bulk \code{3V3} & --- & Resta a \SI{3,3}{\volt} nominale, componenti esistenti\\
+Pacco CPH3225A & --- & Resta solo su \code{RTC\_VBAT} per \code{U404}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Analisi senza modifiche (dati da netlist)}
+Il pacco CPH3225A non può sostenere la scheda: \code{D401} blocca la scarica verso \code{3V3}, e collegarlo direttamente a \code{3V3} lo porterebbe al limite della tensione nominale (\SI{3,3}{\volt}). La tenuta al distacco dipende quindi solo dai condensatori esistenti.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Rail & Capacità totale & Componenti principali\\
+\midrule
+\code{3V3} & \SI{77,5}{\micro\farad} & \code{C36} \SI{47}{\micro\farad}, \code{C245} \SI{10}{\micro\farad}, \code{C256} \SI{10}{\micro\farad}, \code{C307} \SI{4,7}{\micro\farad}, \code{C202}/\code{C215}/\code{C231}/\code{C309} \SI{1}{\micro\farad} ciascuno, più ceramici piccoli\\
+\code{5V0} & \SI{22,2}{\micro\farad} & \code{C33} \SI{22}{\micro\farad}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Energia utile sul \code{3V3}, da \SI{2,9}{\volt} (soglia PVD STM32) a \SI{2,0}{\volt} (minimo FRAM FM25V10):
+\[
+E_{3V3} = \tfrac12 \cdot \SI{77,5}{\micro\farad}\cdot\left[(\SI{2,9}{\volt})^2-(\SI{2,0}{\volt})^2\right] \approx \SI{0,17}{\milli\joule}
+\]
+A questa si aggiungono circa \SI{0,1}{\milli\joule} dal \code{5V0} attraverso il buck, per un totale di circa \SI{0,25}{\milli\joule}.
+
+Con carico di circa \SI{30}{\milli\ampere} a circa \SI{2,5}{\volt} (PA e radio spenti) la finestra è di circa \SIrange{2}{4}{\milli\second}. Basta per scrivere circa \SIrange{1}{4}{\kilo\byte} su \code{U401}: \SI{1}{\kilo\byte} a \SI{16}{\mega\hertz} SPI richiede circa \SI{0,5}{\milli\second}. \code{IC205} (TPS3825-33) a \SI{2,93}{\volt} porta già \code{RF\_SDN} alto (Si4464 in shutdown), riducendo il carico.
+
+\subsubsection{Requisiti firmware (nessun hardware)}
+\begin{itemize}
+  \item PVD STM32 attivo a circa \SI{2,9}{\volt}, con interrupt.
+  \item BOR al livello minimo (circa \SI{1,7}{\volt}).
+  \item Nell'interrupt: prima spegnere il PA \code{IC2} (\code{Q701}/APC) e la trasmissione, poi scrivere lo stato minimo su FRAM.
+  \item Stato da salvare piccolo (pochi \si{\kilo\byte}).
+\end{itemize}
+
+\subsection{Motivazione}
+Decisione di Brik81 del 10/11/2026:
+\begin{quote}
+``no il bulk rimane a 3v3 usa quei componenti e basta non modifichiamo cerchiamo di capire e bona''
+\end{quote}
+Il bulk resta sul \code{3V3} con i componenti già presenti; si evita ogni modifica e si valuta la tenuta effettiva con l'analisi sopra e con la verifica al banco.
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Margine stretto.} Se il PA sta trasmettendo (centinaia di \si{\milli\ampere}) l'energia si esaurisce in meno di \SI{0,5}{\milli\second}: lo spegnimento del PA nell'interrupt PVD è obbligatorio e va fatto per primo.
+\end{critbox}
+\begin{notebox}
+I carichi residui (\code{TCAN3414}, \code{CH340E}, TCXO \code{Y201}, \code{TLV9051}) riducono la finestra stimata di \SIrange{2}{4}{\milli\second}. Nessun impatto su schematico, PCB o BOM.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Al banco: staccare l'alimentazione e misurare con oscilloscopio \code{3V3} e un GPIO di debug il tempo tra l'interrupt PVD e la fine della scrittura FRAM.
+  \item Verificare in firmware la configurazione di PVD (circa \SI{2,9}{\volt}) e BOR (livello minimo).
+  \item Verificare la sequenza nell'interrupt: spegnimento PA/trasmissione, poi scrittura su \code{U401}.
+\end{itemize}

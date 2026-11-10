@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP HMC349AMS8GE
+D High Isolation, Nonreflective, GaAs, SPDT Switch,100 MHz to 4 GHz
+K
+F https://www.analog.com/HMC349AMS8G/datasheet
+$ENDCMP
+#
+#End Doc Library

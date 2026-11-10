@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SN74AHC1G04DBVRE4
+D Inverter 1-Element CMOS 5-Pin SOT-23 T/R
+K
+F http://www.ti.com/general/docs/suppproductinfo.tsp?distId=26&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fsn74ahc1g04
+$ENDCMP
+#
+#End Doc Library

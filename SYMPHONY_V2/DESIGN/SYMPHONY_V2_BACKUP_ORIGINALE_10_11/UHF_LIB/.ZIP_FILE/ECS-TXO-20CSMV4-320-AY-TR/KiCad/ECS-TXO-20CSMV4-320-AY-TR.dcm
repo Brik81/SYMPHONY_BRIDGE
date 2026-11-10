@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ECS-TXO-20CSMV4-320-AY-TR
+D XTAL OSC TCXO 32.0000MHZ CLPSW
+K
+F 
+$ENDCMP
+#
+#End Doc Library

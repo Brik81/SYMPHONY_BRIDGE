@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "TQP3M9036"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2019-11-13-23:20:55)
+    (mountForm default
+        (footprintRef "SON50P200X200X95-9N-D")
+        (spec "System")
+    )
+)

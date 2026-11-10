@@ -1,0 +1,9 @@
+Manufacturer=Qorvo
+PartNumber=TQP3M9036
+PartCategory=Transistor
+PackageCategory=Small Outline No-lead
+PinCount=9
+Version=1.1
+Released=2018-09-13 17:33:27
+Downloaded=2026-06-11 07:55:45
+3D=Y

@@ -1,0 +1,9 @@
+Manufacturer=STMicroelectronics
+PartNumber=S2-LPCBQTR
+PartCategory=Integrated Circuit
+PackageCategory=Quad Flat No-Lead
+PinCount=25
+Version=2.1
+Released=2022-09-08 06:25:02
+Downloaded=2025-10-12 12:36:36
+3D=Y

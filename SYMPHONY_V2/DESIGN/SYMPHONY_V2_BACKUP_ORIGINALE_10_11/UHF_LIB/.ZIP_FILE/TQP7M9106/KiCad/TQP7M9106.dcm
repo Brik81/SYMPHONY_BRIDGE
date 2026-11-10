@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TQP7M9106
+D RF Amplifier IC CDMA, LTE, W-CDMA 50MHz ~ 1.5GHz 24-QFN (4x4), 4.75V ~ 5.25V
+K
+F https://www.qorvo.com/products/p/TQP7M9106#documents
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,9 @@
+Manufacturer=Infineon
+PartNumber=FM25V10-G
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=8
+Version=3.1
+Released=2017-02-20 10:01:26
+Downloaded=2026-06-19 21:53:20
+3D=Y

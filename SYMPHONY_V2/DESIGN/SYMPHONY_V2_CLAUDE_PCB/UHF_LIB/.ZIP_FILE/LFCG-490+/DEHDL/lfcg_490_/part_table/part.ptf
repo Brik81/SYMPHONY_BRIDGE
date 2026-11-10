@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'LFCG_490_'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Mini-Circuits", "LFCG-490+" (!) = "", "LFCG490", "Other", "139-LFCG-490+", "https://www.mouser.co.uk/ProductDetail/Mini-Circuits/LFCG-490%2b?qs=vmHwEFxEFR%252BNH1d71kamjA%3D%3D", "Signal Conditioning LTCC Low Pass Filter, DC - 490 MHz, 50O", "https://www.minicircuits.com/pdfs/LFCG-490+.pdf", "0.95 mm"
+END_PART
+
+END.

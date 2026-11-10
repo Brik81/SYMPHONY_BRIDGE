@@ -1,0 +1,9 @@
+Manufacturer=Texas Instruments
+PartNumber=TPS259474LRPWR
+PartCategory=Integrated Circuit
+PackageCategory=Other
+PinCount=14
+Version=1.6
+Released=2022-12-01 13:04:18
+Downloaded=2026-06-11 12:03:57
+3D=Y

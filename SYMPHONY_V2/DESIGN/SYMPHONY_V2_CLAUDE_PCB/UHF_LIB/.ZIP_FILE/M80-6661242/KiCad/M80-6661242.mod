@@ -1,0 +1,135 @@
+PCBNEW-LibModule-V1  2026-06-11 13:57:29
+# encoding utf-8
+Units mm
+$INDEX
+M80-66612YY
+$EndINDEX
+$MODULE M80-66612YY
+Po 0 0 0 15 6a2ab0b9 00000000 ~~
+Li M80-66612YY
+Cd M80-66612YY
+Kw Connector
+Sc 0
+At STD
+AR 
+Op 0 0 0
+T0 0 0 1.27 1.27 0 0.254 N V 21 N "J**"
+T1 0 0 1.27 1.27 0 0.254 N I 21 N "M80-66612YY"
+DS -8.05 2.6 8.05 2.6 0.2 24
+DS 8.05 2.6 8.05 7.8 0.2 24
+DS 8.05 7.8 -8.05 7.8 0.2 24
+DS -8.05 7.8 -8.05 2.6 0.2 24
+DS 8.05 2.6 8.05 7.8 0.1 21
+DS -8.05 7.8 -8.05 2.6 0.1 21
+DS 7.5 -1.75 7.5 -0.75 0.1 21
+DS 7.5 -0.75 6.5 -1.25 0.1 21
+DS 6.5 -1.25 7.5 -1.75 0.1 21
+DS 7.5 -1.75 7.5 -0.75 0.2 24
+DS 7.5 -0.75 6.5 -1.25 0.2 24
+DS 6.5 -1.25 7.5 -1.75 0.2 24
+DS -9.05 -2.8 9.05 -2.8 0.05 24
+DS 9.05 -2.8 9.05 8.85 0.05 24
+DS 9.05 8.85 -9.05 8.85 0.05 24
+DS -9.05 8.85 -9.05 -2.8 0.05 24
+$PAD
+Po 5 -1.25
+Sh "1" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 3 -1.25
+Sh "2" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 1 -1.25
+Sh "3" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -1 -1.25
+Sh "4" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -3 -1.25
+Sh "5" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -5 -1.25
+Sh "6" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 5 1.25
+Sh "7" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 3 1.25
+Sh "8" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 1 1.25
+Sh "9" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -1 1.25
+Sh "10" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -3 1.25
+Sh "11" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po -5 1.25
+Sh "12" R 1 1.5 0 0 0
+At SMD N 00888000
+Ne 0 ""
+$EndPAD
+$PAD
+Po 7.25 2.85
+Sh "13" C 0.45 0.45 0 0 900
+Dr 0.9 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+$EndPAD
+$PAD
+Po -7.25 2.85
+Sh "14" C 0.45 0.45 0 0 900
+Dr 0.9 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+$EndPAD
+$PAD
+Po 7.25 7.6
+Sh "15" C 0.45 0.45 0 0 900
+Dr 0.9 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+$EndPAD
+$PAD
+Po -7.25 7.6
+Sh "16" C 0.45 0.45 0 0 900
+Dr 0.9 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+$EndPAD
+$EndMODULE M80-66612YY
+$EndLIBRARY

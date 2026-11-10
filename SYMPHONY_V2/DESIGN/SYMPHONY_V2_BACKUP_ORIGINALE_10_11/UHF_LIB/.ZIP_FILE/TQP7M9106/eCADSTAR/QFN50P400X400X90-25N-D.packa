@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "TQP7M9106"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2026-03-20-10:20:13)
+    (mountForm default
+        (footprintRef "QFN50P400X400X90-25N-D")
+        (spec "System")
+    )
+)

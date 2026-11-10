@@ -1,0 +1,208 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "M80-6661242"
+   (description "Datamate L-Tek: 6+6 Pos Plug DIL Right-Angle SMT Connector Latches Gold+Tin")
+   (family "CON")
+   (package "M80-66612YY")
+   (attribute "Datasheet Link" "https://content.harwin.com/m/6e4b090b866b085f/original/DRG-01687-Technical-Drawing-Datasheet-M80-666-pdf.pdf")
+   (attribute "Geometry.Height" "5.85mm")
+   (attribute "Mouser Part Number" "855-M80-6661242")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Harwin/M80-6661242?qs=IQR8xM2KsGiyO%2F%252ByA7kSvw%3D%3D")
+   (attribute "Manufacturer_Name" "Harwin")
+   (attribute "Manufacturer_Part_Number" "M80-6661242")
+   (gate
+    (symbol "M80-6661242")
+    (pin "1" 1 PS)
+    (pin "2" 2 PS)
+    (pin "3" 3 PS)
+    (pin "4" 4 PS)
+    (pin "5" 5 PS)
+    (pin "6" 6 PS)
+    (pin "7" 7 PS)
+    (pin "8" 8 PS)
+    (pin "9" 9 PS)
+    (pin "10" 10 PS)
+    (pin "11" 11 PS)
+    (pin "12" 12 PS)
+   )
+  )
+  (symbol "M80-6661242"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 700 100) (pt 700 -600) (pt 200 -600) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 900 -500) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 900 -400) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 900 -300) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 900 -200) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 900 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 900 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -500) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -400) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -300) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -200) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "M80-66612YY"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt -8.05 -2.6)
+      (pt 8.05 -2.6)
+      (pt 8.05 -7.8)
+      (pt -8.05 -7.8)
+      (pt -8.05 -2.6))))
+   (layer TSLK
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt 8.05 -2.6)
+      (pt 8.05 -7.8))))
+   (layer TSLK
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -8.05 -7.8)
+      (pt -8.05 -2.6))))
+   (layer TSLK
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt 7.5 1.75)
+      (pt 7.5 0.75)
+      (pt 6.5 1.25)
+      (pt 7.5 1.75))))
+   (layer TASM
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt 7.5 1.75)
+      (pt 7.5 0.75)
+      (pt 6.5 1.25)
+      (pt 7.5 1.75))))
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -9.05 2.8)
+      (pt 9.05 2.8)
+      (pt 9.05 -8.85)
+      (pt -9.05 -8.85)
+      (pt -9.05 2.8))))
+   (leg 1 (pt 5 1.25) (padstack 0))
+   (leg 2 (pt 3 1.25) (padstack 0))
+   (leg 3 (pt 1 1.25) (padstack 0))
+   (leg 4 (pt -1 1.25) (padstack 0))
+   (leg 5 (pt -3 1.25) (padstack 0))
+   (leg 6 (pt -5 1.25) (padstack 0))
+   (leg 7 (pt 5 -1.25) (padstack 0))
+   (leg 8 (pt 3 -1.25) (padstack 0))
+   (leg 9 (pt 1 -1.25) (padstack 0))
+   (leg 10 (pt -1 -1.25) (padstack 0))
+   (leg 11 (pt -3 -1.25) (padstack 0))
+   (leg 12 (pt -5 -1.25) (padstack 0))
+   (leg 13 (pt 7.25 -2.85) (padstack 13))
+   (leg 14 (pt -7.25 -2.85) (padstack 14))
+   (leg 15 (pt 7.25 -7.6) (padstack 15))
+   (leg 16 (pt -7.25 -7.6) (padstack 16))
+   (padstack 0
+    (plated false)
+    (pad (layer TCOP) (rectf 1 1.5 0 0 90))
+   )
+   (padstack 13
+    (hole 0.9)
+    (plated false)
+    (pad (layer TCOP) (round 0.45))
+    (pad (layer INNER) (round 0.45))
+    (pad (layer BCOP) (round 0.45))
+   )
+   (padstack 14
+    (hole 0.9)
+    (plated false)
+    (pad (layer TCOP) (round 0.45))
+    (pad (layer INNER) (round 0.45))
+    (pad (layer BCOP) (round 0.45))
+   )
+   (padstack 15
+    (hole 0.9)
+    (plated false)
+    (pad (layer TCOP) (round 0.45))
+    (pad (layer INNER) (round 0.45))
+    (pad (layer BCOP) (round 0.45))
+   )
+   (padstack 16
+    (hole 0.9)
+    (plated false)
+    (pad (layer TCOP) (round 0.45))
+    (pad (layer INNER) (round 0.45))
+    (pad (layer BCOP) (round 0.45))
+   )
+   (model "M80-6661242.stp"
+    (euler 180 0 0)
+    (offset 0.019999999552965164 4.179999828338623 2.9800000190734863)
+   )
+  )
+ )
+)

@@ -1,0 +1,10 @@
+(unit MM)
+
+(package "TCM163AX"
+    (type UNDEF)
+    (uver 2)
+    (mountForm default
+        (footprintRef "TCM163AX")
+        (spec "default")
+    )
+)

@@ -1,0 +1,16 @@
+.ECS-TXO-20CSMV4-320-AY-TR :1 ;XTAL OSC TCXO 32.0000MHZ CLPSW
+ECSTXO20CSMV4320AYTR
+*STM Y
+*NGS
+*PLB 1="GROUND_1" 2="GROUND_2" 3="OUTPUT" 4="VDD"
+*MXP 4
+*DFN ECS-TXO-20CSMV4-320-AY-TR
+~!Farnell Part Number (-)
+~!Farnell Price/Stock (-)
+~!Manufacturer_Name (ECS)
+~!Manufacturer_Part_Number (ECS-TXO-20CSMV4-320-AY-TR)
+~!Link Datasheet (-)
+~!Height (0.8mm)
+~!3D_Model (ECS-TXO-20CSMV4-320-AY-TR)
+ECS-TXO-20CSMV4-320-AY-TR
+1.1!U 2.1!U 3.1!U 4.1!U 

@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP GRF5604
+D Excellent OP1dB/PSAT 190 mA Native Mode Quiescent Current Consumption 5 V Supply Voltage 50  Single-Ended Input/Output Impedances Digital Shutdown -40 to 85 C Operating Temperature Range Compact 3 x 3 mm QFN-16 Package Process: InGaP HBT
+K
+F 
+$ENDCMP
+#
+#End Doc Library

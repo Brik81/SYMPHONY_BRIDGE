@@ -1,0 +1,9 @@
+Manufacturer=Kyocera AVX
+PartNumber=CX2016DB24000D0FLJC6
+PartCategory=Crystal or Oscillator
+PackageCategory=Other
+PinCount=4
+Version=2.3
+Released=2019-02-05 23:07:24
+Downloaded=2025-10-12 17:26:24
+3D=Y

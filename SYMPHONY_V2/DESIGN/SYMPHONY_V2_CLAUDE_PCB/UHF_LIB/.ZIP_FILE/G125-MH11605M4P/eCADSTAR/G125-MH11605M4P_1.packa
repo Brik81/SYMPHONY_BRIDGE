@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "G125-MH11605M4P"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2024-10-24-12:51:28)
+    (mountForm default
+        (footprintRef "G125-MH11605M4P_1")
+        (spec "System")
+    )
+)

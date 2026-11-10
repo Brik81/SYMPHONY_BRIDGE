@@ -1,0 +1,16 @@
+.SN74AHC1G04DBVRE4 :1 ;Inverter 1-Element CMOS 5-Pin SOT-23 T/R
+SOT95P280X145-5N
+*STM IC
+*NGS
+*PLB 1="NC" 2="A" 3="GND" 4="Y" 5="VCC"
+*MXP 5
+*DFN SN74AHC1G04DBVRE4
+~!Mouser Part Number (595-SN74AHC1G04DBVRE)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Texas-Instruments/SN74AHC1G04DBVRE4?qs=PVVDbbWpW3K%252BS%2Feykj44gw%3D%3D)
+~!Manufacturer_Name (Texas Instruments)
+~!Manufacturer_Part_Number (SN74AHC1G04DBVRE4)
+~!Link Datasheet (http://www.ti.com/general/docs/suppproductinfo.tsp?distId=26&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fsn74ahc1g04)
+~!Height (1.45mm)
+~!3D_Model (SN74AHC1G04DBVRE4)
+SN74AHC1G04DBVRE4
+1.1!U 2.1!U 3.1!U 4.1!U 5.1!U 

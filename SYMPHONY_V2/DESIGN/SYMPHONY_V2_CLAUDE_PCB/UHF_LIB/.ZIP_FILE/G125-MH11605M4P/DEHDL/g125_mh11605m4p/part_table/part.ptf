@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'G125_MH11605M4P'
+CLASS = IO
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Harwin", "G125-MH11605M4P" (!) = "", "G125-MH11605M4P_1", "Other", "855-G125MH1165M4PM4P", "https://www.mouser.co.uk/ProductDetail/Harwin/G125-MH11605M4P?qs=vHuUswq2%252BszmOoz18%252BqG2Q%3D%3D", "Gecko-SL: 8+8 Pos Plug DIL Right-Angle 3.2mm THT Connector Screw-Lok Board Mount", "https://content.harwin.com/m/667f1be9427fb768/original/DRG-02921-Technical-Drawing-Datasheet-G125-MH1XX05M4P-pdf.pdf", "5.3 mm"
+END_PART
+
+END.

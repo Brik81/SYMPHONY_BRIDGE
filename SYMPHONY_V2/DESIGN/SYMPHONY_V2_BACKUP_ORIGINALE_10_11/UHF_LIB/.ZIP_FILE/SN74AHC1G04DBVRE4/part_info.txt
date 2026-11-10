@@ -1,0 +1,9 @@
+Manufacturer=Texas Instruments
+PartNumber=SN74AHC1G04DBVRE4
+PartCategory=Integrated Circuit
+PackageCategory=SOT23 (5-Pin)
+PinCount=5
+Version=1.1
+Released=2021-10-02 11:11:37
+Downloaded=2025-10-15 20:15:01
+3D=Y
