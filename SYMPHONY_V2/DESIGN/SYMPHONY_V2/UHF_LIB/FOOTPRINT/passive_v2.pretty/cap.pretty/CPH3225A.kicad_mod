@@ -8,7 +8,7 @@
 	(property "Reference" "C**"
 		(at -0.25 -3.2 0)
 		(layer "F.SilkS")
-		(uuid "d9229432-59f1-4031-b8c6-95eae2f5f141")
+		(uuid "64a0d012-8268-4550-bd88-b0015f8f08c9")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -20,7 +20,7 @@
 		(at -0.25 0 0)
 		(layer "F.SilkS")
 		(hide yes)
-		(uuid "4c57a8d7-b08a-4275-b5eb-91b2628bc612")
+		(uuid "c7972f8c-a632-4141-ab73-0cf1f2cc627f")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -32,7 +32,7 @@
 		(at -0.3 0.3 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "3f628fd6-8a41-4b20-a8e3-ca21d5df5755")
+		(uuid "79ee6de8-09b2-48bb-8a79-346e6c0d1af0")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -43,7 +43,7 @@
 		(at -0.3 0.3 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "73131650-0461-42db-bd6c-98e6fd3ffad5")
+		(uuid "9d9b65c2-f3bf-41de-9927-78036e5f73b1")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -60,7 +60,7 @@
 			(type solid)
 		)
 		(layer "F.SilkS")
-		(uuid "120c0688-e31f-44ca-9f34-fb7ee6b39fcc")
+		(uuid "3cc182b0-32c1-447a-b56c-581b66071c3b")
 	)
 	(fp_line
 		(start -1.6 1.25)
@@ -70,7 +70,7 @@
 			(type solid)
 		)
 		(layer "F.SilkS")
-		(uuid "9542a1ca-c469-4198-ac46-4ddbf0d87235")
+		(uuid "1d2cbe02-817a-4385-ad2e-d8f0480112a0")
 	)
 	(fp_rect
 		(start -1.24 -1.23)
@@ -81,7 +81,7 @@
 		)
 		(fill yes)
 		(layer "F.SilkS")
-		(uuid "833772f4-64b0-4923-a236-f46ea25bed4c")
+		(uuid "0adf07f9-4c71-47d7-84c8-279eca61eb01")
 	)
 	(fp_rect
 		(start -1.24 0.76)
@@ -92,47 +92,47 @@
 		)
 		(fill yes)
 		(layer "F.SilkS")
-		(uuid "bb4ed948-bb85-4b06-93a1-250983fb9142")
+		(uuid "86e528ac-47c7-48ce-ba86-f7950416716f")
 	)
 	(fp_line
-		(start -2.8 -1.75)
-		(end 2.3 -1.75)
+		(start -2.3 -1.6)
+		(end 2.2 -1.6)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
 		(layer "F.CrtYd")
-		(uuid "aecd4d28-da13-4316-8bbd-8ba0d90b852d")
+		(uuid "8b5c1c9d-1ada-4f13-aabd-77e6d73680db")
 	)
 	(fp_line
-		(start -2.8 1.75)
-		(end -2.8 -1.75)
+		(start -2.3 1.6)
+		(end -2.3 -1.6)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
 		(layer "F.CrtYd")
-		(uuid "c1a4f2c3-377c-4d1e-9f55-877cf98dc57f")
+		(uuid "9641e34a-0d5d-4b58-a6d6-7b1f43e9fd0f")
 	)
 	(fp_line
-		(start 2.3 -1.75)
-		(end 2.3 1.75)
+		(start 2.2 -1.6)
+		(end 2.2 1.6)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
 		(layer "F.CrtYd")
-		(uuid "cefaba9e-7598-4f70-bd2c-0f926f239297")
+		(uuid "c64b0767-0766-4ab4-82f8-c45b721249cb")
 	)
 	(fp_line
-		(start 2.3 1.75)
-		(end -2.8 1.75)
+		(start 2.2 1.6)
+		(end -2.3 1.6)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
 		(layer "F.CrtYd")
-		(uuid "8653ed3b-4913-4161-9aaf-1b5c23a97007")
+		(uuid "14b223a3-4c43-42ab-bc7d-a87be7aebf0b")
 	)
 	(fp_line
 		(start -1.6 -1.25)
@@ -142,7 +142,7 @@
 			(type solid)
 		)
 		(layer "F.Fab")
-		(uuid "aff70279-79a1-4899-bd9b-910047b468f5")
+		(uuid "bd71bd6a-7997-4a60-9535-05441e7e46af")
 	)
 	(fp_line
 		(start -1.6 1.25)
@@ -152,7 +152,7 @@
 			(type solid)
 		)
 		(layer "F.Fab")
-		(uuid "d9cb0eea-18ea-4949-bfd4-8f8defe3b7a5")
+		(uuid "27f2d954-3990-4fb4-a3e4-da13f53a7de5")
 	)
 	(fp_line
 		(start 1.6 -1.25)
@@ -162,7 +162,7 @@
 			(type solid)
 		)
 		(layer "F.Fab")
-		(uuid "959b21dd-aa50-421b-8390-33ebf5fd66df")
+		(uuid "2e234c3f-2f5e-49b4-b1f1-a0614d1a50e9")
 	)
 	(fp_line
 		(start 1.6 1.25)
@@ -172,12 +172,12 @@
 			(type solid)
 		)
 		(layer "F.Fab")
-		(uuid "2aba1484-360f-4061-a982-c18169da637a")
+		(uuid "c62532c0-1183-4bd1-8f8d-5137326eac9a")
 	)
 	(fp_text user "${REFERENCE}"
 		(at -0.25 3.8 0)
 		(layer "F.Fab")
-		(uuid "0811a06e-b5f7-47b9-8d74-a63858880b94")
+		(uuid "205bbb81-e5b5-470d-acc1-cefbce6e70c0")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -189,13 +189,13 @@
 		(at -1.235 0)
 		(size 1.67 1.4)
 		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "21b639ea-5740-4ed1-875c-71d52d1746a2")
+		(uuid "2c8096d3-6882-4c76-a8d8-bbb8f57d73a8")
 	)
 	(pad "2" smd rect
 		(at 1.185 0)
 		(size 1.51 1.4)
 		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "f0c355dd-8ffd-47fe-8b69-85c47737368c")
+		(uuid "dc505861-62cf-4d45-a56d-9615cdce7fbb")
 	)
 	(embedded_fonts no)
 	(model "${KIPRJMOD}/UHF_LIB/3D/CPH3225A.stp"

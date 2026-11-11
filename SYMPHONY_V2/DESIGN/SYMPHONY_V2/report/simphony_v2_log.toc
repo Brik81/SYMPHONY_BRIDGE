@@ -186,3 +186,80 @@
 \contentsline {subsection}{Motivazione}{80}{subsection*.184}%
 \contentsline {subsection}{Impatti e criticit\`a}{80}{subsection*.185}%
 \contentsline {subsection}{Verifiche da fare}{80}{subsection*.186}%
+\contentsline {section}{Rev. 1.43 -- Revisione finale indipendente: P-02, P-03, P-05, P-06}{81}{section*.187}%
+\contentsline {subsection}{Data e revisione}{81}{subsection*.188}%
+\contentsline {subsection}{Titolo}{81}{subsection*.189}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{81}{subsection*.190}%
+\contentsline {subsection}{Cosa è cambiato}{81}{subsection*.191}%
+\contentsline {subsubsection}{P-06 -- R413 e R205 senza flag \emph {Exclude from BOM}}{81}{subsubsection*.192}%
+\contentsline {subsubsection}{P-05 / R-23 -- Connettore MMCX J201}{81}{subsubsection*.193}%
+\contentsline {subsubsection}{P-02 -- Commutazione TX$\rightarrow $RX}{81}{subsubsection*.194}%
+\contentsline {subsubsection}{P-03 -- Armoniche del deviatore HMC349A}{81}{subsubsection*.195}%
+\contentsline {subsubsection}{Altri punti della revisione, già coperti da decisioni precedenti}{82}{subsubsection*.196}%
+\contentsline {subsection}{Motivazione}{82}{subsection*.197}%
+\contentsline {subsection}{Impatti e criticità}{82}{subsection*.198}%
+\contentsline {subsection}{Verifiche da fare}{82}{subsection*.199}%
+\contentsline {section}{Rev. 1.44 -- P-08: R29 a 22k 1 \%; P-10, P-12, P-15 chiusi}{83}{section*.200}%
+\contentsline {subsection}{Data e revisione}{83}{subsection*.201}%
+\contentsline {subsection}{Titolo}{83}{subsection*.202}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{83}{subsection*.203}%
+\contentsline {subsection}{Cosa è cambiato}{83}{subsection*.204}%
+\contentsline {subsubsection}{P-08 -- R29 a 22k 1\,\%}{83}{subsubsection*.205}%
+\contentsline {subsubsection}{P-10 -- Condensatore sull'APC/VCC1 del PA}{83}{subsubsection*.206}%
+\contentsline {subsubsection}{P-12 -- CS flottanti durante reset/boot}{83}{subsubsection*.207}%
+\contentsline {subsubsection}{P-15 -- Riferimenti senza codice in BOM}{83}{subsubsection*.208}%
+\contentsline {subsection}{Motivazione}{84}{subsection*.209}%
+\contentsline {subsection}{Impatti e criticità}{84}{subsection*.210}%
+\contentsline {subsection}{Verifiche da fare}{84}{subsection*.211}%
+\contentsline {section}{Rev. 1.45 -- Revisione del 04/11: R243 a 220 ohm, R409/R410 rimosse, nota L-01}{85}{section*.212}%
+\contentsline {subsection}{Data e revisione}{85}{subsection*.213}%
+\contentsline {subsection}{Titolo}{85}{subsection*.214}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{85}{subsection*.215}%
+\contentsline {subsection}{Cosa è cambiato}{85}{subsection*.216}%
+\contentsline {subsubsection}{P03 -- Pull-up esterni del DS3231M (U404)}{85}{subsubsection*.217}%
+\contentsline {subsubsection}{P09 -- R243 a \SI {220}{\ohm }}{86}{subsubsection*.218}%
+\contentsline {subsubsection}{P20 -- Note obsolete sul foglio POWER}{86}{subsubsection*.219}%
+\contentsline {subsubsection}{P08 -- Rete d'uscita del PA}{86}{subsubsection*.220}%
+\contentsline {subsubsection}{Verifica dell'esecuzione}{86}{subsubsection*.221}%
+\contentsline {subsection}{Decisioni senza modifica}{86}{subsection*.222}%
+\contentsline {subsubsection}{P11 -- Filtro RX C209--L201--C210}{86}{subsubsection*.223}%
+\contentsline {subsubsection}{P12 -- Alimentazione LNA TQP3M9036 (Q201)}{87}{subsubsection*.224}%
+\contentsline {subsubsection}{P14 -- LED D203 su \textasciitilde {}RESET di IC205}{87}{subsubsection*.225}%
+\contentsline {subsubsection}{P18 -- Q701, descrizione e codice}{87}{subsubsection*.226}%
+\contentsline {subsubsection}{P19 -- QPA9510 (IC2) pin 7 e pin 8}{87}{subsubsection*.227}%
+\contentsline {subsection}{Punti già coperti da decisioni precedenti}{87}{subsection*.228}%
+\contentsline {subsection}{Motivazione}{87}{subsection*.229}%
+\contentsline {subsection}{Impatti e criticità}{88}{subsection*.230}%
+\contentsline {subsection}{Verifiche da fare}{88}{subsection*.231}%
+\contentsline {section}{Backup alimentazione scheda: requisito e soluzione proposta}{89}{section*.232}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{89}{subsection*.233}%
+\contentsline {subsection}{Cosa \`e cambiato}{89}{subsection*.234}%
+\contentsline {subsection}{Motivazione}{89}{subsection*.235}%
+\contentsline {subsection}{Impatti e criticit\`a}{90}{subsection*.236}%
+\contentsline {subsection}{Verifiche da fare}{90}{subsection*.237}%
+\contentsline {section}{045 -- Backup alimentazione scheda: soluzione respinta, nessuna modifica hardware}{91}{section*.238}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{91}{subsection*.239}%
+\contentsline {subsection}{Cosa è cambiato}{91}{subsection*.240}%
+\contentsline {subsubsection}{Analisi senza modifiche (dati da netlist)}{91}{subsubsection*.241}%
+\contentsline {subsubsection}{Requisiti firmware (nessun hardware)}{91}{subsubsection*.242}%
+\contentsline {subsection}{Motivazione}{92}{subsection*.243}%
+\contentsline {subsection}{Impatti e criticità}{92}{subsection*.244}%
+\contentsline {subsection}{Verifiche da fare}{92}{subsection*.245}%
+\contentsline {section}{046 -- Banco supercap RTC ridotto da 10 a 8 pezzi}{93}{section*.246}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{93}{subsection*.247}%
+\contentsline {subsection}{Cosa è cambiato}{93}{subsection*.248}%
+\contentsline {subsection}{Motivazione}{93}{subsection*.249}%
+\contentsline {subsection}{Impatti e criticità}{94}{subsection*.250}%
+\contentsline {subsection}{Verifiche da fare}{94}{subsection*.251}%
+\contentsline {section}{047 -- Stackup JLC08161H-2116 e piste RF microstrip \SI {50}{\ohm } a \SI {0,20}{\milli \metre }}{95}{section*.252}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{95}{subsection*.253}%
+\contentsline {subsection}{Cosa è cambiato}{95}{subsection*.254}%
+\contentsline {subsection}{Motivazione}{96}{subsection*.255}%
+\contentsline {subsection}{Impatti e criticità}{96}{subsection*.256}%
+\contentsline {subsection}{Verifiche da fare}{96}{subsection*.257}%
+\contentsline {section}{048 -- Regole DRC RF allentate verso i pad (routing ai componenti RF)}{97}{section*.258}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{97}{subsection*.259}%
+\contentsline {subsection}{Cosa è cambiato}{97}{subsection*.260}%
+\contentsline {subsection}{Motivazione}{97}{subsection*.261}%
+\contentsline {subsection}{Impatti e criticità}{97}{subsection*.262}%
+\contentsline {subsection}{Verifiche da fare}{98}{subsection*.263}%

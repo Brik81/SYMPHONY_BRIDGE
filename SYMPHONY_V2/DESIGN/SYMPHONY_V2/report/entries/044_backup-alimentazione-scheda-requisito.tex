@@ -17,16 +17,16 @@ Nessuna modifica eseguita. Stato verificato da netlist il 10/11/2026 e modifiche
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}lXX@{}}
 \toprule
-Voce & Stato attuale & Proposta (non approvata) \
+Voce & Stato attuale & Proposta (non approvata) \\
 \midrule
-Percorso backup & \code{3V3} $\to$ \code{D401} $\to$ \code{R412} (\SI{1}{\kilo\ohm}) $\to$ \code{RTC\_VBAT} $\to$ \code{C415}--\code{C424} $\to$ solo \code{U404.6} & Pacco CPH3225A mantenuto solo per RTC \
-Pacco CPH3225A & 10 $\times$ \SI{11}{\milli\farad}, \SI{3.3}{\volt}; totale \SI{110}{\milli\farad}, ESR $\approx \SI{16}{\ohm}$ (\SI{160}{\ohm} ciascuno) & invariato \
-Autonomia RTC & \SIrange{4.9}{12.4}{\hour} (calcolata) & invariata \
-Bulk su \code{5V0} & assente & \SIrange{2.2}{3.3}{\milli\farad} elettrolitico/polimerico \SI{10}{\volt}, oppure supercap \SI{0.1}{\farad} \SI{5.5}{\volt} low-ESR per margine \
-Segnale power-fail verso MCU & assente & partitore da \code{5V0} (es. \SI{100}{\kilo\ohm}/\SI{39}{\kilo\ohm}, soglia $\approx \SI{4.3}{\volt}$ con VREFINT \SI{1.2}{\volt}) su ingresso COMP o EXTI di \code{U301}; pin da scegliere \
-Inrush bulk & \code{C4} (SS di \code{IC4}), \code{R44} \SI{33}{\kilo\ohm} (ILIM) & rivedere \code{C4} (formula da datasheet TPS2121) \
-\code{U301} VBAT & \code{3V3} diretto & facoltativo: su \code{RTC\_VBAT} \
-Firmware & --- & all'interrupt: spegnere PA e Si4464, salvare lo stato su FRAM \code{U401} \
+Percorso backup & \code{3V3} $\to$ \code{D401} $\to$ \code{R412} (\SI{1}{\kilo\ohm}) $\to$ \code{RTC\_VBAT} $\to$ \code{C415}--\code{C424} $\to$ solo \code{U404.6} & Pacco CPH3225A mantenuto solo per RTC \\
+Pacco CPH3225A & 10 $\times$ \SI{11}{\milli\farad}, \SI{3.3}{\volt}; totale \SI{110}{\milli\farad}, ESR $\approx \SI{16}{\ohm}$ (\SI{160}{\ohm} ciascuno) & invariato \\
+Autonomia RTC & \SIrange{4.9}{12.4}{\hour} (calcolata) & invariata \\
+Bulk su \code{5V0} & assente & \SIrange{2.2}{3.3}{\milli\farad} elettrolitico/polimerico \SI{10}{\volt}, oppure supercap \SI{0.1}{\farad} \SI{5.5}{\volt} low-ESR per margine \\
+Segnale power-fail verso MCU & assente & partitore da \code{5V0} (es. \SI{100}{\kilo\ohm}/\SI{39}{\kilo\ohm}, soglia $\approx \SI{4.3}{\volt}$ con VREFINT \SI{1.2}{\volt}) su ingresso COMP o EXTI di \code{U301}; pin da scegliere \\
+Inrush bulk & \code{C4} (SS di \code{IC4}), \code{R44} \SI{33}{\kilo\ohm} (ILIM) & rivedere \code{C4} (formula da datasheet TPS2121) \\
+\code{U301} VBAT & \code{3V3} diretto & facoltativo: su \code{RTC\_VBAT} \\
+Firmware & --- & all'interrupt: spegnere PA e Si4464, salvare lo stato su FRAM \code{U401} \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -41,11 +41,11 @@ Il pacco attuale non pu\`o alimentare la scheda: con ESR $\approx \SI{16}{\ohm}$
 \begin{center}
 \begin{tikzpicture}[node distance=9mm and 11mm,>=Stealth,
   blk/.style={draw=accent,rounded corners=2pt,align=center,minimum height=8mm,font=\small\sffamily,fill=accent!6}]
-  \node[blk] (in) {TPS2121\\code{IC4}};
-  \node[blk,right=of in] (bus) {Net \code{5V0}\+ bulk (proposto)};
-  \node[blk,right=of bus] (buck) {TPSM863257\\code{IC3}};
-  \node[blk,right=of buck] (mcu) {\code{3V3}\\code{U301}, \code{U401}};
-  \node[blk,below=of bus,fill=boxwarnbg,draw=boxwarn] (pf) {Partitore\power-fail};
+  \node[blk] (in) {TPS2121\\ \code{IC4}};
+  \node[blk,right=of in] (bus) {Net \code{5V0}\\ + bulk (proposto)};
+  \node[blk,right=of bus] (buck) {TPSM863257\\ \code{IC3}};
+  \node[blk,right=of buck] (mcu) {\code{3V3}\\ \code{U301},\code{U401}};
+  \node[blk,below=of bus,fill=boxwarnbg,draw=boxwarn] (pf) {Partitore\\ power-fail};
   \draw[->] (in)--(bus); \draw[->] (bus)--(buck); \draw[->] (buck)--(mcu);
   \draw[->] (bus)--(pf); \draw[->] (pf)-|(mcu) node[pos=.25,above,font=\scriptsize]{COMP/EXTI};
 \end{tikzpicture}

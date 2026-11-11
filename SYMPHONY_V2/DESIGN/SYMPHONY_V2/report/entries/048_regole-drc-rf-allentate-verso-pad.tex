@@ -1,0 +1,73 @@
+\clearpage
+\section{048 -- Regole DRC RF allentate verso i pad (routing ai componenti RF)}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 11/11/2026\\
+Revisione & non indicata\\
+Redatto da & Claude Code\\
+Approvazione & Brik81\\
+Stato & \tg{tagdone}{MODIFICA ESEGUITA} \quad \tg{tagwarn}{CRITICITÀ APERTE}\\
+\bottomrule
+\end{tabularx}
+
+Seguito della entry 047 (stackup JLC08161H-2116, piste RF microstrip \SI{0,20}{\milli\metre}).
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item File: \code{SYMPHONY.kicad\_dru}, sezione 7 (NET CLASS RF). Nessun altro file modificato.
+  \item Net class \code{RF\_50R\_CPWG} (piste RF microstrip \SI{50}{\ohm}).
+  \item Componenti interessati dal routing: QFN a passo \SI{0,5}{\milli\metre}, passivi 0402, connettori RF.
+  \item Correzione alla 047: net \code{RF\_PA\_OUT}, IC2 (QPA9510) pin 9--12, L242, C260, L243, net \code{RF\_PA\_MATCH}.
+  \item Backup precedente alla 047: \code{report\_src/bak\_stackup\_2116/}. Nessun nuovo backup per questa modifica (il diff è limitato alle due regole).
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.6cm}p{5.7cm}p{5.7cm}@{}}
+\toprule
+Regola & Prima & Dopo\\
+\midrule
+``RF microstrip clearance 0.35'' & condizione \code{A.NetClass == 'RF\_50R\_CPWG' \&\& A.Type == 'Track' \&\& B.Net != A.Net}: \SI{0,35}{\milli\metre} verso qualsiasi oggetto di altra net, pad compresi & aggiunta \code{\&\& B.Type != 'Pad'}: \SI{0,35}{\milli\metre} solo verso piste, via e zone di altre net; verso i pad vale la clearance ECSS esterna generale di \SI{0,20}{\milli\metre}\\
+``RF microstrip larghezza 0.20'' & \code{track\_width} min \SI{0,19}{\milli\metre} / opt \SI{0,20}{\milli\metre} / max \SI{0,21}{\milli\metre} & min \SI{0,20}{\milli\metre} / opt \SI{0,20}{\milli\metre}, nessun massimo\\
+Commenti nel file & versione 047 & aggiornati con data e motivazione\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Verifica.} DRC con kicad-cli eseguito: sintassi delle regole OK, nessuna violazione di clearance o larghezza dovuta alle regole RF. Le uniche violazioni RF presenti sono via \code{RF\_XIN} contro la zona GND interna non ancora riempita, preesistenti e legate al routing in corso.
+
+\subsection{Motivazione}
+Con le regole della 047 non era possibile collegare le piste RF ai pin dei componenti. Su un QFN a passo \SI{0,5}{\milli\metre} una pista da \SI{0,20}{\milli\metre} che entra al centro di un pad da \SI{0,25}{\milli\metre} sta a circa \SI{0,275}{\milli\metre} dal pad vicino, cioè meno di \SI{0,35}{\milli\metre}: impossibile da rispettare. Il massimo di \SI{0,21}{\milli\metre} sulla larghezza impediva inoltre allargamenti e raccordi sui pad di connettori e componenti.
+
+\textbf{Richiesta di Brik81 (testuale):} ``ascolta, va bene le rule stringenti per RF ma io cosi non riesco a connettere le tracce cojn i vari micro, allenta le rule''.
+
+La modifica è stata eseguita dall'agente principale.
+
+\subsubsection*{Correzione alla entry 047: \code{RF\_PA\_OUT}}
+La criticità della 047 (``\code{RF\_PA\_OUT} a \SI{1,0}{\milli\metre} $\approx$ \SIrange{20}{22}{\ohm}, da rivedere'') era un \textbf{errore di analisi}. \code{RF\_PA\_OUT} è il nodo di uscita del PA QPA9510 (IC2 pin 9--12 in parallelo), \emph{prima} della rete di adattamento. Vi sono collegati:
+\begin{itemize}
+  \item L242: choke \SI{1}{\micro\henry} di alimentazione del collettore, corrente DC fino a circa \SI{1}{\ampere} in TX;
+  \item C260: \SI{27}{\pico\farad} shunt;
+  \item L243: \SI{2,7}{\nano\henry} serie (valori Qorvo EVB-02).
+\end{itemize}
+I \SI{50}{\ohm} si ottengono solo dopo L243 (net \code{RF\_PA\_MATCH}). Su \code{RF\_PA\_OUT} l'impedenza è di pochi ohm e la pista da \SI{1,0}{\milli\metre} è corretta (bassa induttanza, corrente DC, unisce 4 pad del QFN). \textbf{Nessuna modifica}: \code{RF\_PA\_OUT} resta \SI{1,0}{\milli\metre}.
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Deroghe future.} Se il routing richiede ulteriori deroghe (per esempio piste RF a meno di \SI{0,20}{\milli\metre} in uscita da un pad), vanno decise da Brik81: \SI{0,20}{\milli\metre} è il minimo ECSS sui layer esterni.
+\end{critbox}
+\begin{notebox}
+\textbf{Isolamento verso i pad.} Verso i pad la distanza RF scende a \SI{0,20}{\milli\metre}: il controllo di \SI{0,35}{\milli\metre} ($\approx 3h$) resta solo verso piste, via e zone di altre net.\\
+\textbf{Via \code{RF\_XIN}.} Violazioni contro la zona GND interna non ancora riempita: da riverificare dopo il riempimento zone.\\
+\textbf{Layout PA.} Pista \code{RF\_PA\_OUT} corta; C260 e L243 alle distanze della EVB Qorvo; disaccoppiamento di L242 vicino; GND pieno su In1 con molti via sotto il PA.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Riempire le zone e rilanciare il DRC, controllando le violazioni di \code{RF\_XIN}.
+  \item Completare il routing RF ai pin dei QFN e dei passivi 0402 con le nuove regole.
+  \item Layout PA: distanze di C260 e L243 come da EVB Qorvo, disaccoppiamento di L242, via GND sotto il PA.
+  \item Segnalare a Brik81 ogni caso che richieda piste RF sotto \SI{0,20}{\milli\metre}.
+\end{itemize}

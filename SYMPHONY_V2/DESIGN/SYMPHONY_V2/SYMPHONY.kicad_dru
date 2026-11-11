@@ -1,7 +1,8 @@
 (version 1)
 # =====================================================================
 #  Regole DRC custom KiCad  -  ECSS-Q-ST-70-12C Rev.1 (30 Apr 2025)  +  JLCPCB senza sovrapprezzo
-#  Scheda: 4 layer, 1.6 mm, stackup JLC04161H-3313A, rame est. 1 oz / int. 0.5 oz, FR4
+#  Scheda: 8 layer, 1.6 mm, stackup JLC08161H-2116 (FR-4 TG155 NP-155F), rame est. 1 oz / int. 0.5 oz
+#  (fino all'11/11/2026 il commento citava JLC04161H-3313A a 4 layer: superato)
 #  Ipotesi: tensioni <= 30 V di picco (13.8.2b), isolamento "standard" (non "reliable" 13.9),
 #           normal pitch, conformal coating sui layer esterni (13.8.4a).
 #  Valori = "as-designed" (Tabella 13-7) e, se piu' restrittivo, minimo JLCPCB.
@@ -114,21 +115,34 @@
     (constraint edge_clearance (min 0.2mm)))
 
 # ---------------------------------------------------------------------
-# 7) NET CLASS RF  (stackup JLC04161H-3313A, L1 riferito a L2 = GND)
+# 7) NET CLASS RF  (stackup JLC08161H-2116: F.Cu riferito a In1 = GND, B.Cu riferito a In6 = GND)
 # ---------------------------------------------------------------------
-# CPWG 50 ohm: w = 0.32 mm, gap = 0.25 mm (verificare su calcolatore JLC prima dell'ordine)
-# Solo piste (A.Type == 'Track'): i pad interni dei componenti RF (FL201, IC202, Q201...) hanno passo fisso < 0.25
-(rule "RF CPWG gap 0.25"
-    (condition "A.NetClass == 'RF_50R_CPWG' && A.Type == 'Track' && B.Net != A.Net")
-    (constraint clearance (min 0.25mm)))
+# Microstrip 50 ohm, nessun piano GND sul top, senza soldermask:
+#   h = 0.1164 mm (prepreg 2116, er 4.16), rame 35 um, w = 0.20 mm -> ~50.8 ohm (Hammerstad-Jensen)
+#   (con soldermask JLC er 3.8 circa -1 ohm). Verificare sul calcolatore JLC prima dell'ordine.
+# La net class si chiama ancora RF_50R_CPWG per non rompere le assegnazioni, ma e' una MICROSTRIP.
+# Solo piste (A.Type == 'Track'): i pad interni dei componenti RF (FL201, IC202, Q201...) hanno passo fisso < 0.35
+# Larghezza: 0.20 di default, nessun massimo (allargamenti/tapered sui pad di connettori e componenti)
+(rule "RF microstrip larghezza 0.20"
+    (layer outer)
+    (condition "A.NetClass == 'RF_50R_CPWG' && A.Type == 'Track'")
+    (constraint track_width (min 0.2mm) (opt 0.2mm)))
 
-# Microstrip 50 ohm: w = 0.35 mm, rame vicino >= 3h ~ 0.65 mm (non deve diventare CPW)
-(rule "RF microstrip keep-out 0.65"
+# Rame vicino >= 3h ~ 0.35 mm: la pista resta microstrip e non diventa coplanare.
+# Solo verso piste, via e zone di altre net. Verso i PAD vale la clearance ECSS normale (0.20),
+# altrimenti non si entra nei pad dei QFN/0402 (passo 0.5 mm: pista 0.20 -> ~0.27 dal pad vicino).
+# Allentata l'11/11/2026 su richiesta di Brik81 (prima valeva anche verso i pad).
+(rule "RF microstrip clearance 0.35"
+    (condition "A.NetClass == 'RF_50R_CPWG' && A.Type == 'Track' && B.Net != A.Net && B.Type != 'Pad'")
+    (constraint clearance (min 0.35mm)))
+
+# Classe RF_50R_MS (oggi non assegnata a nessuna net): stesse regole della microstrip sopra
+(rule "RF_50R_MS keep-out 0.35"
     (layer outer)
     (condition "A.NetClass == 'RF_50R_MS' && B.Net != A.Net")
-    (constraint clearance (min 0.65mm)))
+    (constraint clearance (min 0.35mm)))
 
-# RF solo su layer esterni (L2 = piano GND di riferimento, ECSS 7.1.2f)
+# RF solo su layer esterni (In1 / In6 = piani GND di riferimento, ECSS 7.1.2f)
 (rule "RF vietata su layer interni"
     (layer inner)
     (condition "A.NetClass == 'RF_50R_CPWG' || A.NetClass == 'RF_50R_MS'")

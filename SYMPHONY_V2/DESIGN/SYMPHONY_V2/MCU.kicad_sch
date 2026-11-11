@@ -3869,27 +3869,6 @@
 	)
 	(text_box ""
 		(exclude_from_sim no)
-		(at 106.426 49.022 0)
-		(size 177.546 55.118)
-		(margins 0.9525 0.9525 0.9525 0.9525)
-		(stroke
-			(width 0.762)
-			(type solid)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 32 14 255 1)
-			)
-			(justify left top)
-		)
-		(uuid "09d9f07b-e40b-40cc-9275-e7bb39b71c31")
-	)
-	(text_box ""
-		(exclude_from_sim no)
 		(at 199.39 104.394 0)
 		(size 84.836 46.99)
 		(margins 0.9525 0.9525 0.9525 0.9525)
@@ -3992,12 +3971,6 @@
 			(justify left top)
 		)
 		(uuid "dc60c975-1cde-4cc1-8a6b-a0db8435dd98")
-	)
-	(junction
-		(at 262.89 77.47)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "00bcade5-7cf2-4c7b-a052-f9c1a9ca8434")
 	)
 	(junction
 		(at 137.16 21.59)
@@ -4174,34 +4147,22 @@
 		(uuid "a92f3ee5-e3e3-4bf2-a0ca-2a05a27d4951")
 	)
 	(junction
-		(at 254 81.28)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ab41192f-0d42-4bd2-bd36-7193050eeef6")
-	)
-	(junction
-		(at 262.89 81.28)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b8887092-534a-456b-ae13-441813ac5005")
-	)
-	(junction
 		(at 243.84 81.28)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "bb234cca-5bfc-4748-9816-4ac8f68b6cfb")
 	)
 	(junction
+		(at 254 81.28)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c0482d5f-31b7-4228-b920-41c7503179d8")
+	)
+	(junction
 		(at 60.96 63.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c8054beb-4d0e-4a38-8408-d433dac511f9")
-	)
-	(junction
-		(at 262.89 64.77)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c8e988b7-3786-4a66-bc44-70fb8abf82f0")
 	)
 	(junction
 		(at 171.45 26.67)
@@ -4238,12 +4199,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e3299991-6a65-4380-8182-39873d5647b6")
-	)
-	(junction
-		(at 262.89 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e49e7d48-f8e8-44f7-8300-6a7bbf3e6c57")
 	)
 	(junction
 		(at 232.41 118.11)
@@ -5072,16 +5027,6 @@
 	)
 	(wire
 		(pts
-			(xy 254 81.28) (xy 270.51 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5b6e7a77-7d67-4d86-bd25-097380ea7e5e")
-	)
-	(wire
-		(pts
 			(xy 222.25 38.1) (xy 232.41 38.1)
 		)
 		(stroke
@@ -5389,6 +5334,16 @@
 			(type default)
 		)
 		(uuid "89f4215a-8335-417a-bc63-cb53eb2577ee")
+	)
+	(wire
+		(pts
+			(xy 254 81.28) (xy 262.89 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b1ad0c2-8531-4c82-a7f4-e202f6226d76")
 	)
 	(wire
 		(pts
@@ -5772,16 +5727,6 @@
 	)
 	(wire
 		(pts
-			(xy 262.89 77.47) (xy 270.51 77.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b9b6c29e-2eae-4397-9b6f-18744d0ecd74")
-	)
-	(wire
-		(pts
 			(xy 74.93 33.02) (xy 74.93 34.29)
 		)
 		(stroke
@@ -5799,16 +5744,6 @@
 			(type default)
 		)
 		(uuid "bf27a4df-faea-4dcd-ad17-477942a1e48c")
-	)
-	(wire
-		(pts
-			(xy 254 64.77) (xy 270.51 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bf5b5db7-a1ee-4b9d-9676-8253397ac777")
 	)
 	(wire
 		(pts
@@ -5944,6 +5879,16 @@
 	)
 	(wire
 		(pts
+			(xy 254 64.77) (xy 262.89 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da90357a-e7d0-4cf7-80d2-8334fddb6151")
+	)
+	(wire
+		(pts
 			(xy 223.52 30.48) (xy 232.41 30.48)
 		)
 		(stroke
@@ -5991,16 +5936,6 @@
 			(type default)
 		)
 		(uuid "df98f900-cad5-4e46-8887-0748b2ea282f")
-	)
-	(wire
-		(pts
-			(xy 262.89 93.98) (xy 270.51 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e0358c33-92f8-4477-aa87-3228f3d10d54")
 	)
 	(wire
 		(pts
@@ -12212,151 +12147,6 @@
 	(symbol
 		(lib_name "CPH3225A_2")
 		(lib_id "cap:CPH3225A")
-		(at 270.51 64.77 270)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "0b5edaff-a0f6-4ad2-bd37-103fd837c7e5")
-		(property "Reference" "C419"
-			(at 263.906 68.58 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "CPH3225A"
-			(at 274.32 72.3899 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "cap:CPH3225A"
-			(at 174.32 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6537/rev05-CPHCPM.pdf"
-			(at 74.32 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Description" "Supercapacitors / Ultracapacitors Reflow EDLC 3.3V, 11mF, 160 Ohm"
-			(at 263.398 63.246 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Height" "1"
-			(at -125.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Mouser Part Number" "628-CPH3225A"
-			(at -225.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Mouser Price/Stock" "https://www.mouser.com/Search/Refine.aspx?Keyword=628-CPH3225A"
-			(at -325.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Manufacturer_Name" "Seiko Epson Corporation"
-			(at -425.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Manufacturer_Part_Number" "CPH3225A"
-			(at -525.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(pin "1"
-			(uuid "1f41c097-6022-40e9-b73b-3d71ee58a845")
-		)
-		(pin "2"
-			(uuid "04e17d8b-f3f0-47b2-a63d-5199e3ef82f0")
-		)
-		(instances
-			(project "SYMPHONY"
-				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
-					(reference "C419")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_name "CPH3225A_2")
-		(lib_id "cap:CPH3225A")
 		(at 254 81.28 270)
 		(unit 1)
 		(body_style 1)
@@ -17796,151 +17586,6 @@
 			(project "SYMPHONY"
 				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
 					(reference "#PWR0310")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_name "CPH3225A_2")
-		(lib_id "cap:CPH3225A")
-		(at 270.51 81.28 270)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ddea9f4b-aeb8-4fee-ae6d-ce6af176897f")
-		(property "Reference" "C424"
-			(at 263.906 85.09 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "CPH3225A"
-			(at 274.32 88.8999 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "cap:CPH3225A"
-			(at 174.32 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6537/rev05-CPHCPM.pdf"
-			(at 74.32 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Description" "Supercapacitors / Ultracapacitors Reflow EDLC 3.3V, 11mF, 160 Ohm"
-			(at 263.398 79.756 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Height" "1"
-			(at -125.68 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Mouser Part Number" "628-CPH3225A"
-			(at -225.68 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Mouser Price/Stock" "https://www.mouser.com/Search/Refine.aspx?Keyword=628-CPH3225A"
-			(at -325.68 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Manufacturer_Name" "Seiko Epson Corporation"
-			(at -425.68 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(property "Manufacturer_Part_Number" "CPH3225A"
-			(at -525.68 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(pin "1"
-			(uuid "d72f6c47-4aed-4a39-b733-5f16ccfd7221")
-		)
-		(pin "2"
-			(uuid "edc7ddfe-f920-48e7-823e-cf0d0486efaa")
-		)
-		(instances
-			(project "SYMPHONY"
-				(path "/071989b5-e01f-46b9-99db-912cb901eec9/3191773e-8460-4c92-a3cd-b1b33a95610d"
-					(reference "C424")
 					(unit 1)
 				)
 			)

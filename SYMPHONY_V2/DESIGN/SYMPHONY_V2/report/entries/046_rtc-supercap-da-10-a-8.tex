@@ -1,0 +1,81 @@
+\clearpage
+\section{046 -- Banco supercap RTC ridotto da 10 a 8 pezzi}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 11/11/2026\\
+Revisione & non indicata\\
+Redatto da & Claude Code\\
+Approvazione & Brik81\\
+Stato & \tg{tagdone}{MODIFICA ESEGUITA DA BRIK81} \quad \tg{tagcheck}{DA VERIFICARE IN LAYOUT}\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item Foglio \textbf{MCU}, sezione RTC. Net \code{RTC\_VBAT}.
+  \item Banco di supercondensatori Seiko \code{CPH3225A} (EDLC \SI{11}{\milli\farad}, \SI{3,3}{\volt}, \SI{3,2}{\milli\metre}$\times$\SI{2,5}{\milli\metre}$\times$\SI{0,9}{\milli\metre}, ESR circa \SI{160}{\ohm}) in parallelo sul VBAT di \code{U404} (DS3231MZ).
+  \item Carica da \code{3V3} tramite \code{D401} (BAT54WS, anodo su \code{3V3}, blocca la scarica verso \code{3V3}) e \code{R412} (\SI{1}{\kilo\ohm}, limitazione della corrente di carica).
+  \item Riferimenti rimossi: \code{C419} e \code{C424}.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.6cm}p{5.6cm}p{5.6cm}@{}}
+\toprule
+Aspetto & Prima & Dopo\\
+\midrule
+Numero di CPH3225A & 10 & 8\\
+Capacità totale & $10\times\SI{11}{\milli\farad}=\SI{110}{\milli\farad}$ & $8\times\SI{11}{\milli\farad}=\SI{88}{\milli\farad}$\\
+Pin + su \code{RTC\_VBAT} & \code{C415}\ldots\code{C424} & \code{C415}, \code{C416}, \code{C417}, \code{C418}, \code{C420}, \code{C421}, \code{C422}, \code{C423}\\
+Altri membri della net & \code{R412.1}, \code{U404.6} & \code{R412.1}, \code{U404.6} (invariati)\\
+\bottomrule
+\end{tabular}
+\end{center}
+La modifica è stata eseguita da Brik81 direttamente in KiCad, non dall'agente. Verifica sulla netlist dopo la modifica: la net \code{RTC\_VBAT} contiene esattamente i pezzi elencati sopra. L'agente aveva proposto di togliere \code{C423}/\code{C424}; la scelta dei riferimenti (\code{C419} e \code{C424}) è di Brik81 e il risultato è equivalente.
+
+\subsection{Motivazione}
+\textbf{Analisi (verificata su netlist esportata).} Il banco alimenta \emph{solo} il VBAT del DS3231MZ. Non può mantenere in vita l'MCU (STM32L562, \code{U301}, con VBAT collegato direttamente a \code{3V3}) né la FRAM (\code{U401}, FM25V10). L'idea iniziale di \SI{10}{\second} di backup per tutta la scheda è irrealizzabile:
+\begin{itemize}
+  \item 10 CPH contengono in totale circa \SI{0,5}{\joule};
+  \item l'ESR parallela (circa \SI{16}{\ohm}) fa crollare la tensione già a decine di \si{\milli\ampere};
+  \item nell'ingombro 3225 / \SI{0,9}{\milli\metre} non esiste un supercap o una batteria a bassa ESR (CPX3225A752D: \SI{7,5}{\milli\farad}, \SI{2,6}{\volt}, \SI{25}{\ohm}, obsoleto; batterie a stato solido TDK CeraCharge da \SI{1,1}{\milli\metre} e Cymbet CBC050 erogano solo da \si{\micro\ampere} a \si{\milli\ampere}).
+\end{itemize}
+Dopo una riunione Brik81 ha chiarito che il requisito è tenere in vita \emph{solo l'RTC} per \SI{1}{\hour}, al massimo \SI{2}{\hour}.
+
+\textbf{Dimensionamento.}
+\begin{itemize}
+  \item Datasheet DS3231 (PDF nel progetto, nota 5): \code{IBATT} è una corrente media che include la conversione di temperatura; \SI{3,0}{\micro\ampere} max a VBAT \SI{3,63}{\volt} (DS3231M: \SI{2}{\micro\ampere} tip., \SI{3,0}{\micro\ampere} max). VBAT min \SI{2,3}{\volt}.
+  \item Carica a circa \SI{3,1}{\volt} (\code{3V3} meno Vf del BAT54), quindi $\Delta V\approx\SI{0,8}{\volt}$.
+  \item Caso peggiore assunto: capacità $-30\,\%$; corrente totale circa \SIrange{4,6}{4,8}{\micro\ampere}, somma di \SI{3}{\micro\ampere} (RTC), circa \SI{1}{\micro\ampere} di leakage inverso del BAT54 a caldo e circa \SI{0,1}{\micro\ampere} per supercap. \textbf{Le ultime due voci sono stime, non dati da datasheet.}
+\end{itemize}
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Numero di CPH3225A & Autonomia caso peggiore & Autonomia tipica\\
+\midrule
+6 & circa \SI{2,2}{\hour} & \SIrange{6}{7}{\hour}\\
+8 & circa \SI{2,8}{\hour} & circa \SI{9}{\hour}\\
+\bottomrule
+\end{tabular}
+\end{center}
+Scelti 8 pezzi (Brik81 voleva un numero pari, 6 o 8).
+
+\textbf{Approvazione di Brik81 (testuale):} ``Dai vedo di riuscire a farne 8 al massimo scendo a 6''; e poi ``ho gia rimosso io fregatene''.
+
+\subsection{Impatti e criticità}
+\begin{notebox}
+\textbf{Layout.} Se in layout gli 8 pezzi non entrano si scende a 6 (si tolgono altri 2): con 6 pezzi l'autonomia nel caso peggiore è circa \SI{2,2}{\hour}, appena sopra il massimo richiesto di \SI{2}{\hour}.
+\end{notebox}
+\begin{notebox}
+\textbf{Stime.} I valori del leakage inverso del BAT54 a caldo e della corrente per supercap del CPH3225A sono stime, non letture da datasheet. L'autonomia reale non è ancora nota.
+\end{notebox}
+Il backup della scheda intera (MCU, FRAM) resta non coperto dal banco, come già deciso nelle entry 044 e 045.
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Controllare in layout che gli 8 CPH3225A entrino; in caso contrario scendere a 6.
+  \item Misurare l'autonomia reale dell'RTC sulla prima versione hardware (Brik81 non può testare prima).
+  \item Verificare se il firmware salva comunque dati in FRAM per altri motivi (non richiede backup hardware).
+\end{itemize}
