@@ -1,0 +1,68 @@
+\section{053 \textendash{} Clearance pad-pad rilassata a \SI{0,13}{mm} per footprint a passo fine (JLC, NON ECSS)}
+
+\textbf{Data:} 16/11/2026 \quad \textbf{Revisione:} non indicata \quad \textbf{Tipo:} regola DRC (nessuna modifica a schema o componenti)
+
+\subsection{Elementi coinvolti}
+\begin{itemize}
+\item File: \code{SYMPHONY.kicad\_dru}, sezione 1 \guillemotleft{}Isolamento X,Y tra conduttori\guillemotright.
+\item Componente di esempio: U402 (MSOP-10, JEDEC MO-187F variante BA), gap pad-pad \SI{0,15}{mm}.
+\item Net dell'esempio: \code{/IF/UART1.RX} (pad 8) e \code{/IF/UART1.TX} (pad 9), layer F.Cu, foglio IF.
+\item Nessun codice JLCPCB/Mouser coinvolto.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Dopo la sospensione dell'ECSS per il primo prototipo (entry 052, priorità produzione JLC), il DRC segnalava errori non risolvibili sui pad dei componenti a passo fine. Esempio riportato da Brik81:
+
+\begin{notebox}
+\small\ttfamily
+Error: Clearance violation (rule 'ECSS esterni clearance 0.20' clearance 0.2000 mm; actual 0.1500 mm) \textemdash{} Pad 8 [/IF/UART1.RX] of U402 on F.Cu / Pad 9 [/IF/UART1.TX] of U402 on F.Cu
+\end{notebox}
+
+È stata aggiunta una nuova regola subito dopo \code{ECSS esterni clearance 0.20}, con commento datato:
+
+\begin{verbatim}
+(rule "Pad-pad clearance 0.13 (JLC) - NON ECSS"
+    (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+    (constraint clearance (min 0.13mm)))
+\end{verbatim}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Voce} & \textbf{Prima} & \textbf{Dopo}\
+\midrule
+Clearance pad-pad, layer esterni & \SI{0,20}{mm} (ECSS Tab.\ 13-7, esterni con coating) & \SI{0,13}{mm}\
+Ambito della nuova regola & \textendash & coppie pad-pad su tutti i layer\
+Regola \code{ECSS esterni clearance 0.20} (piste e via) & \SI{0,20}{mm} & invariata\
+Net class (clearance Default) & \SI{0,20}{mm} & invariata\
+\code{min\_clearance} globale (\code{.kicad\_pro}) & \SI{0,13}{mm} & invariato (non toccato)\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La regola è posizionata dopo le regole di clearance generali (in KiCad vince l'ultima regola che corrisponde) e prima delle regole RF (RF microstrip \SI{0,35}{mm}, keep-out \code{RF\_50R\_MS} \SI{0,35}{mm}, \code{HV\_50V}), che restano prioritarie. Il valore \SI{0,13}{mm} coincide con il minimo globale del board setup.
+
+\subsection{Motivazione}
+Alcune regole risultavano troppo stringenti rispetto alla geometria dei footprint, generando errori non risolvibili dal progettista. Approvazione di Brik81:
+
+\begin{quote}
+\emph{\guillemotleft{}ascolta alcune rule sono troppo stringenti esempio: [errore sopra] e mio va a dare errori in cose che non posso risovlere essendo componenti, alleggeriamo questa rule suvvia\guillemotright}
+\end{quote}
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Deviazione ECSS.} La Tab.\ 13-7 prevede \SI{0,20}{mm} per i layer esterni. Per il passo fine l'ECSS ammette \SI{0,15}{mm} as-designed (Review Item 7.4.3g/7.4.5), con coating obbligatorio. Da ripristinare per la versione di volo.
+\end{critbox}
+\begin{notebox}
+\textbf{Ambito esteso.} La regola vale per tutte le coppie pad-pad, anche di footprint diversi, non solo all'interno dello stesso footprint. Due componenti piazzati troppo vicini (\SIrange{0,13}{0,20}{mm}) non verrebbero più segnalati dalla regola ECSS; il controllo courtyard resta attivo.
+\end{notebox}
+\begin{notebox}
+\textbf{Limite residuo.} Il gap pad-pad più piccolo visto finora è \SI{0,15}{mm} (U402). Footprint con gap inferiore a \SI{0,13}{mm} continuerebbero a dare errore.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item Rilanciare il DRC in KiCad (\code{kicad-cli} 9.0 non carica la scheda da riga di comando: \guillemotleft{}Impossibile caricare scheda\guillemotright).
+\item Verificare che l'errore su U402 pad 8/9 sia sparito.
+\item Verificare che nessuna regola RF sia stata scavalcata.
+\end{itemize}

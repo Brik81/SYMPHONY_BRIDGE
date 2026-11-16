@@ -22,6 +22,14 @@
     (condition "A.Type != 'Zone' && B.Type != 'Zone'")
     (constraint clearance (min 0.2mm)))
 
+# 16/11/2026 su richiesta di Brik81 (prototipo, priorita' JLC): pad-pad a 0.13 mm su tutti i layer.
+# I gap pad-pad dei footprint a passo fine (es. U402 MSOP-10: 0.15 mm) non si possono correggere.
+# Deve stare DOPO le regole clearance generali (in KiCad vince l'ultima regola che corrisponde);
+# le regole RF piu' in basso restano prioritarie. NON ECSS (Tab 13-7 esterni: 0.20).
+(rule "Pad-pad clearance 0.13 (JLC) - NON ECSS"
+    (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+    (constraint clearance (min 0.13mm)))
+
 # Interni, rame base 17 um (0.5 oz), normal pitch: 130 um as-designed (Tab 13-7, 3 di 4)
 # (con 1 oz interno = 17<Th<=60 -> 150 um)
 (rule "ECSS interni clearance 0.13"
