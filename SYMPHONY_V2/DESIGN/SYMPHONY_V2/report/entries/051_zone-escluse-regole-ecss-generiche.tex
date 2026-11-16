@@ -1,0 +1,104 @@
+\clearpage
+\section{051 -- Zone escluse dalle regole clearance ECSS generiche}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 13/11/2026 (problema segnalato il 12/11/2026)\\
+Revisione & non indicata\\
+Redatto da & Claude Code\\
+Approvazione & Brik81\\
+Stato & \tg{tagdone}{MODIFICA ESEGUITA} \quad \tg{tagwarn}{CRITICITÀ APERTE}\\
+\bottomrule
+\end{tabularx}
+
+Solo regole DRC: nessun componente, nessuna net, nessun codice JLCPCB/Mouser toccati. Nessun altro file modificato oltre a \code{SYMPHONY.kicad\_dru}.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item File modificato: \code{SYMPHONY.kicad\_dru}.
+  \item Regole: ``ECSS esterni clearance 0.20'' (layer esterni) e ``ECSS interni clearance 0.13'' (layer interni).
+  \item Zone d'esempio su \code{In5.Cu}: \code{3V3} (clearance zona \SI{1,0}{\milli\metre}, priorità 1), \code{5V0} (\SI{0,5}{\milli\metre}, priorità 3), \code{5V} (\SI{0,2}{\milli\metre}, priorità 2).
+  \item Zone RF su \code{F.Cu} (clearance zona 0, quindi segue la net class): \code{PA\_VCC2}, \code{RF\_PA\_IN}, \code{RF\_PA\_OUT}.
+\end{itemize}
+
+\subsection{Problema segnalato}
+Brik81 ha notato che, cambiando la clearance delle zone in KiCad e rifacendo il riempimento, le distanze tra zone di net diverse non cambiavano e restavano bassissime.
+
+Analisi: il riempimento è stato rifatto con pcbnew di KiCad 10 su una copia del progetto e sono state misurate le distanze tra i riempimenti su \code{In5.Cu}.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Coppia di zone (\code{In5.Cu}) & Clearance impostata & Misurata prima & Misurata dopo\\
+\midrule
+\code{3V3}--\code{5V0} & \SI{1,0}{\milli\metre} & \SI{0,135}{\milli\metre} & \SI{1,002}{\milli\metre}\\
+\code{3V3}--\code{5V} & \SI{1,0}{\milli\metre} & \SI{0,134}{\milli\metre} & \SI{1,002}{\milli\metre}\\
+\code{5V0}--\code{5V} & \SI{0,5}{\milli\metre} & \SI{0,135}{\milli\metre} & \SI{0,501}{\milli\metre}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Causa: le due regole ECSS generiche non avevano condizioni. In KiCad una regola custom prevale sulla clearance propria della zona e sulla clearance della net class (non si prende il valore massimo). Quindi su tutti i layer interni, zona--zona e zona--oggetto, valevano \SI{0,13}{\milli\metre}, e sugli esterni \SI{0,20}{\milli\metre}, qualunque fosse il valore impostato nella zona.
+
+\subsection{Cosa è cambiato}
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{@{}l l X X@{}}
+\toprule
+Regola & Layer & Prima & Dopo\\
+\midrule
+ECSS esterni clearance 0.20 & outer & nessuna condizione; min \SI{0,2}{\milli\metre} & \code{(condition "A.Type != 'Zone' \&\& B.Type != 'Zone'")}; min \SI{0,2}{\milli\metre} invariato\\
+ECSS interni clearance 0.13 & inner & nessuna condizione; min \SI{0,13}{\milli\metre} & stessa condizione; min \SI{0,13}{\milli\metre} invariato\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{itemize}
+  \item Aggiunto in \code{SYMPHONY.kicad\_dru} un commento datato 13/11/2026 che spiega il motivo.
+  \item Piste, via e pad tra loro restano sotto le regole ECSS come prima.
+  \item Per le zone vale ora la clearance della zona, oppure quella della net class se la zona ha clearance 0.
+  \item Invariate le altre regole con condizione: RF \SI{0,35}{\milli\metre}, HV\_50V, via-via 0.13/0.20, \code{hole\_clearance}, \code{edge\_clearance}.
+\end{itemize}
+
+\textbf{Verifica fatta} (riempimento rifatto con pcbnew su una copia, con il nuovo \code{.dru}):
+\begin{itemize}
+  \item \code{In5.Cu}: valori nella tabella sopra; prima erano tutte \SI{0,13}{\milli\metre}, ora le clearance impostate sono rispettate.
+  \item \code{F.Cu}, zone RF che seguono la net class: \code{PA\_VCC2}--\code{RF\_PA\_IN} \SI{1,088}{\milli\metre}, \code{PA\_VCC2}--\code{RF\_PA\_OUT} \SI{1,220}{\milli\metre}, \code{RF\_PA\_IN}--\code{RF\_PA\_OUT} \SI{2,297}{\milli\metre}.
+\end{itemize}
+
+\subsection{Motivazione}
+Sono state proposte due opzioni a Brik81:
+\begin{enumerate}
+  \item Escludere solo le zone dalle due regole ECSS generiche (consigliata, cambiamento minimo).
+  \item Limitare le regole generiche alla net class \code{Default}, così da far valere anche le clearance delle net class; più invasiva, con possibili nuove violazioni DRC sulle piste RF.
+\end{enumerate}
+Brik81 ha scelto la prima.
+
+Approvazione di Brik81 (citazione testuale):
+\begin{quote}
+``si escludi le zone dalle regole''
+\end{quote}
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Riempimento da rifare.} Il \code{.kicad\_pcb} sul disco contiene ancora i riempimenti vecchi a \SI{0,13}{\milli\metre}. Brik81 deve rifare il riempimento di tutte le zone in KiCad (tasto B) e salvare.
+\end{critbox}
+\begin{critbox}
+\textbf{Frammentazione dei piani.} Le zone con clearance grande (\code{3V3} a \SI{1,0}{\milli\metre}, GND interni a \SI{0,8}{\milli\metre}) lasciano ora attorno a via e pad di altre net vuoti più larghi. Il piano GND su In1/In3/In6 potrebbe risultare troppo frammentato, con nuove isole o colli stretti (\code{min\_thickness}).
+\end{critbox}
+\begin{notebox}
+\textbf{Minimo ECSS sulle zone esterne.} Su F.Cu/B.Cu viene meno il minimo di \SI{0,20}{\milli\metre} ECSS per le zone. Con clearance zona 0 si usa la net class (\code{Default} \SI{0,20}{\milli\metre}, quindi equivalente). Una zona con clearance locale impostata sotto \SI{0,20}{\milli\metre} su F.Cu/B.Cu non sarebbe più segnalata dalla regola ECSS.
+\end{notebox}
+\begin{critbox}
+\textbf{Aperto per scelta di Brik81.} Le clearance più grandi delle net class \code{RF\_CLK} (\SI{0,30}{\milli\metre}), \code{RF\_PA\_OUT} (\SI{0,25}{\milli\metre}) e \code{RF\_50R\_CPWG} (\SI{0,25}{\milli\metre}) non hanno effetto su piste e via, che restano a \SI{0,20}{\milli\metre} sugli esterni e \SI{0,13}{\milli\metre} sugli interni. Brik81 ha scelto di non intervenire per ora.
+\end{critbox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Rifare il riempimento di tutte le zone (tasto B) e salvare il progetto.
+  \item Lanciare il DRC dopo il riempimento.
+  \item Controllare la frammentazione del GND su In1/In3/In6 e l'assenza di nuove isole o colli stretti (\code{min\_thickness}).
+  \item Tenere presente che zone esterne con clearance locale sotto \SI{0,20}{\milli\metre} non sono più segnalate.
+  \item Decidere in futuro se far valere le clearance delle net class RF su piste e via (opzione 2).
+\end{itemize}

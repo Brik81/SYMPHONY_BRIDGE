@@ -1,0 +1,73 @@
+\clearpage
+\section{049 -- Regole DRC: distanza via-via ridotta (deroga ECSS Tab 13-7)}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 12/11/2026\\
+Revisione & non indicata\\
+Redatto da & Claude Code\\
+Approvazione & Brik81\\
+Stato & \tg{tagdone}{MODIFICA ESEGUITA} \quad \tg{tagcrit}{DEROGA ECSS} \quad \tg{tagwarn}{CRITICITÀ APERTE}\\
+\bottomrule
+\end{tabularx}
+
+Seguito della entry 048 (regole DRC). Solo regole di progetto: nessun componente, nessuna net, nessun codice JLCPCB/Mouser toccato.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item File modificato: \code{SYMPHONY.kicad\_dru}, sezione 5, due regole aggiunte dopo ``Foro-foro stessa net 0.20 (JLC)''.
+  \item \code{SYMPHONY.kicad\_pro}: nessuna modifica (ripristinato alla versione committata). \code{min\_via\_annular\_width} resta \SI{0,15}{\milli\metre}, \code{min\_via\_diameter} \SI{0,55}{\milli\metre}, via della net class \code{Default} \SI{0,6}{\milli\metre}/\SI{0,3}{\milli\metre}.
+  \item Via di progetto fissata da Brik81: foro \SI{0,30}{\milli\metre}, corona (diametro) \SI{0,45}{\milli\metre}.
+  \item Le regole RF e \code{HV\_50V}, definite dopo, continuano a prevalere per le loro net.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Regola ``Via anello >= 0.30'' invariata. Regola ``Foro-foro net diverse 0.45 (ECSS)'' invariata per tutto il resto (PTH di componenti, ecc.). Aggiunte solo due regole:
+\begin{center}
+\small
+\begin{tabular}{@{}p{4.2cm}p{4.6cm}p{6.2cm}@{}}
+\toprule
+Regola & Prima & Dopo\\
+\midrule
+``Via-via foro-foro 0.20 (JLC) -- NON ECSS'' &
+tra via di net diverse: \code{hole\_to\_hole} \SI{0,45}{\milli\metre} (ECSS Tab 13-7 4/4) &
+\code{A.Type == 'Via' \&\& B.Type == 'Via'}: \code{hole\_to\_hole} min \SI{0,20}{\milli\metre}\\
+``Via-via clearance 0.13 (JLC) -- NON ECSS'' &
+tra via sui layer esterni: \SI{0,20}{\milli\metre} (clearance esterna ECSS) &
+stessa condizione: clearance min \SI{0,13}{\milli\metre} su tutti i layer\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Passo minimo tra via affiancate (corona \SI{0,45}{\milli\metre}, foro \SI{0,30}{\milli\metre}): \SI{0,58}{\milli\metre} (prima \SI{0,75}{\milli\metre}, limitato dal foro-foro \SI{0,45}{\milli\metre}). La regola rame-foro via \SI{0,20}{\milli\metre} resta ed è rispettata al passo \SI{0,58}{\milli\metre} (\SI{0,205}{\milli\metre}).
+
+\subsection{Motivazione}
+La scheda si produce da JLCPCB e Brik81 non vuole via più grosse per evitare sovrapprezzi. Chiede di poter mettere via vicine e parallele in uscita dall'MCU e da alcuni integrati.
+
+Richiesta originale di Brik81 (citazione testuale):
+\begin{quote}
+``magari non è ecss compliant ma perfavore riducimi lo spazio minimo tra i vias perche la produco con jlcpcb e devo usare vias troppo grossi per non pagarli, e divento idiota con quelle rule cosi stringeti perfavaore cambiala facendo in modo che possano stare vicini e paralelli in uscirta di micro e alcuni integrati''
+\end{quote}
+
+\textbf{Tentativo annullato.} Una prima versione della modifica agiva sulle regole e sui parametri della via (anello via \SI{0,075}{\milli\metre}, diametro minimo e via \code{Default} \SI{0,45}{\milli\metre}, clearance via-via \SI{0,15}{\milli\metre}, foro-foro \SI{0,25}{\milli\metre}). Brik81 l'ha respinta e la modifica è stata annullata (file ripristinati alla versione committata). Citazione testuale:
+\begin{quote}
+``no annulla ste modifiche io non sto parlando del vias che è fissato a 0.3mm di diametro del foro e 0.45mm il diametro della corona, io intendo la distanza tra vias e vias per la miseria, annulla la tua modifica di regole di prima e aggiusta con quello che ho detto io delle violazioni al momnetno fregatene nperche non ho finito''
+\end{quote}
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Deroga ECSS (Tab 13-7).} La distanza foro-foro e rame-rame tra via è ora sotto i valori ECSS. Decisione accettata da Brik81; da segnalare se il progetto deve passare una review ECSS.
+\end{critbox}
+\begin{notebox}
+\textbf{Violazioni anello via.} La regola ``Via anello >= 0.30'', rimasta invariata, segnala come violazione le via \SI{0,45}{\milli\metre}/\SI{0,30}{\milli\metre}. Brik81 ha indicato di ignorare le violazioni per ora perché il layout non è finito.
+\end{notebox}
+\begin{notebox}
+DRC non rifatto dopo questa correzione, per indicazione di Brik81.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Rifare il DRC a layout finito e rivedere le violazioni di anello via (via \SI{0,45}{\milli\metre}/\SI{0,30}{\milli\metre} contro regola \SI{0,30}{\milli\metre}).
+  \item Rifare il fan-out di MCU e integrati con via a passo \SI{0,58}{\milli\metre}.
+  \item Confermare con JLCPCB la producibilità della distanza via-via ridotta.
+\end{itemize}

@@ -1,0 +1,79 @@
+\clearpage
+\section{050 -- Via di tutte le net class uniformate a 0.45/0.30 mm}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+\toprule
+Data & 12/11/2026\\
+Revisione & non indicata\\
+Redatto da & Claude Code\\
+Approvazione & Brik81\\
+Stato & \tg{tagdone}{MODIFICA ESEGUITA} \quad \tg{tagwarn}{CRITICITÀ APERTE}\\
+\bottomrule
+\end{tabularx}
+
+Seguito della entry 049. Solo impostazioni di progetto: nessun componente, nessuna net, nessun codice JLCPCB/Mouser e nessuna regola DRC toccati.
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item File modificato: \code{SYMPHONY.kicad\_pro}, sezione \code{net\_settings.classes} (Board Setup > Net Classes).
+  \item Net class interessate (7): \code{Default}, \code{PA\_BIAS}, \code{PWR}, \code{RF\_50R\_CPWG}, \code{RF\_CLK}, \code{RF\_DIFF}, \code{RF\_PA\_OUT}.
+  \item Via passanti: foro \SI{0,30}{\milli\metre}, corona (diametro) \SI{0,45}{\milli\metre} su tutte le classi.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+Formato: diametro/foro in \si{\milli\metre}.
+\begin{center}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Net class & Prima & Dopo\\
+\midrule
+\code{Default} & 0.60/0.30 & 0.45/0.30\\
+\code{PA\_BIAS} & 0.80/0.40 & 0.45/0.30\\
+\code{PWR} & 0.80/0.40 & 0.45/0.30\\
+\code{RF\_50R\_CPWG} & 0.60/0.30 & 0.45/0.30\\
+\code{RF\_CLK} & 0.60/0.30 & 0.45/0.30\\
+\code{RF\_DIFF} & 0.60/0.30 & 0.45/0.30\\
+\code{RF\_PA\_OUT} & 0.80/0.40 & 0.45/0.30\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Cosa non è cambiato.}
+\begin{itemize}
+  \item Le via già piazzate non cambiano da sole: la net class vale solo per le via nuove. Prima della modifica il PCB aveva 137 via, tutte con foro \SI{0,30}{\milli\metre}: 115 da \SI{0,45}{\milli\metre} e 22 da \SI{0,60}{\milli\metre}.
+  \item In \code{SYMPHONY.kicad\_pro} restano \code{min\_via\_diameter} \SI{0,55}{\milli\metre} e \code{min\_via\_annular\_width} \SI{0,15}{\milli\metre}.
+  \item In \code{SYMPHONY.kicad\_dru} resta la regola ``Via anello >= 0.30''.
+\end{itemize}
+
+\subsection{Motivazione}
+Brik81 vuole un'unica via standard JLCPCB senza sovrapprezzo, foro \SI{0,30}{\milli\metre} e corona \SI{0,45}{\milli\metre}, la stessa già fissata per il fan-out a via affiancate della entry 049.
+
+Approvazione di Brik81 (citazione testuale):
+\begin{quote}
+``Fai un'altra modifica, rendi TUTTI I VIAS DI OGNI NETCLASS A 0.45 mm di corona e 0,3mm di diametro ok? tutti''
+\end{quote}
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{Potenza e uscita PA.} Le classi \code{PWR}, \code{PA\_BIAS} e \code{RF\_PA\_OUT} passano da foro \SI{0,40}{\milli\metre} a \SI{0,30}{\milli\metre}: ogni via porta meno corrente e ha più resistenza e induttanza. Sulle net di potenza e sull'uscita PA servono più via in parallelo.
+\end{critbox}
+\begin{notebox}
+\textbf{Discontinuità RF.} Su \code{RF\_50R\_CPWG} e \code{RF\_PA\_OUT} la via più piccola cambia la discontinuità di impedenza nelle transizioni.
+\end{notebox}
+\begin{notebox}
+\textbf{Violazioni anello via.} \code{min\_via\_diameter} \SI{0,55}{\milli\metre}, \code{min\_via\_annular\_width} \SI{0,15}{\milli\metre} e la regola ``Via anello >= 0.30'' invariati: il DRC segnalerà come violazione le via \SI{0,45}{\milli\metre}/\SI{0,30}{\milli\metre} (anello \SI{0,075}{\milli\metre}). Brik81 ha indicato di ignorare le violazioni per ora perché il layout non è finito.
+\end{notebox}
+\begin{notebox}
+\textbf{KiCad aperto.} La modifica è stata fatta con KiCad aperto. Se il progetto è aperto e si salvano le impostazioni, il \code{.kicad\_pro} può tornare ai valori vecchi.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Controllare i valori in Board Setup > Net Classes.
+  \item Verificare il numero di via in parallelo su \code{PWR}, \code{PA\_BIAS} e \code{RF\_PA\_OUT} (per esempio con un calcolatore di corrente per via).
+  \item Verificare l'impedenza sulle transizioni RF (\code{RF\_50R\_CPWG}, \code{RF\_PA\_OUT}).
+  \item Decidere se allineare le 22 via da \SI{0,60}{\milli\metre} già piazzate.
+  \item Allineare \code{min\_via\_diameter} e la regola anello a \SI{0,45}{\milli\metre}/\SI{0,075}{\milli\metre} quando Brik81 lo deciderà.
+  \item Rifare il DRC a layout finito.
+\end{itemize}

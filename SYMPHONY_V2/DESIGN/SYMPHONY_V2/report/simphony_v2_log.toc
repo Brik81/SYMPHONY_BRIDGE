@@ -263,3 +263,22 @@
 \contentsline {subsection}{Motivazione}{97}{subsection*.261}%
 \contentsline {subsection}{Impatti e criticità}{97}{subsection*.262}%
 \contentsline {subsection}{Verifiche da fare}{98}{subsection*.263}%
+\contentsline {section}{049 -- Regole DRC: distanza via-via ridotta (deroga ECSS Tab 13-7)}{99}{section*.264}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{99}{subsection*.265}%
+\contentsline {subsection}{Cosa è cambiato}{99}{subsection*.266}%
+\contentsline {subsection}{Motivazione}{99}{subsection*.267}%
+\contentsline {subsection}{Impatti e criticità}{99}{subsection*.268}%
+\contentsline {subsection}{Verifiche da fare}{100}{subsection*.269}%
+\contentsline {section}{050 -- Via di tutte le net class uniformate a 0.45/0.30 mm}{101}{section*.270}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{101}{subsection*.271}%
+\contentsline {subsection}{Cosa è cambiato}{101}{subsection*.272}%
+\contentsline {subsection}{Motivazione}{101}{subsection*.273}%
+\contentsline {subsection}{Impatti e criticità}{101}{subsection*.274}%
+\contentsline {subsection}{Verifiche da fare}{102}{subsection*.275}%
+\contentsline {section}{051 -- Zone escluse dalle regole clearance ECSS generiche}{103}{section*.276}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{103}{subsection*.277}%
+\contentsline {subsection}{Problema segnalato}{103}{subsection*.278}%
+\contentsline {subsection}{Cosa è cambiato}{103}{subsection*.279}%
+\contentsline {subsection}{Motivazione}{103}{subsection*.280}%
+\contentsline {subsection}{Impatti e criticità}{104}{subsection*.281}%
+\contentsline {subsection}{Verifiche da fare}{104}{subsection*.282}%

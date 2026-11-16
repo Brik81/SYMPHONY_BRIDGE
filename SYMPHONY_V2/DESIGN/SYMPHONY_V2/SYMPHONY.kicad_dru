@@ -14,14 +14,19 @@
 # ---------------------------------------------------------------------
 # Esterni, con coating, normal pitch, Th<=70um: 200 um as-designed (Tab 13-7, 2 di 4)
 # SENZA coating: 250 um (0-10 V) / 350 um (10-30 V) -> vedi regola "NO COATING" in fondo
+# 13/11/2026 su richiesta di Brik81: zone escluse da questa regola e da quella interna 0.13.
+# Senza condizione la regola scavalcava la clearance impostata nelle zone (es. In5: 3V3/5V0/5V
+# a 0.13 mm anche con clearance zona 1.0/0.5). Per le zone vale ora la loro clearance / net class.
 (rule "ECSS esterni clearance 0.20"
     (layer outer)
+    (condition "A.Type != 'Zone' && B.Type != 'Zone'")
     (constraint clearance (min 0.2mm)))
 
 # Interni, rame base 17 um (0.5 oz), normal pitch: 130 um as-designed (Tab 13-7, 3 di 4)
 # (con 1 oz interno = 17<Th<=60 -> 150 um)
 (rule "ECSS interni clearance 0.13"
     (layer inner)
+    (condition "A.Type != 'Zone' && B.Type != 'Zone'")
     (constraint clearance (min 0.13mm)))
 
 # ---------------------------------------------------------------------
@@ -90,6 +95,17 @@
 (rule "Foro-foro stessa net 0.20 (JLC)"
     (condition "A.Net == B.Net")
     (constraint hole_to_hole (min 0.2mm)))
+
+# 12/11/2026 su richiesta di Brik81 - NON ECSS: via affiancate/parallele in fan-out (MCU, integrati).
+# Tra VIA e VIA (qualsiasi net): parete-parete fori 0.20 (minimo JLC) e rame-rame 0.13 su tutti i layer.
+# Con via 0.45/0.30 -> passo minimo 0.58 mm (prima 0.75 per il foro-foro 0.45 ECSS).
+(rule "Via-via foro-foro 0.20 (JLC) - NON ECSS"
+    (condition "A.Type == 'Via' && B.Type == 'Via'")
+    (constraint hole_to_hole (min 0.2mm)))
+
+(rule "Via-via clearance 0.13 (JLC) - NON ECSS"
+    (condition "A.Type == 'Via' && B.Type == 'Via'")
+    (constraint clearance (min 0.13mm)))
 
 # Conduttore -> parete foro: ECSS = clearance interna + 50 um anello = 0.18
 # JLC: via-rame interno 0.20, PTH-rame interno 0.30 -> vince JLC
