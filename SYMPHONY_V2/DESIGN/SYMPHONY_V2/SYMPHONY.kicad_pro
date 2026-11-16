@@ -240,6 +240,46 @@
         [
           "copper_edge_clearance|151708400|71723800|b6ce5aef-163e-4b7b-9d03-52def898eea0|7f518ef5-eb94-418b-9ae2-8501d149acd7",
           ""
+        ],
+        [
+          "via_dangling|138703400|79518800|f7252b58-be51-43e8-af85-997d4f5f8ed6|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|138708400|80263800|074925fc-e204-472f-afc5-ac5912423f31|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|139468400|79503800|44f41e95-6328-47d5-9108-1073eb7f0f32|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|139468400|80263800|7abc4dd2-0dbc-454e-8981-52e3ee2cab2c|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|139728400|81118799|c38791ca-b9cc-4e7f-b631-b38053693753|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|143538400|79683800|e6b566d3-095c-41fe-9ffc-8fcf57cf0ec6|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|143592400|78940200|e63fd6ac-2885-4661-aa6c-57e317baf766|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|147266400|108707400|4923f08e-83ff-45e6-b90c-3d0093aa0f7f|00000000-0000-0000-0000-000000000000",
+          "THERMAL"
+        ],
+        [
+          "via_dangling|147268400|109413800|66e2b4c9-6a59-4e34-9fc1-5bd9eac4d739|00000000-0000-0000-0000-000000000000",
+          "thermal"
+        ],
+        [
+          "via_dangling|147278400|110183800|c1ed9e94-d952-41c9-b887-26bd75305efb|00000000-0000-0000-0000-000000000000",
+          "thermal"
         ]
       ],
       "meta": {
@@ -311,8 +351,8 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.13,
-        "min_connection": 0.13,
+        "min_clearance": 0.15,
+        "min_connection": 0.15,
         "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.2,
@@ -324,7 +364,7 @@
         "min_text_height": 1.0,
         "min_text_thickness": 0.15,
         "min_through_hole_diameter": 0.25,
-        "min_track_width": 0.13,
+        "min_track_width": 0.15,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.0,
