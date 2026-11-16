@@ -1,0 +1,89 @@
+\section{054 \textendash{} Clearance pad-pad portata da \SI{0,13}{mm} a \SI{0,15}{mm} (minimo JLC, zero sovrapprezzo, NON ECSS)}
+
+\textbf{Data:} 16/11/2026 \quad \textbf{Revisione:} non indicata \quad \textbf{Tipo:} regola DRC (nessuna modifica a schema o componenti)
+
+\subsection{Elementi coinvolti}
+\begin{itemize}
+\item File: \code{SYMPHONY.kicad\_dru}, sezione 1. Nessun altro file o regola toccati.
+\item Regola: \code{Pad-pad clearance} (condizione \code{A.Type == 'Pad' \&\& B.Type == 'Pad'}), introdotta con l'entry 053.
+\item Componente al limite: U402 (MSOP-10), foglio IF, gap pad-pad \SI{0,15}{mm}.
+\item Nessun componente e nessun codice JLCPCB/Mouser coinvolto.
+\end{itemize}
+
+\subsection{Cosa è cambiato}
+La regola è stata rinominata e il valore portato da \SI{0,13}{mm} a \SI{0,15}{mm}, con commento datato che cita la richiesta. La posizione nel file è invariata: dopo \code{ECSS esterni clearance 0.20}, prima della regola interna \SI{0,13}{mm} e delle regole RF.
+
+\begin{verbatim}
+Prima:
+(rule "Pad-pad clearance 0.13 (JLC) - NON ECSS"
+    (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+    (constraint clearance (min 0.13mm)))
+
+Dopo:
+(rule "Pad-pad clearance 0.15 (JLC) - NON ECSS"
+    (condition "A.Type == 'Pad' && B.Type == 'Pad'")
+    (constraint clearance (min 0.15mm)))
+\end{verbatim}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Voce} & \textbf{Prima} & \textbf{Dopo}\\
+\midrule
+Nome regola & \code{Pad-pad clearance 0.13 (JLC) - NON ECSS} & \code{Pad-pad clearance 0.15 (JLC) - NON ECSS}\\
+Clearance pad-pad (min) & \SI{0,13}{mm} & \SI{0,15}{mm}\\
+Posizione nel file & dopo \code{ECSS esterni clearance 0.20} & invariata\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Motivazione}
+Controllando la pagina capabilities di JLCPCB (\url{https://jlcpcb.com/capabilities/pcb-capabilities}, multistrato, rame \SI{1}{oz}) è emerso che il minimo pad-pad SMD tra net diverse è \SI{0,15}{mm}. Con la regola a \SI{0,13}{mm} il DRC non avrebbe segnalato gap tra \SI{0,13}{mm} e \SI{0,15}{mm}, che JLC rifiuterebbe o farebbe pagare di più. L'obiettivo di progetto dichiarato da Brik81 è nessun sovrapprezzo JLCPCB.
+
+Approvazione di Brik81 (citazione testuale):
+\begin{quote}
+\guillemotleft{}si modifica assolutamente: obbiettivo avere nessun sovrapprezzo se no me lo mettono in busta paga\guillemotright{}
+\end{quote}
+
+\subsubsection{Confronto delle altre regole del .dru con i minimi JLC}
+Minimi JLC multistrato \SI{1}{oz} dalla pagina capabilities. Tutte le altre regole sono già conformi.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Regola} & \textbf{Valore progetto} & \textbf{Minimo JLC}\\
+\midrule
+Foro via\textendash pista & \SI{0,20}{mm} & \SI{0,20}{mm}\\
+Foro PTH\textendash pista & \SI{0,30}{mm} & \SI{0,28}{mm} (consigliato \SI{0,35}{mm})\\
+Foro via\textendash rame interno & \SI{0,20}{mm} & \SI{0,20}{mm}\\
+Foro\textendash foro via & \SI{0,20}{mm} & \SI{0,20}{mm}\\
+Foro\textendash foro pad PTH & \SI{0,45}{mm} & \SI{0,45}{mm}\\
+Rame\textendash bordo & \SI{0,30}{mm} & \SI{0,20}{mm} fresato, \SI{0,40}{mm} V-cut\\
+Anello PTH & \SI{0,40}{mm} & \SI{0,15}{mm} (consigliato \SI{0,20}{mm})\\
+Silk\textendash pad & \SI{0,15}{mm} & \SI{0,15}{mm}\\
+Piste/clearance esterne & \SI{0,20}{mm} & \SI{0,09}{mm}\\
+Piste/clearance interne & \SI{0,13}{mm} & \SI{0,09}{mm}\\
+\textbf{Pad-pad SMD (questa entry)} & \textbf{\SI{0,15}{mm}} & \SI{0,15}{mm}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Per le piste interne una fonte non ufficiale indica un sovrapprezzo del \SI{20}{\percent} su 4\textendash 8 layer a \SIrange{3,0}{3,5}{mil}; per questo ci si mantiene sopra \SI{0,10}{mm}. Via \SI{0,50}{mm}/\SI{0,30}{mm}: nessun sovrapprezzo (il sovrapprezzo si applica con foro \SI{0,15}{mm}, oppure foro \SI{0,20}{mm}/\SI{0,25}{mm} con diametro inferiore a \SI{0,45}{mm}).
+
+\subsection{Impatti e criticità}
+\begin{critbox}
+\textbf{U402:} il gap è esattamente \SI{0,15}{mm}, al limite JLC. Accettato, perché il minimo è inclusivo.
+\end{critbox}
+\begin{notebox}
+La regola resta \textbf{NON ECSS} (Tab.\ 13-7, esterni \SI{0,20}{mm}) e va ripristinata per la versione di volo.
+
+La regola \code{ECSS interni clearance 0.13}, che segue nel file, vale anche per i pad sui layer interni (pad THT). È coerente con i minimi JLC per le piste interne; i pad SMD sono solo sugli esterni.
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+\item Rilanciare il DRC in KiCad e controllare che non compaiano nuove violazioni pad-pad sotto \SI{0,15}{mm}.
+\item Se compaiono, modificare il footprint (non la regola), per non pagare sovrapprezzo.
+\item Prima della versione di volo, ripristinare la clearance ECSS esterna \SI{0,20}{mm} anche per i pad.
+\end{itemize}

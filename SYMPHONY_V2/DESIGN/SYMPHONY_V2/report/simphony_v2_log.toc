@@ -294,3 +294,10 @@
 \contentsline {subsection}{Motivazione}{106}{subsection*.292}%
 \contentsline {subsection}{Impatti e criticità}{107}{subsection*.293}%
 \contentsline {subsection}{Verifiche da fare}{107}{subsection*.294}%
+\contentsline {section}{054 \textendash {} Clearance pad-pad portata da \SI {0,13}{mm} a \SI {0,15}{mm} (minimo JLC, zero sovrapprezzo, NON ECSS)}{107}{section*.295}%
+\contentsline {subsection}{Elementi coinvolti}{107}{subsection*.296}%
+\contentsline {subsection}{Cosa è cambiato}{107}{subsection*.297}%
+\contentsline {subsection}{Motivazione}{107}{subsection*.298}%
+\contentsline {subsubsection}{Confronto delle altre regole del .dru con i minimi JLC}{108}{subsubsection*.299}%
+\contentsline {subsection}{Impatti e criticità}{108}{subsection*.300}%
+\contentsline {subsection}{Verifiche da fare}{108}{subsection*.301}%

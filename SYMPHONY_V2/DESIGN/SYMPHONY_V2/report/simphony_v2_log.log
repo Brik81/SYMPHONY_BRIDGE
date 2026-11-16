@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.11.6)  16 NOV 2026 10:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.11.6)  16 NOV 2026 11:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2124,7 +2124,9 @@ Overfull \hbox (40.69792pt too wide) in paragraph at lines 30--41
  []
 
 [106{C:/Users/Brik/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4
--ts1.enc}]) [107] 
+-ts1.enc}])
+(C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDGE\SYMPHONY_V2\DESI
+GN\SYMPHONY_V2\report\entries/054_clearance-pad-pad-015-jlc.tex [107]) [108] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 
 (C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDGE\SYMPHONY_V2\DESI
@@ -2136,17 +2138,14 @@ L3 programming layer <2026-09-09>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `simphony_v2_log.out' has not changed.
-(rerunfilecheck)             Checksum: A5CCA3CAECC455199273E94DB9FE9C8F;52463.
+(rerunfilecheck)             Checksum: 5FF4DE0516B09C4E56DF38AF133AEBE2;53780.
  ) 
 Here is how much of TeX's memory you used:
- 70832 strings out of 467392
- 1829166 string characters out of 5406125
- 3318760 words of memory out of 5000000
- 97647 multiletter control sequences out of 15000+600000
+ 70856 strings out of 467392
+ 1829968 string characters out of 5406125
+ 3318763 words of memory out of 5000000
+ 97660 multiletter control sequences out of 15000+600000
  943290 words of font info for 858 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  106i,13n,108p,3106b,1479s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2162,10 +2161,10 @@ MiKTeX/fonts/type1/public/libertinus-type1/LibertinusSerif-Italic.pfb><C:/Users
 nusSerif-Regular.pfb><C:/Users/Brik/AppData/Local/Programs/MiKTeX/fonts/type1/p
 ublic/libertinust1math/LibertinusT1Math.pfb>
 Output written on "C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDG
-E\SYMPHONY_V2\DESIGN\SYMPHONY_V2\report\simphony_v2_log.pdf" (107 pages, 137612
-3 bytes).
+E\SYMPHONY_V2\DESIGN\SYMPHONY_V2\report\simphony_v2_log.pdf" (108 pages, 138515
+1 bytes).
 PDF statistics:
- 1853 PDF objects out of 2073 (max. 8388607)
- 458 named destinations out of 1000 (max. 500000)
- 191909 words of extra memory for PDF output out of 221844 (max. 10000000)
+ 1886 PDF objects out of 2073 (max. 8388607)
+ 466 named destinations out of 1000 (max. 500000)
+ 191957 words of extra memory for PDF output out of 221844 (max. 10000000)
 

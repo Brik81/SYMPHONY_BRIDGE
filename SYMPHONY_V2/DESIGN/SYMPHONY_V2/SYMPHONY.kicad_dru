@@ -26,9 +26,11 @@
 # I gap pad-pad dei footprint a passo fine (es. U402 MSOP-10: 0.15 mm) non si possono correggere.
 # Deve stare DOPO le regole clearance generali (in KiCad vince l'ultima regola che corrisponde);
 # le regole RF piu' in basso restano prioritarie. NON ECSS (Tab 13-7 esterni: 0.20).
-(rule "Pad-pad clearance 0.13 (JLC) - NON ECSS"
+# 16/11/2026 (Brik81: "si modifica assolutamente: obbiettivo avere nessun sovrapprezzo"):
+# 0.13 -> 0.15 = minimo JLC pad-pad SMD net diverse (multilayer). Sotto 0.15 JLC rifiuta/maggiora.
+(rule "Pad-pad clearance 0.15 (JLC) - NON ECSS"
     (condition "A.Type == 'Pad' && B.Type == 'Pad'")
-    (constraint clearance (min 0.13mm)))
+    (constraint clearance (min 0.15mm)))
 
 # Interni, rame base 17 um (0.5 oz), normal pitch: 130 um as-designed (Tab 13-7, 3 di 4)
 # (con 1 oz interno = 17<Th<=60 -> 150 um)
