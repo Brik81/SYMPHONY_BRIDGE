@@ -58,9 +58,12 @@
 # KiCad applica un solo diametro via -> regola unica sull'esterno (0.85 / 0.25, anello 0.30).
 # Con i padstack di KiCad 9 (Front/Inner/Back) puoi fare pad interni 0.55 mm: l'anello interno minimo
 # ECSS e' 0.15 mm. Se usi il "may" 7.5.3g (pad 0.75, Review Item) porta questo valore a 0.25.
-(rule "Via anello >= 0.30 (pad 0.85 / foro 0.25)"
+# 16/11/2026 su richiesta di Brik81 (primo prototipo, priorita' produzione JLC, ECSS sospeso):
+# "modifica le regole in modo che i pad 0.5 e 03 siano accettati" -> anello 0.30 -> 0.10 (via 0.50/0.30).
+# Valore ECSS originale (7.5.3f): 0.30. Da ripristinare per la versione ECSS-compliant.
+(rule "Via anello >= 0.10 (pad 0.50 / foro 0.30) - JLC, NON ECSS"
     (condition "A.Type == 'Via'")
-    (constraint annular_width (min 0.3mm)))
+    (constraint annular_width (min 0.1mm)))
 
 # Niente blind/buried/microvia (non previsti nello stackup JLC standard)
 (rule "Solo via passanti"

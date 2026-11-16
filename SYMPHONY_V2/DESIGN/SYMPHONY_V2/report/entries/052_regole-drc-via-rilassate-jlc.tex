@@ -1,0 +1,78 @@
+\clearpage
+\section{052 -- Regole DRC via rilassate per produzione JLC (ECSS sospeso sulle via)}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X@{}}
+Data & 16/11/2026\\
+Revisione & non indicata\\
+Approvazione & Brik81\\
+\end{tabularx}
+
+\subsection{Componenti, net e fogli coinvolti}
+\begin{itemize}
+  \item File di progetto: \code{SYMPHONY.kicad\_dru} e \code{SYMPHONY.kicad\_pro} (vincoli DRC).
+  \item Scheda: tutte le \num{394} via di \code{SYMPHONY.kicad\_pcb}, tutte con pad \SI{0,50}{\milli\metre} e foro \SI{0,30}{\milli\metre}. Nessuna via \`e stata modificata sul PCB.
+  \item Nessun componente, net o foglio dello schematico coinvolto; nessun codice JLCPCB/Mouser.
+\end{itemize}
+
+\subsection{Cosa \`e cambiato}
+Il DRC segnalava errori di anello minimo (\emph{annular width}) su tutte le via: con pad \SI{0,50}{\milli\metre} e foro \SI{0,30}{\milli\metre} l'anello \`e $(0{,}50-0{,}30)/2=\SI{0,10}{\milli\metre}$, mentre la regola custom richiedeva $\ge\SI{0,30}{\milli\metre}$ (ECSS-Q-ST-70-12C Rev.1, 7.5.3f: pad esterno $\ge$ foro $+\,\SI{0,6}{\milli\metre}$).
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{@{}l l X X@{}}
+\toprule
+File & Parametro & Prima & Dopo\\
+\midrule
+\code{SYMPHONY.kicad\_dru} & regola anello via &
+\code{"Via anello >= 0.30 (pad 0.85 / foro 0.25)"}, \code{annular\_width} min \SI{0,3}{\milli\metre} &
+\code{"Via anello >= 0.10 (pad 0.50 / foro 0.30) - JLC, NON ECSS"}, \code{annular\_width} min \SI{0,1}{\milli\metre}\\
+\code{SYMPHONY.kicad\_pro} & \code{min\_via\_annular\_width} & \SI{0,15}{\milli\metre} & \SI{0,10}{\milli\metre}\\
+\code{SYMPHONY.kicad\_pro} & \code{min\_via\_diameter} & \SI{0,55}{\milli\metre} & \SI{0,50}{\milli\metre}\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Nella regola del file \code{.kicad\_dru} \`e stato aggiunto un commento datato che cita la richiesta e il valore ECSS originale (\SI{0,30}{\milli\metre}) da ripristinare.
+
+Non toccati: regola foro via minimo \SI{0,25}{\milli\metre} (il foro \SI{0,30}{\milli\metre} la rispetta), regole di clearance e piste ECSS, regola anello PTH \SI{0,40}{\milli\metre}, net class (via di default \SI{0,45}{\milli\metre}/\SI{0,30}{\milli\metre}, invariate).
+
+\subsubsection*{Analisi ECSS e JLCPCB (svolta con Brik81)}
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+Voce & Valutazione\\
+\midrule
+ECSS, foro \SI{0,30}{\milli\metre} & pad esterno \SI{0,90}{\milli\metre} (7.5.3f), oppure \SI{0,80}{\milli\metre} come Review Item (7.5.3g); pad interno $\ge\SI{0,60}{\milli\metre}$ (7.5.3h); aspect ratio $1{,}58/0{,}30=5{,}3\le 7$ (7.3.5a): OK\\
+ECSS, foro \SI{0,20}{\milli\metre} & non conforme (aspect ratio $7{,}9>7$)\\
+Via minima ECSS e JLC gratis & \SI{0,85}{\milli\metre}/\SI{0,25}{\milli\metre}\\
+JLCPCB, multistrato, senza sovrapprezzo (pagina quote JLC, data non indicata) & foro $\ge\SI{0,30}{\milli\metre}$ con diametro $\ge\SI{0,40}{\milli\metre}$; foro \SI{0,20}{\milli\metre}/\SI{0,25}{\milli\metre} con diametro $\ge\SI{0,45}{\milli\metre}$\\
+Via \SI{0,90}{\milli\metre}/\SI{0,30}{\milli\metre} & conforme ECSS e gratis JLC, ma giudicata troppo grande da Brik81\\
+\bottomrule
+\end{tabularx}
+\end{center}
+Opzioni discusse: Review Item \SIrange{0,75}{0,80}{\milli\metre}, approccio ibrido (via piccole solo nelle zone fitte), deviazione completa. Scelta: deviazione completa per il primo prototipo.
+
+\subsection{Motivazione}
+Primo prototipo, priorit\`a alla producibilit\`a presso JLCPCB. Approvazione di Brik81 (citazione testuale):
+\begin{quote}
+\emph{``guarda, mi hanno detto di lasciare stare le regole ecss poer ora riorità alla produzione per jlc essenso primo protooti, modifica le regole in modo che i pad 0.5 e 03 siano accettati''}
+\end{quote}
+
+\subsection{Impatti e criticit\`a}
+\begin{critbox}
+\textbf{Deviazione ECSS sulle via.} La scheda NON \`e conforme ECSS sulle via (anello \SI{0,10}{\milli\metre} contro \SI{0,30}{\milli\metre} richiesto). La deviazione vale solo per il prototipo: va ripristinata (regola \SI{0,30}{\milli\metre}, \code{.kicad\_pro} a \SI{0,15}{\milli\metre}/\SI{0,55}{\milli\metre}) e gestita con RFD/waiver per una versione di volo.
+\end{critbox}
+\begin{notebox}
+\begin{itemize}
+  \item Le net class hanno via \SI{0,45}{\milli\metre}/\SI{0,30}{\milli\metre} (anello \SI{0,075}{\milli\metre}): nuove via piazzate con quei default verrebbero segnalate dal DRC. Da allineare a \SI{0,50}{\milli\metre}/\SI{0,30}{\milli\metre} se Brik81 lo chiede.
+  \item Rischi dell'anello sottile: breakout per foratura decentrata e minore affidabilit\`a ai cicli termici.
+\end{itemize}
+\end{notebox}
+
+\subsection{Verifiche da fare}
+\begin{itemize}
+  \item Rilanciare il DRC in KiCad (il tentativo con kicad-cli 9.0 ha restituito ``Impossibile caricare scheda'': non verificato da riga di comando).
+  \item Se KiCad era aperto, ricaricare il progetto: salvando potrebbe sovrascrivere il \code{.kicad\_pro} con i vecchi vincoli.
+  \item Verificare che gli errori di annular ring sulle via \SI{0,50}{\milli\metre}/\SI{0,30}{\milli\metre} siano spariti.
+\end{itemize}

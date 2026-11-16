@@ -282,3 +282,9 @@
 \contentsline {subsection}{Motivazione}{103}{subsection*.280}%
 \contentsline {subsection}{Impatti e criticità}{104}{subsection*.281}%
 \contentsline {subsection}{Verifiche da fare}{104}{subsection*.282}%
+\contentsline {section}{052 -- Regole DRC via rilassate per produzione JLC (ECSS sospeso sulle via)}{105}{section*.283}%
+\contentsline {subsection}{Componenti, net e fogli coinvolti}{105}{subsection*.284}%
+\contentsline {subsection}{Cosa \`e cambiato}{105}{subsection*.285}%
+\contentsline {subsection}{Motivazione}{105}{subsection*.286}%
+\contentsline {subsection}{Impatti e criticit\`a}{105}{subsection*.287}%
+\contentsline {subsection}{Verifiche da fare}{106}{subsection*.288}%

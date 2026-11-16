@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.11.6)  13 NOV 2026 08:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.11.6)  16 NOV 2026 09:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2100,7 +2100,11 @@ GN\SYMPHONY_V2\report\entries/050_via-net-class-uniformate-045-030.tex [100] [1
 GN\SYMPHONY_V2\report\entries/051_zone-escluse-regole-ecss-generiche.tex [102] 
 [103
 
-]) [104] 
+])
+(C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDGE\SYMPHONY_V2\DESI
+GN\SYMPHONY_V2\report\entries/052_regole-drc-via-rilassate-jlc.tex [104] [105
+
+]) [106] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 
 (C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDGE\SYMPHONY_V2\DESI
@@ -2113,13 +2117,13 @@ L3 programming layer <2026-09-09>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `simphony_v2_log.out' has not changed.
-(rerunfilecheck)             Checksum: 4F89E352C3AD083A1B644DAA61A249A7;49900.
+(rerunfilecheck)             Checksum: 7F0D96464056E61413559CE15EA6E97D;51189.
  ) 
 Here is how much of TeX's memory you used:
- 70757 strings out of 467392
- 1826989 string characters out of 5406125
- 3318753 words of memory out of 5000000
- 97599 multiletter control sequences out of 15000+600000
+ 70781 strings out of 467392
+ 1827805 string characters out of 5406125
+ 3318757 words of memory out of 5000000
+ 97612 multiletter control sequences out of 15000+600000
  942887 words of font info for 856 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  106i,13n,108p,3106b,1479s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2135,10 +2139,10 @@ MiKTeX/fonts/type1/public/libertinus-type1/LibertinusSerif-Italic.pfb><C:/Users
 nusSerif-Regular.pfb><C:/Users/Brik/AppData/Local/Programs/MiKTeX/fonts/type1/p
 ublic/libertinust1math/LibertinusT1Math.pfb>
 Output written on "C:\Users\Brik\OneDrive - 2NDSPACE\Desktop\GIT\SYMPHONY_BRIDG
-E\SYMPHONY_V2\DESIGN\SYMPHONY_V2\report\simphony_v2_log.pdf" (104 pages, 135323
-0 bytes).
+E\SYMPHONY_V2\DESIGN\SYMPHONY_V2\report\simphony_v2_log.pdf" (106 pages, 136483
+5 bytes).
 PDF statistics:
- 1781 PDF objects out of 2073 (max. 8388607)
- 443 named destinations out of 1000 (max. 500000)
- 191301 words of extra memory for PDF output out of 221844 (max. 10000000)
+ 1818 PDF objects out of 2073 (max. 8388607)
+ 451 named destinations out of 1000 (max. 500000)
+ 191349 words of extra memory for PDF output out of 221844 (max. 10000000)
 
